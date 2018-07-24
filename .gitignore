@@ -260,3 +260,4 @@ paket-files/
 __pycache__/
 *.pyc
 /DiaryScheduler.Web/dist
+/DiaryScheduler.Web/package-lock.json

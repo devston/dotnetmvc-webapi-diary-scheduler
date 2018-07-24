@@ -218,6 +218,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\SchedulerController.cs" />
     <Compile Include="DependencyResolution\ControllerConvention.cs" />
     <Compile Include="DependencyResolution\DefaultRegistry.cs" />
     <Compile Include="DependencyResolution\IoC.cs" />
@@ -251,8 +252,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />
@@ -291,10 +290,12 @@
     <Content Include="Scripts\Templates\alert.handlebars" />
     <Content Include="Scripts\Templates\load-delay.handlebars" />
     <Content Include="Views\Shared\_PjaxLayout.cshtml" />
+    <Content Include="Views\Scheduler\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\Components\site-loader.ts" />
     <TypeScriptCompile Include="Scripts\Pages\main.ts" />
+    <TypeScriptCompile Include="Scripts\Pages\scheduler.ts" />
     <TypeScriptCompile Include="Scripts\Typings\jquery-typings.ts" />
     <TypeScriptCompile Include="Scripts\Utilities\site-core.ts" />
     <TypeScriptCompile Include="Scripts\Utilities\visibility-helpers.ts" />

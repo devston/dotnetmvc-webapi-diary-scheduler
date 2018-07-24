@@ -19,11 +19,8 @@
                     <li class="nav-item @Html.IsCurrentPage("Home", "Index")">
                         @Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })
                     </li>
-                    <li class="nav-item @Html.IsCurrentPage("Home", "About")">
-                        @Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "nav-link" })
-                    </li>
-                    <li class="nav-item @Html.IsCurrentPage("Home", "Contact")">
-                        @Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })
+                    <li class="nav-item @Html.IsCurrentPage("Scheduler", "Index")">
+                        @Html.ActionLink("Scheduler", "Index", "Scheduler", new { area = "" }, new { @class = "nav-link" })
                     </li>
                 </ul>
                 @Html.Partial("_LoginPartial")

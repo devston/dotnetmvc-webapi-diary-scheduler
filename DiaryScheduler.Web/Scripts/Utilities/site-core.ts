@@ -71,13 +71,15 @@ export namespace Site {
             // Use pjax for the nav.
             $navLinks.on("click", "a", function (e) {
                 e.preventDefault();
-                const href = <string>$(this).attr("href");
+                const $this = $(this);
+                const href = <string>$this.attr("href");
 
                 // Check for empty hrefs.
                 if (!href || href === "#") {
                     return;
                 }
 
+                switchActiveLink($this);
                 loadPartial(href);
             });
         }
@@ -192,5 +194,21 @@ export namespace Site {
                 }
             }
         }
+    }
+
+    /**
+     * Switch the active navigation link.
+     * @param $clickedLink
+     */
+    function switchActiveLink($clickedLink: JQuery<HTMLElement>) {
+        // Get the parent li, which will have the .active class applied.
+        const $parentLi = $clickedLink.parent();
+
+        // Find the li that currently has the .active class applied and remove it.
+        const $currentActive = $parentLi.siblings(".active");
+        $currentActive.removeClass("active");
+
+        // Apply the .active class to the clicked link.
+        $parentLi.addClass("active");
     }
 };
