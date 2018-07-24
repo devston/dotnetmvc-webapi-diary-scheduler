@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using DiaryScheduler.Web.Models;
+using DiaryScheduler.Authentication.Models;
 
 namespace DiaryScheduler.Web.Controllers
 {

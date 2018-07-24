@@ -3,9 +3,9 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
-using Microsoft.Owin.Security.Google;
 using Owin;
-using DiaryScheduler.Web.Models;
+using DiaryScheduler.Authentication.Data;
+using DiaryScheduler.Authentication.Models;
 
 namespace DiaryScheduler.Web
 {

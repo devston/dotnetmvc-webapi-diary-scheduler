@@ -11,6 +11,8 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using DiaryScheduler.Web.Models;
+using DiaryScheduler.Authentication.Models;
+using DiaryScheduler.Authentication.Data;
 
 namespace DiaryScheduler.Web
 {

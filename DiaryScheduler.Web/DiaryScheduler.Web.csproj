@@ -228,7 +228,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -297,6 +296,10 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DiaryScheduler.Authentication\DiaryScheduler.Authentication.csproj">
+      <Project>{b26e6594-7914-45f9-af78-2bc8e3bb4b3d}</Project>
+      <Name>DiaryScheduler.Authentication</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DiaryScheduler.DependencyResolution\DiaryScheduler.DependencyResolution.csproj">
       <Project>{c43e4339-c440-449e-9095-271768078680}</Project>
       <Name>DiaryScheduler.DependencyResolution</Name>

@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infastructure", "Infastruct
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiaryScheduler.DependencyResolution", "DiaryScheduler.DependencyResolution\DiaryScheduler.DependencyResolution.csproj", "{C43E4339-C440-449E-9095-271768078680}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiaryScheduler.Authentication", "DiaryScheduler.Authentication\DiaryScheduler.Authentication.csproj", "{B26E6594-7914-45F9-AF78-2BC8E3BB4B3D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{C43E4339-C440-449E-9095-271768078680}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C43E4339-C440-449E-9095-271768078680}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C43E4339-C440-449E-9095-271768078680}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B26E6594-7914-45F9-AF78-2BC8E3BB4B3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B26E6594-7914-45F9-AF78-2BC8E3BB4B3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B26E6594-7914-45F9-AF78-2BC8E3BB4B3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B26E6594-7914-45F9-AF78-2BC8E3BB4B3D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -32,6 +38,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{08B8790B-C786-4FA5-9742-6B84CB008E15} = {31160D14-92EB-4715-9743-DD35F219FA4B}
 		{C43E4339-C440-449E-9095-271768078680} = {5E6B638D-43B7-412A-B272-A3C8D072251A}
+		{B26E6594-7914-45F9-AF78-2BC8E3BB4B3D} = {5E6B638D-43B7-412A-B272-A3C8D072251A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A1D1F504-E29C-48F9-BED2-A0DD86AB63E9}
