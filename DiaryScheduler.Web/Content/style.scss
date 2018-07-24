@@ -1,0 +1,26 @@
+﻿/*----------------------------------------------------------------------------*\
+    Site Stylesheet - Version 1.0.0
+--------------------------------------------------------------------------------
+
+    This stylesheet contains all the custom styles actively used throughout
+    the site.
+
+\*----------------------------------------------------------------------------*/
+
+@charset "UTF-8";
+
+//------------------------------------------------------------------------------
+//  Contents / Imports
+//------------------------------------------------------------------------------
+
+//  Variables
+//------------------------------------------------------------------------------
+@import 'partials/_variables'; // Colours, fonts, ect...
+@import 'partials/_mixins'; // Custom mixins
+@import 'partials/_helperClasses'; // Helper classes
+
+//  Components
+//------------------------------------------------------------------------------
+@import 'partials/_animation'; // Animation styles
+@import 'partials/_container'; // Container styles
+@import 'partials/_loader'; // Loader styles

@@ -280,6 +280,13 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\style.scss" />
+    <Content Include="Content\partials\_variables.scss" />
+    <Content Include="Content\partials\_mixins.scss" />
+    <Content Include="Content\partials\_animation.scss" />
+    <Content Include="Content\partials\_loader.scss" />
+    <Content Include="Content\partials\_container.scss" />
+    <Content Include="Content\partials\_helperClasses.scss" />
     <None Include="packages.config" />
     <Content Include="Scripts\Templates\alert.handlebars" />
     <Content Include="Scripts\Templates\load-delay.handlebars" />

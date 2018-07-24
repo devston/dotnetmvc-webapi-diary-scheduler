@@ -1,0 +1,182 @@
+﻿//----------------------------------------------------------------------------\\
+//  Mixins
+//------------------------------------------------------------------------------
+//
+//  All mixins available to the site.
+//
+//  Contents
+//  --------
+//
+//  1. Vendor prefixes
+//  2. Media queries
+//  3. Helper mixins
+//
+//----------------------------------------------------------------------------//
+
+//  1. Vendor prefixes
+//------------------------------------------------------------------------------
+
+// Animation mixin.
+// Example: @include animation(fade-in);
+@mixin animation($args) {
+    -webkit-animation: $args;
+    -moz-animation: $args;
+    -ms-animation: $args;
+    -o-animation: $args;
+    animation: $args;
+}
+
+// Animation duration mixin.
+// Example: @include animation-duration(.3s);
+@mixin animation-duration($args) {
+    -webkit-animation-duration: $args;
+    -moz-animation-duration: $args;
+    -ms-animation-duration: $args;
+    -o-animation-duration: $args;
+    animation-duration: $args;
+}
+
+// Animation fill mode mixin.
+// Example: @include animation-fill-mode(both);
+@mixin animation-fill-mode($args) {
+    -webkit-animation-fill-mode: $args;
+    -moz-animation-fill-mode: $args;
+    -ms-animation-fill-mode: $args;
+    -o-animation-fill-mode: $args;
+    animation-fill-mode: $args;
+}
+
+// Animation iteration count mixin.
+// Example: @include animation-iteration-count(infinite);
+@mixin animation-iteration-count($args) {
+    -webkit-animation-iteration-count: $args;
+    -moz-animation-iteration-count: $args;
+    -ms-animation-iteration-count: $args;
+    -o-animation-iteration-count: $args;
+    animation-iteration-count: $args;
+}
+
+// Animation name mixin.
+// Example: @include animation-name(someAnimation);
+@mixin animation-name($args) {
+    -webkit-animation-name: $args;
+    -moz-animation-name: $args;
+    -ms-animation-name: $args;
+    -o-animation-name: $args;
+    animation-name: $args;
+}
+
+// Box sizing mixin.
+// Example: @include box-sizing(border-box);
+@mixin box-sizing($args) {
+    -webkit-box-sizing: $args;
+    -moz-box-sizing: $args;
+    box-sizing: $args;
+}
+
+// Transform mixin.
+// Example: @include transform(scale3d(0,0,0));
+@mixin transform($args) {
+    -webkit-transform: $args;
+    -moz-transform: $args;
+    -ms-transform: $args;
+    -o-transform: $args;
+    transform: $args;
+}
+
+// Transform origin mixin.
+// Example: @include transform-origin(top center);
+@mixin transform-origin($args) {
+    -webkit-transform-origin: $args;
+    -moz-transform-origin: $args;
+    -ms-transform-origin: $args;
+    -o-transform-origin: $args;
+    transform-origin: $args;
+}
+
+// Transform mixin.
+// Example: @include transition(color .3s ease);
+@mixin transition($args...) {
+    -webkit-transition: $args;
+    -moz-transition: $args;
+    -ms-transition: $args;
+    -o-transition: $args;
+    transition: $args;
+}
+
+// User select mixin.
+// Example: @include user-select(none);
+@mixin user-select($args) {
+    -webkit-user-select: $args;
+    -moz-user-select: $args;
+    -ms-user-select: $args;
+    -o-user-select: $args;
+    user-select: $args;
+}
+
+//  2. Media queries
+//------------------------------------------------------------------------------
+
+// Example: @include media-breakpoint-up($sm) {
+//              display: none;
+//          }
+
+// Minimum breakpoint width.
+@mixin media-breakpoint-up($size) {
+    @media only screen and (min-width: $size) {
+        @content;
+    }
+}
+
+// Maximum breakpoint width.
+// The maximum value is calculated as the minimum of the next one less 0.02px
+// to work around the limitations of `min-` and `max-` prefixes and viewports with fractional widths.
+// See https://www.w3.org/TR/mediaqueries-4/#mq-min-max
+@mixin media-breakpoint-down($size) {
+    // Use 0.02px rather than 0.01px to work around a current rounding bug in Safari.
+    // See https://bugs.webkit.org/show_bug.cgi?id=178261
+    $smallerSize: $size - .02px;
+
+    @media only screen and (max-width: $smallerSize) {
+        @content;
+    }
+}
+
+// Media that spans multiple breakpoint widths.
+@mixin media-breakpoint-between($min, $max) {
+    @media (min-width: $min) and (max-width: $max) {
+        @content;
+    }
+}
+
+//  3. Helper mixins
+//------------------------------------------------------------------------------
+
+// Clearfix.
+// Example: @extend %clearfix;
+%clearfix {
+    *zoom: 1;
+
+    &:before, &:after {
+        content: " ";
+        display: table;
+    }
+
+    &:after {
+        clear: both;
+    }
+}
+
+// Calculate the rem size from a pixel size - change 16px to whatever the body
+// font size is.
+@function calculateRem($size) {
+    $remSize: $size / 16px;
+    @return $remSize * 1rem;
+}
+
+// Print the font size as rem and pixel.
+// Example: @include font-size(12px);
+@mixin font-size($size) {
+    font-size: $size;
+    font-size: calculateRem($size);
+}

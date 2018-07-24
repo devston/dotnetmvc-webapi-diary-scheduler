@@ -64,6 +64,22 @@ export namespace Site {
 
             // Load any embedded modules on first load.
             callPageInit({ "target": { "id": mainContainerId } });
+
+            // Only use pjax for the nav links container, so log in actions do full postbacks.
+            const $navLinks = $("#main-nav-links");
+
+            // Use pjax for the nav.
+            $navLinks.on("click", "a", function (e) {
+                e.preventDefault();
+                const href = <string>$(this).attr("href");
+
+                // Check for empty hrefs.
+                if (!href || href === "#") {
+                    return;
+                }
+
+                loadPartial(href);
+            });
         }
         else {
             VisibilityHelpers.alert("danger", "<strong>Error</strong>: Pjax failed to load.", false);

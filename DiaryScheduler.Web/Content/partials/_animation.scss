@@ -1,0 +1,413 @@
+﻿/*----------------------------------------------------------------------------*\
+    Animation
+--------------------------------------------------------------------------------
+
+    This stylesheet contains all the styles linked to animation.
+
+    Contents
+    --------
+
+    1. Core class
+    2. Animation classes
+    3. Animation keyframes
+
+\*----------------------------------------------------------------------------*/
+
+/*  1. Core class
+------------------------------------------------------------------------------*/
+
+// This class is required for animation to work.
+.animated {
+    @include animation-duration(1s);
+    @include animation-fill-mode(both);
+
+    // Have the animation play infinitely.
+    &.infinite {
+        @include animation-iteration-count(infinite);
+    }
+
+    &.bounce-in,
+    &.bounce-out {
+        @include animation-duration(.75s);
+    }
+
+    &.slide-in-right,
+    &.slide-out-right {
+        @include animation-duration(.5s);
+    }
+
+    // Speed up fade in when on a dropdown.
+    &.fade-in.dropdown-menu {
+        @include animation-duration(0.45s);
+        -webkit-animation-timing-function: ease-out;
+        animation-timing-function: ease-out;
+    }
+}
+
+/*  2. Animation classes
+------------------------------------------------------------------------------*/
+
+.bounce-in {
+    @include animation-name(bounce-in);
+}
+
+.bounce-out {
+    @include animation-name(bounce-out);
+}
+
+.fade-in {
+    @include animation-name(fade-in);
+}
+
+.fade-out {
+    @include animation-name(fade-out);
+}
+
+.slide-in-right {
+    @include animation-name(slide-in-right);
+}
+
+.slide-out-right {
+    @include animation-name(slide-out-right);
+}
+
+.spin {
+    @include animation(spin 2s infinite linear);
+}
+
+.swing {
+    @include transform-origin(top center);
+    @include animation-name(swing);
+}
+
+.zoom-in {
+    @include animation-name(zoom-in);
+}
+
+.zoom-out {
+    @include animation-name(zoom-out);
+}
+
+/*  3. Animation keyframes
+------------------------------------------------------------------------------*/
+
+/*----------------------------------------------------------------------------*\
+
+    Webkit prefixes added for old android, chrome and safari support. 
+    Can be removed if support for these browsers is not needed.
+
+\*----------------------------------------------------------------------------*/
+
+// Bounce in
+@-webkit-keyframes bounce-in {
+    from, 20%, 40%, 60%, 80%, to {
+        -webkit-animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+        animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+    }
+
+    0% {
+        opacity: 0;
+        @include transform(scale3d(.3, .3, .3));
+    }
+
+    20% {
+        @include transform(scale3d(1.1, 1.1, 1.1));
+    }
+
+    40% {
+        @include transform(scale3d(.9, .9, .9));
+    }
+
+    60% {
+        opacity: 1;
+        @include transform(scale3d(1.03, 1.03, 1.03));
+    }
+
+    80% {
+        @include transform(scale3d(.97, .97, .97));
+    }
+
+    to {
+        opacity: 1;
+        @include transform(scale3d(1, 1, 1));
+    }
+}
+
+@keyframes bounce-in {
+    from, 20%, 40%, 60%, 80%, to {
+        -webkit-animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+        animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+    }
+
+    0% {
+        opacity: 0;
+        @include transform(scale3d(.3, .3, .3));
+    }
+
+    20% {
+        @include transform(scale3d(1.1, 1.1, 1.1));
+    }
+
+    40% {
+        @include transform(scale3d(.9, .9, .9));
+    }
+
+    60% {
+        opacity: 1;
+        @include transform(scale3d(1.03, 1.03, 1.03));
+    }
+
+    80% {
+        @include transform(scale3d(.97, .97, .97));
+    }
+
+    to {
+        opacity: 1;
+        @include transform(scale3d(1, 1, 1));
+    }
+}
+
+// Bounce out
+@-webkit-keyframes bounce-out {
+    20% {
+        @include transform(scale3d(.9, .9, .9));
+    }
+
+    50%, 55% {
+        opacity: 1;
+        @include transform(scale3d(1.1, 1.1, 1.1));
+    }
+
+    to {
+        opacity: 0;
+        @include transform(scale3d(.3, .3, .3));
+    }
+}
+
+@keyframes bounce-out {
+    20% {
+        @include transform(scale3d(.9, .9, .9));
+    }
+
+    50%, 55% {
+        opacity: 1;
+        @include transform(scale3d(1.1, 1.1, 1.1));
+    }
+
+    to {
+        opacity: 0;
+        @include transform(scale3d(.3, .3, .3));
+    }
+}
+
+// Fade in
+@-webkit-keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+// Fade out
+@-webkit-keyframes fade-out {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes fade-out {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+// Slide in right.
+@-webkit-keyframes slide-in-right {
+    from {
+        -webkit-transform: translate3d(100%, 0, 0);
+        visibility: visible;
+    }
+
+    to {
+        -webkit-transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes slide-in-right {
+    from {
+        @include transform(translate3d(100%, 0, 0));
+        visibility: visible;
+    }
+
+    to {
+        @include transform(translate3d(0, 0, 0));
+    }
+}
+
+// Slide out right.
+@-webkit-keyframes slide-out-right {
+    from {
+        -webkit-transform: translate3d(0, 0, 0);
+    }
+
+    to {
+        visibility: hidden;
+        -webkit-transform: translate3d(100%, 0, 0);
+    }
+}
+
+@keyframes slide-out-right {
+    from {
+        @include transform(translate3d(0, 0, 0));
+    }
+
+    to {
+        visibility: hidden;
+        @include transform(translate3d(100%, 0, 0));
+    }
+}
+
+// Spin.
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(359deg);
+    }
+}
+
+@keyframes spin {
+    0% {
+        @include transform(rotate(0deg))
+    }
+
+    100% {
+        @include transform(rotate(359deg));
+    }
+}
+
+// Swing.
+@-webkit-keyframes swing {
+    20%,40%,60%,80%,100% {
+        -webkit-transform-origin: top center;
+    }
+
+    20% {
+        -webkit-transform: rotate(15deg);
+    }
+
+    40% {
+        -webkit-transform: rotate(-10deg);
+    }
+
+    60% {
+        -webkit-transform: rotate(5deg);
+    }
+
+    80% {
+        -webkit-transform: rotate(-5deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(0deg);
+    }
+}
+
+@keyframes swing {
+    20% {
+        @include transform(rotate(15deg));
+    }
+
+    40% {
+        @include transform(rotate(-10deg));
+    }
+
+    60% {
+        @include transform(rotate(5deg));
+    }
+
+    80% {
+        @include transform(rotate(-5deg));
+    }
+
+    100% {
+        @include transform(rotate(0deg));
+    }
+}
+
+// Zoom in
+@-webkit-keyframes zoom-in {
+    from {
+        opacity: 0;
+        @include transform(scale3d(.3, .3, .3));
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+@keyframes zoom-in {
+    from {
+        opacity: 0;
+        @include transform(scale3d(.3, .3, .3));
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+// Zoom out
+@-webkit-keyframes zoom-out {
+    from {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+        @include transform(scale3d(.3, .3, .3));
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes zoom-out {
+    from {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+        @include transform(scale3d(.3, .3, .3));
+    }
+
+    to {
+        opacity: 0;
+    }
+}
