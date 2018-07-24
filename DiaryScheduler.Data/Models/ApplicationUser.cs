@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace DiaryScheduler.Authentication.Models
+namespace DiaryScheduler.Data.Models
 {
     public class ApplicationUser : IdentityUser
     {
@@ -15,5 +16,7 @@ namespace DiaryScheduler.Authentication.Models
             // Add custom user claims here
             return userIdentity;
         }
+
+        public virtual ICollection<CalendarEntry> CalendarEntries { get; set; }
     }
 }

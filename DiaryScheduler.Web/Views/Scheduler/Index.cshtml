@@ -5,3 +5,4 @@
 <div class="container" page-require="scheduler" page-module-name="Scheduler" page-module-variable="index">
     <div id="calendar"></div>
 </div>
+@{ Html.RenderAction("_ModalQuickCreate", "Scheduler", new { area = "" }); }

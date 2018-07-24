@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C43E4339-C440-449E-9095-271768078680}</ProjectGuid>
+    <ProjectGuid>{B477E728-E932-4DB0-AA97-0DEC92C9DE48}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DiaryScheduler.DependencyResolution</RootNamespace>
-    <AssemblyName>DiaryScheduler.DependencyResolution</AssemblyName>
+    <RootNamespace>DiaryScheduler.Data</RootNamespace>
+    <AssemblyName>DiaryScheduler.Data</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,10 +30,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="StructureMap, Version=4.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\StructureMap.4.7.0\lib\net45\StructureMap.dll</HintPath>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.2\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.2\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -43,22 +53,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IoC.cs" />
-    <Compile Include="IoCExtensionMethods.cs" />
+    <Compile Include="Data\ApplicationDbContext.cs" />
+    <Compile Include="Migrations\201807241649407_InitialCreate.cs" />
+    <Compile Include="Migrations\201807241649407_InitialCreate.Designer.cs">
+      <DependentUpon>201807241649407_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\ApplicationUser.cs" />
+    <Compile Include="Models\CalendarEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DiaryScheduler.ScheduleManagement.Core\DiaryScheduler.ScheduleManagement.Core.csproj">
-      <Project>{2e65bdc1-3ea8-4a49-84a6-2740cfecb225}</Project>
-      <Name>DiaryScheduler.ScheduleManagement.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DiaryScheduler.ScheduleManagement.Data\DiaryScheduler.ScheduleManagement.Data.csproj">
-      <Project>{9c7c173a-079b-4809-af03-0108d78c0358}</Project>
-      <Name>DiaryScheduler.ScheduleManagement.Data</Name>
-    </ProjectReference>
+    <EmbeddedResource Include="Migrations\201807241649407_InitialCreate.resx">
+      <DependentUpon>201807241649407_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

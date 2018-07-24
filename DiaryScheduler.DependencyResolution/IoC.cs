@@ -1,4 +1,6 @@
-﻿using StructureMap;
+﻿using DiaryScheduler.ScheduleManagement.Core.Interfaces;
+using DiaryScheduler.ScheduleManagement.Data.Repositories;
+using StructureMap;
 using System;
 
 namespace DiaryScheduler.DependencyResolution
@@ -13,6 +15,8 @@ namespace DiaryScheduler.DependencyResolution
                 {
                     scan.TheCallingAssembly();
                     scan.WithDefaultConventions();
+
+                    x.For<IScheduleRepository>().Use<ScheduleRepository>();
                 });
 
                 moreInitialization?.Invoke(x);

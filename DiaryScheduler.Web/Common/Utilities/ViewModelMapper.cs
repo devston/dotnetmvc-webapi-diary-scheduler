@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using DiaryScheduler.ScheduleManagement.Core.Models;
+using DiaryScheduler.Web.Models;
 using System;
 
 namespace DiaryScheduler.Web.Common.Utilities
@@ -11,7 +13,8 @@ namespace DiaryScheduler.Web.Common.Utilities
         {
             var config = new MapperConfiguration(cfg =>
             {
-                // TODO: Put view model mappings here.
+                cfg.CreateMap<CalEntry, CalendarEventViewModel>()
+                   .ReverseMap();
             });
 
             _mapper = config.CreateMapper();

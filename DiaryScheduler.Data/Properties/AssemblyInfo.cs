@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DiaryScheduler.Authentication")]
+[assembly: AssemblyTitle("DiaryScheduler.Data")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("DiaryScheduler.Authentication")]
+[assembly: AssemblyProduct("DiaryScheduler.Data")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("b26e6594-7914-45f9-af78-2bc8e3bb4b3d")]
+[assembly: Guid("b477e728-e932-4db0-aa97-0dec92c9de48")]
 
 // Version information for an assembly consists of the following four values:
 //

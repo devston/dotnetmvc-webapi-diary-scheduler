@@ -1,0 +1,22 @@
+﻿@model DiaryScheduler.Web.Models.CalendarEventViewModel
+
+@Html.AntiForgeryToken()
+<div class="row">
+    <div class="col-md-12 form-group">
+        @Html.LabelFor(x => x.Title)
+        @Html.TextBoxFor(x => x.Title, htmlAttributes: new { @class = "form-control", maxlength = "100" })
+        @Html.ValidationMessageFor(x => x.Title, "", new { @class = "text-danger" })
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 form-group">
+        <label for="DateStarting">@Html.DisplayNameFor(x => x.DateFrom)</label>
+        <input class="form-control" id="DateStarting" type="text" name="DateStarting" readonly />
+        @Html.EditorFor(x => x.DateFrom, new { htmlAttributes = new { @type = "hidden" } })
+    </div>
+    <div class="col-md-6 form-group">
+        <label for="DateEnding">@Html.DisplayNameFor(x => x.DateTo)</label>
+        <input class="form-control" id="DateEnding" type="text" name="DateEnding" readonly />
+        @Html.EditorFor(x => x.DateTo, new { htmlAttributes = new { @type = "hidden" } })
+    </div>
+</div>

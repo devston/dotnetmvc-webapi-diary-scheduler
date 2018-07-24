@@ -1,11 +1,11 @@
 ﻿using System;
+using DiaryScheduler.Data.Data;
+using DiaryScheduler.Data.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
-using DiaryScheduler.Authentication.Data;
-using DiaryScheduler.Authentication.Models;
 
 namespace DiaryScheduler.Web
 {

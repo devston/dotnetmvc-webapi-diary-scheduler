@@ -1,5 +1,5 @@
-﻿using DiaryScheduler.Authentication.Data;
-using DiaryScheduler.Authentication.Models;
+﻿using DiaryScheduler.Data.Data;
+using DiaryScheduler.Data.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
