@@ -31,6 +31,38 @@ namespace DiaryScheduler.Web.Controllers
             return View();
         }
 
+        // GET: Create view.
+        public ActionResult Create()
+        {
+            DateTime today = DateTime.UtcNow;
+            TimeSpan amountToRound = TimeSpan.FromMinutes(15);
+
+            // Rounds date to the nearest specified minute.
+            // "+ amountToRound.Ticks - 1" makes sure today will round up if necessary. E.g. (12 + 5 - 1) = 16, 16 / 5 = 3,  3 * 5 = 15.
+            DateTime laterToday = new DateTime(((today.Ticks + amountToRound.Ticks - 1) / amountToRound.Ticks) * amountToRound.Ticks);
+
+            var entry = new CalendarEventViewModel()
+            {
+                DateFrom = laterToday,
+                DateTo = laterToday.AddMinutes(15)
+            };
+
+            return PartialView(entry);
+        }
+
+        // GET: Create view with filled in options.
+        public ActionResult CreateMoreOptions(string title, DateTime start, DateTime end)
+        {
+            var entry = new CalendarEventViewModel()
+            {
+                Title = title,
+                DateFrom = start,
+                DateTo = end
+            };
+
+            return PartialView("Create", entry);
+        }
+
         // GET: Quick create modal.
         public ActionResult _ModalQuickCreate()
         {

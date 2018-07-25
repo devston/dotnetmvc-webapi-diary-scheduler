@@ -4,5 +4,8 @@
 
 <div class="container" page-require="scheduler" page-module-name="Scheduler" page-module-variable="index">
     <div id="calendar"></div>
+    <div>
+        <button class="btn btn-outline-primary" id="create-event-btn" title="Create a new event" type="button">Create</button>
+    </div>
 </div>
 @{ Html.RenderAction("_ModalQuickCreate", "Scheduler", new { area = "" }); }

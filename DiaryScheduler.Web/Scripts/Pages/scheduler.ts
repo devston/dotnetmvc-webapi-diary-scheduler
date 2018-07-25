@@ -20,6 +20,8 @@ import moment from "moment";
 import "fullcalendar";
 import { Site } from "Scripts/Utilities/site-core";
 import { VisibilityHelpers } from "Scripts/Utilities/visibility-helpers";
+import { SiteCalendar } from "Scripts/Components/site-calendar";
+import { DateTimePicker } from "Scripts/Components/site-datetimepicker";
 
 /**
  * A module containing all the logic for the scheduler area.
@@ -30,11 +32,17 @@ export namespace Scheduler {
         1. Initialisation functions
     \*------------------------------------------------------------------------*/
 
+    const calendarSelector = "#calendar";
+
     /**
      * Initialise scheduler area.
      */
     export function init(pageToLoad: string) {
         switch (pageToLoad) {
+            case "create":
+                initCreate();
+                break;
+
             default:
                 initIndex();
                 break;
@@ -45,7 +53,46 @@ export namespace Scheduler {
      * Initialise the index page.
      */
     function initIndex() {
-        initCalendar("#calendar");
+        const sourceUrl = "/Scheduler/UserEntries/";
+        SiteCalendar.init(calendarSelector, sourceUrl, showQuickCreateModal);
+
+        $("#create-event-btn").on("click", function (e) {
+            e.preventDefault();
+            Navigate.toCreate();
+        });
+    }
+
+    /**
+     *  Initialise the create page.
+     * */
+    function initCreate() {
+        initEventCard("#create-cal-entry-form", "/Scheduler/CreateEntry/");
+    }
+
+    /**
+     * Initialise the event card.
+     * @param formSelector
+     * @param url
+     */
+    function initEventCard(formSelector: string, url: string) {
+        const startPickerSelector = "#DateStarting";
+        const endPickerSelector = "#DateEnding";
+
+        // Initialise the datetime pickers.
+        DateTimePicker.initDateTime(startPickerSelector);
+        DateTimePicker.initDateTime(endPickerSelector);
+        DateTimePicker.initRange(startPickerSelector, endPickerSelector);
+
+        // Form submit.
+        $(formSelector).on("submit", function (e) {
+            e.preventDefault();
+            saveEvent($(this), url);
+        });
+
+        $("#back-to-cal-btn").on("click", function (e) {
+            e.preventDefault();
+            Navigate.toIndex();
+        });
     }
 
     /*------------------------------------------------------------------------*\
@@ -63,14 +110,20 @@ export namespace Scheduler {
             $.ajax({
                 beforeSend: function () {
                     VisibilityHelpers.loader(true);
+                    $("#edit-entry-btn").attr("disabled");
+                    $("#quick-create-btn").attr("disabled");
                 },
-                url: "/Scheduler/CreateEntry",
+                url: "/Scheduler/CreateEntry/",
                 type: "POST",
                 data: $form.serialize()
-            }).always(function () {
+            })
+            .always(function () {
                 VisibilityHelpers.loader(false);
-            }).done(function (data: any) {
-                addEntryToCalendar(data.calEntry);
+                $("#edit-entry-btn").removeAttr("disabled");
+                $("#quick-create-btn").removeAttr("disabled");
+            })
+            .done(function (data: any) {
+                SiteCalendar.addEvent(data.calEntry, calendarSelector);
                 VisibilityHelpers.alert("success", data.message, true);
 
                 // jQuery object is used multiple times so store it in a variable.
@@ -89,45 +142,40 @@ export namespace Scheduler {
         }
     }
 
+    /**
+     * Save a calendar event.
+     * @param formId
+     * @param url
+     */
+    function saveEvent($form: JQuery<HTMLElement>, url: string) {
+        if ($form.valid()) {
+            $.ajax({
+                beforeSend: function () {
+                    VisibilityHelpers.loader(true);
+                    $("#save-entry-btn").attr("disabled");
+                    $("#back-to-cal-btn").attr("disabled");
+                },
+                url: url,
+                type: "POST",
+                data: $form.serialize()
+            }).always(function () {
+                VisibilityHelpers.loader(false);
+                $("#save-entry-btn").removeAttr("disabled");
+                $("#back-to-cal-btn").removeAttr("disabled");
+            })
+            .done(function (data: any) {
+                VisibilityHelpers.alert("success", data.message, false);
+                Navigate.toIndex();
+            })
+            .fail(function (jqXHR) {
+                Site.showJqXhrAsAlert(jqXHR);
+            });
+        }
+    }
+
     /*------------------------------------------------------------------------*\
         3. Helper functions
     \*------------------------------------------------------------------------*/
-
-    /**
-     * Initialise the calendar.
-     * @param calendarSelector
-     */
-    function initCalendar(calendarSelector: string) {
-        $(calendarSelector).fullCalendar({
-            //eventClick: function (calEvent) {
-            //    showEditEntryPanel(calEvent.id);
-            //},
-            eventLimit: true,
-            eventSources: [{
-                url: "/Scheduler/UserEntries",
-                error: function () {
-                    VisibilityHelpers.alert("danger", "There was an error while fetching entries.", true);
-                }
-            }],
-            eventDataTransform: function (eventData) {
-                // Convert the UTC date to the user's local time.
-                return {
-                    "id": eventData.id,
-                    "title": eventData.title,
-                    "allDay": eventData.allDay,
-                    "start": moment.utc(eventData.start).local(),
-                    "end": moment.utc(eventData.end).local(),
-                    "className": eventData.className
-                };
-            },
-            selectable: true,
-            selectHelper: true,
-            select: function (start: moment.Moment, end: moment.Moment) {
-                showQuickCreateModal(start, end);
-            },
-            timeFormat: "HH:mm"
-        });
-    }
 
     // Show quick create modal.
     function showQuickCreateModal(start: moment.Moment, end: moment.Moment) {
@@ -164,7 +212,7 @@ export namespace Scheduler {
                     // Close and empty the modal.
                     $modal.modal("hide");
 
-                    Navigate.toQuickCreate(title, startFormatted, endFormatted);
+                    Navigate.toCreateMoreOptions(title, startFormatted, endFormatted);
 
                     VisibilityHelpers.loader(false);
                 });
@@ -178,22 +226,6 @@ export namespace Scheduler {
                 VisibilityHelpers.loader(false);
             }
         });
-    }
-
-    /**
-     *  Add a calendar entry to the calendar.
-     * */
-    function addEntryToCalendar(eventData: any) {
-        var event = {
-            "id": eventData.id,
-            "title": eventData.title,
-            "start": moment(eventData.start),
-            "end": moment(eventData.end),
-            "allDay": eventData.allDay,
-            "className": eventData.className
-        };
-
-        $("#calendar").fullCalendar("renderEvent", event);
     }
 
     /*------------------------------------------------------------------------*\
@@ -212,13 +244,20 @@ export namespace Scheduler {
         }
 
         /**
+         *  Navigate to the create page.
+         * */
+        export function toCreate() {
+            Site.loadPartial("/Scheduler/Create/");
+        }
+
+        /**
          * Navigate to the quick entry create page.
          * @param title
          * @param start
          * @param end
          */
-        export function toQuickCreate(title: string, start: string, end: string) {
-            Site.loadPartial("/Scheduler/QuickCreateEntry/", { "title": title, "start": start, "end": end })
+        export function toCreateMoreOptions(title: string, start: string, end: string) {
+            Site.loadPartial("/Scheduler/CreateMoreOptions/", { "title": title, "start": start, "end": end })
         }
     }
 }

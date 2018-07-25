@@ -1,7 +1,8 @@
-﻿import "font-awesome/css/font-awesome.min.css";
+﻿import "@fortawesome/fontawesome-free-webfonts/css/fontawesome.css";
+import "@fortawesome/fontawesome-free-webfonts/css/fa-solid.css";
+import "@fortawesome/fontawesome-free-webfonts/css/fa-regular.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "datatables.net-bs4/css/dataTables.bootstrap4.css";
-import "fullcalendar/dist/fullcalendar.min.css";
 import "Content/style.scss";
 import $ from "jquery";
 import "bootstrap";

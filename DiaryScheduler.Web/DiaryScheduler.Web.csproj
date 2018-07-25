@@ -294,8 +294,11 @@
     <Content Include="Views\Scheduler\Index.cshtml" />
     <Content Include="Views\Scheduler\_ModalQuickCreate.cshtml" />
     <Content Include="Views\Scheduler\_QuickCreate.cshtml" />
+    <Content Include="Views\Scheduler\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Scripts\Components\site-calendar.ts" />
+    <TypeScriptCompile Include="Scripts\Components\site-datetimepicker.ts" />
     <TypeScriptCompile Include="Scripts\Components\site-loader.ts" />
     <TypeScriptCompile Include="Scripts\Pages\main.ts" />
     <TypeScriptCompile Include="Scripts\Pages\scheduler.ts" />
