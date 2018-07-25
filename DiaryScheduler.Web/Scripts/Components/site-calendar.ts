@@ -42,12 +42,26 @@ export namespace SiteCalendar {
     }
 
     /**
+     * Get the visible date range on the calendar.
+     * @param calendarSelector
+     */
+    export function getVisibleDates(calendarSelector: string) {
+        const view = $(calendarSelector).fullCalendar("getView");
+        const dates = {
+            start: view.intervalStart.format(),
+            end: view.intervalEnd.format()
+        };
+
+        return dates;
+    }
+
+    /**
      * Add a calendar event to the calendar.
      * @param eventData
      * @param calendarSelector
      */
     export function addEvent(eventData: any, calendarSelector: string) {
-        var event = {
+        const event = {
             "id": eventData.id,
             "title": eventData.title,
             "start": moment(eventData.start),

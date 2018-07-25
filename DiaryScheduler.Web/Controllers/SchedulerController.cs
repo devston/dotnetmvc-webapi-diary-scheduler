@@ -101,6 +101,12 @@ namespace DiaryScheduler.Web.Controllers
             return PartialView(vm);
         }
 
+        // GET: Export calendar events modal.
+        public ActionResult _ModalExport()
+        {
+            return PartialView();
+        }
+
         // GET: Confirm event deletion modal.
         public ActionResult _ModalDeleteConfirmation()
         {
@@ -234,6 +240,7 @@ namespace DiaryScheduler.Web.Controllers
 
         #region Export
 
+        // Create a .ics file for a calendar event.
         public ActionResult ExportEventToIcal(Guid id)
         {
             // Check if an id was sent.
@@ -269,6 +276,61 @@ namespace DiaryScheduler.Web.Controllers
 
             // Build the .ics file.
             var ctx = new Ical.Net.Serialization.SerializationContext();
+            var serialiser = new Ical.Net.Serialization.CalendarSerializer(ctx);
+
+            string output = serialiser.SerializeToString(iCal);
+            string contentType = "text/calendar";
+            var bytes = System.Text.Encoding.UTF8.GetBytes(output);
+
+            // Create a name.
+            Guid fileId = Guid.NewGuid();
+            string fileName = fileId.ToString() + ".ics";
+
+            return File(bytes, contentType, fileName);
+        }
+
+        // Create a .ics file for calendar events from a date range.
+        public ActionResult ExportEventsToIcal(DateTime start, DateTime end)
+        {
+            // Check if dates are null before doing anything.
+            if (start == null || end == null)
+            {
+                return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> No date range provided.", "");
+            }
+
+            // Get user's calendar entries within the date range.
+            List<CalEntry> userEntries = _scheduleRepository.GetAllUserEntries(User.Identity.GetUserId(), start, end);
+
+            // Check if there are any diary entries to sync.
+            if (userEntries == null)
+            {
+                return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> No calendar events to sync.", "");
+            }
+
+            // Create iCal.
+            var iCal = new Ical.Net.Calendar()
+            {
+                ProductId = "ASP.Net Diary Scheduler",
+                Version = "2.0"
+            };
+
+            // Create a new event for each calendar entry.
+            foreach (CalEntry entry in userEntries)
+            {
+                // Create event.
+                var evt = iCal.Create<Ical.Net.CalendarComponents.CalendarEvent>();
+
+                // Prepare ical event.
+                evt.Uid = entry.CalendarEntryId.ToString();
+                evt.Start = new Ical.Net.DataTypes.CalDateTime(entry.DateFrom);
+                evt.End = new Ical.Net.DataTypes.CalDateTime(entry.DateTo);
+                evt.Description = entry.Description;
+                evt.Summary = entry.Title;
+                evt.IsAllDay = entry.AllDay;
+            }
+
+            // Build the .ics file.
+            Ical.Net.Serialization.SerializationContext ctx = new Ical.Net.Serialization.SerializationContext();
             var serialiser = new Ical.Net.Serialization.CalendarSerializer(ctx);
 
             string output = serialiser.SerializeToString(iCal);

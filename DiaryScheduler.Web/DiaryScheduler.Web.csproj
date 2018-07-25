@@ -309,6 +309,7 @@
     <Content Include="Views\Scheduler\Create.cshtml" />
     <Content Include="Views\Scheduler\Edit.cshtml" />
     <Content Include="Views\Scheduler\_ModalDeleteConfirmation.cshtml" />
+    <Content Include="Views\Scheduler\_ModalExport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\Components\site-calendar.ts" />

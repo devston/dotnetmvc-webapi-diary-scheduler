@@ -65,6 +65,11 @@ export namespace Scheduler {
             e.preventDefault();
             Navigate.toCreate();
         });
+
+        $("#export-events-btn").on("click", function (e) {
+            e.preventDefault();
+            initExportModal();
+        });
     }
 
     /**
@@ -116,6 +121,59 @@ export namespace Scheduler {
             e.preventDefault();
             Navigate.toIndex();
         });
+    }
+
+    /**
+     *  Initialise the export calendar event modal.
+     * */
+    function initExportModal() {
+        const $modal = $("#export-events-modal");
+        const startPickerSelector = "#SyncFrom";
+        const endPickerSelector = "#SyncTo";
+        let radioVal = "0";
+
+        // Initialise the datetime pickers.
+        DateTimePicker.initDateTime(startPickerSelector);
+        DateTimePicker.initDateTime(endPickerSelector);
+        DateTimePicker.initRange(startPickerSelector, endPickerSelector);
+
+        // Initialise the radio controls.
+        $("#calendar-sync-options-container").find("input[name=\"calsync\"]").on("change", function (this: HTMLInputElement) {
+            if (this.value == "1") {
+                $("#date-sync-container").addClass("hidden");
+                $("#calendar-sync-container").removeClass("hidden");
+            }
+            else {
+                $("#calendar-sync-container").addClass("hidden");
+                $("#date-sync-container").removeClass("hidden");
+            }
+
+            radioVal = this.value;
+        });
+
+        $("#confirm-export-btn").on("click", function (e) {
+            e.preventDefault();
+
+            // No value selected.
+            if (radioVal == "0") {
+                return;
+            }
+            else {
+                $modal.modal("hide");
+
+                if (radioVal == "1") {
+                    exportVisibleEventsToIcal();
+                }
+                else if (radioVal == "2") {
+                    var start = <string>$("#SyncFromHid").val();
+                    var end = <string>$("#SyncToHid").val();
+
+                    exportEventsFromDateRangeToIcal(start, end);
+                }
+            }
+        });
+
+        $modal.modal("show");
     }
 
     /**
@@ -261,6 +319,35 @@ export namespace Scheduler {
      */
     function exportEventToIcal(eventId: string) {
         window.location.href = `/Scheduler/ExportEventToIcal/${eventId}`;
+    }
+
+    /**
+     *  Export visible events on the calendar to ical.
+     * */
+    function exportVisibleEventsToIcal() {
+        // Check if there are any events before going to the controller.
+        if ($(".fc-view").has(".fc-event").length === 0) {
+            VisibilityHelpers.alert("info", "There are no events to sync.", true);
+            return;
+        }
+
+        const dates = SiteCalendar.getVisibleDates(calendarSelector);
+        window.location.href = `/Scheduler/ExportEventsToIcal?start=${dates.start}&end=${dates.end}`;
+    }
+
+    /**
+     * Export calendar events to ics from a date range.
+     * @param start
+     * @param end
+     */
+    function exportEventsFromDateRangeToIcal(start: string, end: string) {
+        // Check if dates were entered before going to the server.
+        if (start == null || end == null) {
+            VisibilityHelpers.alert("danger", "<strong>Error</strong>: No dates provided.", true);
+            return;
+        }
+
+        window.location.href = `/Scheduler/ExportEventsToIcal?start=${start}&end=${end}`;
     }
 
     /*------------------------------------------------------------------------*\

@@ -1,0 +1,54 @@
+﻿<div class="modal fade" id="export-events-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Export calendar events</h5>
+                <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center" id="calendar-sync-options-container">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="calsync" id="sync-calendar" value="1">
+                        <label class="form-check-label" for="sync-calendar">Sync visible calendar events</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="calsync" id="sync-date" value="2">
+                        <label class="form-check-label" for="sync-date">Sync calendar events from a date range</label>
+                    </div>
+                </div>
+                <div class="hidden" id="calendar-sync-container">
+                    <hr />
+                    <div class="alert alert-info">
+                        <h4>Visible sync</h4>
+                        <p>This option will sync the calendar events currently visible on your calendar.</p>
+                    </div>
+                </div>
+                <div class="hidden" id="date-sync-container">
+                    <hr />
+                    <div class="alert alert-info">
+                        <h4>Date range sync</h4>
+                        <p>This option will sync the calendar events that fall within the date range you select.</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label for="SyncFrom">Sync From</label>
+                            <input class="form-control" data-id="SyncFromHid" id="SyncFrom" type="text" name="DateStarting" />
+                            <input id="SyncFromHid" type="hidden" value="@DateTime.UtcNow.ToString("yyyy/MM/dd")" />
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="SyncTo">Sync To</label>
+                            <input class="form-control" data-id="SyncToHid" id="SyncTo" type="text" name="DateEnding" />
+                            <input id="SyncToHid" type="hidden" value="@DateTime.UtcNow.AddDays(1).ToString("yyyy/MM/dd")" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="confirm-export-btn" type="button">Export</button>
+                <button class="btn btn-outline-secondary" data-dismiss="modal" type="button">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
