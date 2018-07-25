@@ -15,12 +15,18 @@
 
 //  Variables
 //------------------------------------------------------------------------------
+
 @import 'partials/_variables'; // Colours, fonts, ect...
 @import 'partials/_mixins'; // Custom mixins
 @import 'partials/_helperClasses'; // Helper classes
 
 //  Components
 //------------------------------------------------------------------------------
+
+@import 'partials/_primary'; // Primary styles
 @import 'partials/_animation'; // Animation styles
 @import 'partials/_container'; // Container styles
+@import 'partials/_card'; // Card styles
+@import 'partials/_button'; // Button styles
+@import 'partials/_jumbotron'; // Jumbotron styles
 @import 'partials/_loader'; // Loader styles

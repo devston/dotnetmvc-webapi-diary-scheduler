@@ -3,10 +3,14 @@
 }
 
 <div class="container" page-require="scheduler" page-module-name="Scheduler" page-module-variable="index">
-    <div id="calendar"></div>
-    <div>
-        <button class="btn btn-outline-primary" id="create-event-btn" title="Create a new event" type="button">Create</button>
-        <button class="btn btn-outline-warning" id="export-events-btn" title="Export events" type="button">Export</button>
+    <div class="card">
+        <div class="card-body">
+            <div id="calendar"></div>
+            <div class="form-group">
+                <button class="btn btn-primary" id="create-event-btn" title="Create a new event" type="button">Create</button>
+                <button class="btn btn-info" id="export-events-btn" title="Export events" type="button">Export</button>
+            </div>
+        </div>
     </div>
 </div>
 @{ Html.RenderAction("_ModalQuickCreate", "Scheduler", new { area = "" }); }

@@ -5,8 +5,8 @@
 }
 
 <div class="container" page-require="scheduler" page-module-name="Scheduler" page-module-variable="edit">
-    <form class="card" id="edit-cal-entry-form">
-        <div class="card-body">
+    <div class="card">
+        <form class="card-body" id="edit-cal-entry-form">
             <h2 class="card-title">Edit calendar event</h2>
             @Html.AntiForgeryToken()
             @Html.HiddenFor(x => x.CalendarEntryId)
@@ -38,13 +38,13 @@
                 @Html.CheckBoxFor(x => x.AllDay, htmlAttributes: new { @class = "form-check-input" })
                 @Html.LabelFor(x => x.AllDay, htmlAttributes: new { @class = "form-check-label" })
             </div>
-        </div>
-        <div class="card-footer">
-            <button class="btn btn-success" id="save-entry-btn" title="Save changes to this calendar event" type="submit">Save</button>
-            <button class="btn btn-danger" id="delete-entry-btn" title="Delete this calendar event" type="button">Delete</button>
-            <button class="btn btn-outline-secondary" id="export-event-btn" title="Export this calendar event to an iCal" type="button">Export</button>
-            <button class="btn btn-outline-secondary" id="back-to-cal-btn" title="Go back to the calendar" type="button">Back</button>
-        </div>
-    </form>
+            <div class="form-group">
+                <button class="btn btn-success" id="save-entry-btn" title="Save changes to this calendar event" type="submit">Save</button>
+                <button class="btn btn-danger" id="delete-entry-btn" title="Delete this calendar event" type="button">Delete</button>
+                <button class="btn btn-info" id="export-event-btn" title="Export this calendar event to an iCal" type="button">Export</button>
+                <button class="btn btn-outline-secondary" id="back-to-cal-btn" title="Go back to the calendar" type="button">Back</button>
+            </div>
+        </form>
+    </div>
 </div>
 @{ Html.RenderAction("_ModalDeleteConfirmation", "Scheduler", new { area = "" }); }

@@ -6,6 +6,10 @@
 
 \*----------------------------------------------------------------------------*/
 
+.site-main-container {
+    padding-top: calculateRem(15px);
+}
+
 .alert-container {
     bottom: 15px;
     min-width: 100%;

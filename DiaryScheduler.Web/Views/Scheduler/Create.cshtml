@@ -5,8 +5,8 @@
 }
 
 <div class="container" page-require="scheduler" page-module-name="Scheduler" page-module-variable="create">
-    <form class="card" id="create-cal-entry-form">
-        <div class="card-body">
+    <div class="card">
+        <form class="card-body" id="create-cal-entry-form">
             <h2 class="card-title">Create calendar event</h2>
             @Html.AntiForgeryToken()
             @Html.HiddenFor(x => x.CalendarEntryId)
@@ -38,10 +38,10 @@
                 @Html.CheckBoxFor(x => x.AllDay, htmlAttributes: new { @class = "form-check-input" })
                 @Html.LabelFor(x => x.AllDay, htmlAttributes: new { @class = "form-check-label" })
             </div>
-        </div>
-        <div class="card-footer">
-            <button class="btn btn-success" id="save-entry-btn" title="Create a new calendar event" type="submit">Create</button>
-            <button class="btn btn-outline-secondary" id="back-to-cal-btn" title="Go back to the calendar" type="button">Back</button>
-        </div>
-    </form>
+            <div class="form-group">
+                <button class="btn btn-success" id="save-entry-btn" title="Create a new calendar event" type="submit">Create</button>
+                <button class="btn btn-outline-secondary" id="back-to-cal-btn" title="Go back to the calendar" type="button">Back</button>
+            </div>
+        </form>
+    </div>
 </div>

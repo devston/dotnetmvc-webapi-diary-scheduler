@@ -389,9 +389,11 @@ export namespace Scheduler {
                     // Close and empty the modal.
                     $modal.modal("hide");
 
-                    Navigate.toCreateMoreOptions(title, startFormatted, endFormatted);
-
-                    VisibilityHelpers.loader(false);
+                    // Stop the modal from getting 'stuck'.
+                    $modal.on("hidden.bs.modal", function () {
+                        Navigate.toCreateMoreOptions(title, startFormatted, endFormatted);
+                        VisibilityHelpers.loader(false);
+                    });
                 });
 
                 // Submit form.

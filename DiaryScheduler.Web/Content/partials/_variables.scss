@@ -15,7 +15,37 @@
 //  1. Default colours
 //------------------------------------------------------------------------------
 
+// Bootstrap replacement colours.
+$colour-primary: #4285f4;
+$colour-primary-dark: #0d47a1;
+$colour-secondary: #4B515D;
+$colour-secondary-dark: #3E4551;
+$colour-success: #00c851;
+$colour-success-dark: #9933CC;
+$colour-info: #33b5e5;
+$colour-info-dark: #0099CC;
+$colour-warning: #f80;
+$colour-warning-dark: #FF8800;
+$colour-danger: #ff3547;
+$colour-danger-dark: #CC0000;
 
+// Buttons.
+$colour-btn-primary-bg: $colour-primary;
+$colour-btn-primary-text: #fff;
+$colour-btn-secondary-bg: $colour-secondary;
+$colour-btn-secondary-text: #fff;
+$colour-btn-success-bg: $colour-success;
+$colour-btn-success-text: #fff;
+$colour-btn-info-bg: $colour-info;
+$colour-btn-info-text: #fff;
+$colour-btn-warning-bg: $colour-warning;
+$colour-btn-warning-text: #fff;
+$colour-btn-danger-bg: $colour-danger;
+$colour-btn-danger-text: #fff;
+
+// Misc.
+$colour-page-bg: #eee;
+$colour-jumbotron-bg: #fff;
 
 //  2. Media queries
 //------------------------------------------------------------------------------

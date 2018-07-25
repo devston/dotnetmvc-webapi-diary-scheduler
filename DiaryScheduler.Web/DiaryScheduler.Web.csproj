@@ -299,6 +299,10 @@
     <Content Include="Content\partials\_loader.scss" />
     <Content Include="Content\partials\_container.scss" />
     <Content Include="Content\partials\_helperClasses.scss" />
+    <Content Include="Content\partials\_primary.scss" />
+    <Content Include="Content\partials\_jumbotron.scss" />
+    <Content Include="Content\partials\_button.scss" />
+    <Content Include="Content\partials\_card.scss" />
     <None Include="packages.config" />
     <Content Include="Scripts\Templates\alert.handlebars" />
     <Content Include="Scripts\Templates\load-delay.handlebars" />

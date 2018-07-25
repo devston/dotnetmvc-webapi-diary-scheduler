@@ -1,0 +1,168 @@
+﻿/*----------------------------------------------------------------------------*\
+     Buttons
+--------------------------------------------------------------------------------
+
+    All styles related to buttons can be found here.
+
+\*----------------------------------------------------------------------------*/
+
+.btn {
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,.16),0 2px 10px 0 rgba(0,0,0,.12);
+
+    &:focus,
+    &:hover {
+        box-shadow: 0 5px 11px 0 rgba(0,0,0,.18),0 4px 15px 0 rgba(0,0,0,.15);
+    }
+}
+
+// Primary varients.
+.btn-primary {
+    background-color: $colour-btn-primary-bg;
+    border-color: $colour-btn-primary-bg;
+    color: $colour-btn-primary-text;
+
+    &:focus,
+    &:hover {
+        background-color: $colour-btn-primary-bg;
+        border-color: $colour-btn-primary-bg;
+        color: $colour-btn-primary-text;
+    }
+}
+
+.btn-secondary {
+    background-color: $colour-btn-secondary-bg;
+    border-color: $colour-btn-secondary-bg;
+    color: $colour-btn-secondary-text;
+
+    &:focus,
+    &:hover {
+        background-color: $colour-btn-secondary-bg;
+        border-color: $colour-btn-secondary-bg;
+        color: $colour-btn-secondary-text;
+    }
+}
+
+.btn-success {
+    background-color: $colour-btn-success-bg;
+    border-color: $colour-btn-success-bg;
+    color: $colour-btn-success-text;
+
+    &:focus,
+    &:hover {
+        background-color: $colour-btn-success-bg;
+        border-color: $colour-btn-success-bg;
+        color: $colour-btn-success-text;
+    }
+}
+
+.btn-info {
+    background-color: $colour-btn-info-bg;
+    border-color: $colour-btn-info-bg;
+    color: $colour-btn-info-text;
+
+    &:focus,
+    &:hover {
+        background-color: $colour-btn-info-bg;
+        border-color: $colour-btn-info-bg;
+        color: $colour-btn-info-text;
+    }
+}
+
+.btn-warning {
+    background-color: $colour-btn-warning-bg;
+    border-color: $colour-btn-warning-bg;
+    color: $colour-btn-warning-text;
+
+    &:focus,
+    &:hover {
+        background-color: $colour-btn-warning-bg;
+        border-color: $colour-btn-warning-bg;
+        color: $colour-btn-warning-text;
+    }
+}
+
+.btn-danger {
+    background-color: $colour-btn-danger-bg;
+    border-color: $colour-btn-danger-bg;
+    color: $colour-btn-danger-text;
+
+    &:focus,
+    &:hover {
+        background-color: $colour-btn-danger-bg;
+        border-color: $colour-btn-danger-bg;
+        color: $colour-btn-danger-text;
+    }
+}
+
+// Outline varients.
+.btn-outline-primary {
+    border-color: $colour-btn-primary-bg;
+    color: $colour-btn-primary-bg;
+
+    &:focus,
+    &:hover {
+        background-color: $colour-btn-primary-bg;
+        border-color: $colour-btn-primary-bg;
+        color: $colour-btn-primary-text;
+    }
+}
+
+.btn-outline-secondary {
+    border-color: $colour-btn-secondary-bg;
+    color: $colour-btn-secondary-bg;
+
+    &:focus,
+    &:hover {
+        background-color: $colour-btn-secondary-bg;
+        border-color: $colour-btn-secondary-bg;
+        color: $colour-btn-secondary-text;
+    }
+}
+
+.btn-outline-success {
+    border-color: $colour-btn-success-bg;
+    color: $colour-btn-success-bg;
+
+    &:focus,
+    &:hover {
+        background-color: $colour-btn-success-bg;
+        border-color: $colour-btn-success-bg;
+        color: $colour-btn-success-text;
+    }
+}
+
+.btn-outline-info {
+    border-color: $colour-btn-info-bg;
+    color: $colour-btn-info-bg;
+
+    &:focus,
+    &:hover {
+        background-color: $colour-btn-info-bg;
+        border-color: $colour-btn-info-bg;
+        color: $colour-btn-info-text;
+    }
+}
+
+.btn-outline-warning {
+    border-color: $colour-btn-warning-bg;
+    color: $colour-btn-warning-bg;
+
+    &:focus,
+    &:hover {
+        background-color: $colour-btn-warning-bg;
+        border-color: $colour-btn-warning-bg;
+        color: $colour-btn-warning-text;
+    }
+}
+
+.btn-outline-danger {
+    border-color: $colour-btn-danger-bg;
+    color: $colour-btn-danger-bg;
+
+    &:focus,
+    &:hover {
+        background-color: $colour-btn-danger-bg;
+        border-color: $colour-btn-danger-bg;
+        color: $colour-btn-danger-text;
+    }
+}

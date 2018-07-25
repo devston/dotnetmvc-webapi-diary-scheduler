@@ -11,6 +11,11 @@ export namespace SiteCalendar {
      */
     export function init(calendarSelector: string, sourceUrl: string, createFunc: Function, editFunc: Function) {
         $(calendarSelector).fullCalendar({
+            header: {
+                left: "prev,next today",
+                center: "title",
+                right: "month,agendaWeek,agendaDay,listWeek"
+            },
             eventClick: function (calEvent) {
                 editFunc(calEvent.id);
             },
@@ -37,6 +42,7 @@ export namespace SiteCalendar {
             select: function (start: moment.Moment, end: moment.Moment) {
                 createFunc(start, end);
             },
+            themeSystem: "bootstrap4",
             timeFormat: "HH:mm"
         });
     }
