@@ -78,6 +78,11 @@ export namespace Scheduler {
      * */
     function initEdit() {
         initEventCard("#edit-cal-entry-form", "/Scheduler/EditEntry/");
+
+        $("#delete-entry-btn").on("click", function (e) {
+            e.preventDefault();
+            initDeleteModal();
+        });
     }
 
     /**
@@ -104,6 +109,25 @@ export namespace Scheduler {
             e.preventDefault();
             Navigate.toIndex();
         });
+    }
+
+    /**
+     *  Initialise the delete event modal.
+     * */
+    function initDeleteModal() {
+        const $modal = $("#confirm-delete-modal");
+
+        $("#confirm-delete-btn").on("click", function (e) {
+            e.preventDefault();
+            $modal.modal("hide");
+
+            // Stop the modal from getting 'stuck'.
+            $modal.on("hidden.bs.modal", function () {
+                deleteEvent();
+            });
+        });
+
+        $modal.modal("show");
     }
 
     /*------------------------------------------------------------------------*\
@@ -164,6 +188,7 @@ export namespace Scheduler {
                 beforeSend: function () {
                     VisibilityHelpers.loader(true);
                     $("#save-entry-btn").attr("disabled");
+                    $("#delete-entry-btn").attr("disabled");
                     $("#back-to-cal-btn").attr("disabled");
                 },
                 url: url,
@@ -172,6 +197,40 @@ export namespace Scheduler {
             }).always(function () {
                 VisibilityHelpers.loader(false);
                 $("#save-entry-btn").removeAttr("disabled");
+                $("#delete-entry-btn").removeAttr("disabled");
+                $("#back-to-cal-btn").removeAttr("disabled");
+            })
+            .done(function (data: any) {
+                VisibilityHelpers.alert("success", data.message, true);
+                Navigate.toIndex();
+            })
+            .fail(function (jqXHR) {
+                Site.showJqXhrAsAlert(jqXHR);
+            });
+        }
+    }
+
+    /**
+     *  Delete a calendar event.
+     * */
+    function deleteEvent() {
+        const $form = $("#edit-cal-entry-form");
+
+        if ($form.valid()) {
+            $.ajax({
+                beforeSend: function () {
+                    VisibilityHelpers.loader(true);
+                    $("#save-entry-btn").attr("disabled");
+                    $("#delete-entry-btn").attr("disabled");
+                    $("#back-to-cal-btn").attr("disabled");
+                },
+                url: "/Scheduler/DeleteEntry/",
+                type: "POST",
+                data: $form.serialize()
+            }).always(function () {
+                VisibilityHelpers.loader(false);
+                $("#save-entry-btn").removeAttr("disabled");
+                $("#delete-entry-btn").removeAttr("disabled");
                 $("#back-to-cal-btn").removeAttr("disabled");
             })
             .done(function (data: any) {

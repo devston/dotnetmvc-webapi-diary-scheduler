@@ -101,6 +101,12 @@ namespace DiaryScheduler.Web.Controllers
             return PartialView(vm);
         }
 
+        // GET: Confirm event deletion modal.
+        public ActionResult _ModalDeleteConfirmation()
+        {
+            return PartialView();
+        }
+
         #endregion
 
         #region Posts
@@ -137,7 +143,7 @@ namespace DiaryScheduler.Web.Controllers
             // Return calendar record for fullCalendar.js.
             return Json(new
             {
-                message = "<strong>Success:</strong> Calendar entry created.",
+                message = "<strong>Success:</strong> Calendar event created.",
                 calEntry = new
                 {
                     id,
@@ -178,7 +184,27 @@ namespace DiaryScheduler.Web.Controllers
 
             return Json(new
             {
-                message = "<strong>Success:</strong> Calendar entry saved."
+                message = "<strong>Success:</strong> Calendar event saved."
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        // Delete calendar entry.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteEntry(CalendarEventViewModel vm)
+        {
+            // Check if the calendar entry exists.
+            if (!_scheduleRepository.DoesCalEntryExist(vm.CalendarEntryId))
+            {
+                return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> The calendar event could not be found.", "");
+            }
+
+            // Delete event.
+            _scheduleRepository.DeleteCalendarEntry(vm.CalendarEntryId);
+
+            return Json(new
+            {
+                message = "<strong>Success:</strong> Calendar entry deleted."
             }, JsonRequestBehavior.AllowGet);
         }
 

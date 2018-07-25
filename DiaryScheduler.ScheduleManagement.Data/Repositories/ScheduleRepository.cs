@@ -87,6 +87,23 @@ namespace DiaryScheduler.ScheduleManagement.Data.Repositories
             SaveChanges();
         }
 
+        // Delete a calendar entry.
+        public void DeleteCalendarEntry(Guid id)
+        {
+            // Get the original entry.
+            var originalEntry = _context.CalendarEntries.FirstOrDefault(x => x.CalendarEntryId == id);
+
+            // Double check the entry exists.
+            if (originalEntry == null)
+            {
+                throw new Exception("The calendar entry could not be found.");
+            }
+
+            // Save changes.
+            _context.CalendarEntries.Remove(originalEntry);
+            SaveChanges();
+        }
+
         #endregion
 
         #region Helpers

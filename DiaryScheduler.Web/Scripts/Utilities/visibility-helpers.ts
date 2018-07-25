@@ -11,7 +11,7 @@ export namespace VisibilityHelpers {
      * Create alerts inside the alert container.
      * @param type Alert type - "danger", "success", "info", "warning".
      * @param message Alert message.
-     * @param timeout Whether to auto dismiss the alert after 10 seconds (Defaults to false if not passed).
+     * @param timeout Whether to auto dismiss the alert after 8 seconds (Defaults to false if not passed).
      */
     export function alert(type: string, message: string, timeout?: boolean) {
         // Time out callback.
@@ -25,7 +25,7 @@ export namespace VisibilityHelpers {
         var alert = require("handlebarsTemplates/alert")(hbObj);
 
         if (timeout) {
-            $(alert).appendTo(alertContainerId).timeout(10000, function (this: any) {
+            $(alert).appendTo(alertContainerId).timeout(8000, function (this: any) {
                 hideAlert($(this));
             }).children(".close").on("click", function (e) {
                 e.preventDefault();

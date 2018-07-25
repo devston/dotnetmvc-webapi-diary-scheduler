@@ -52,6 +52,12 @@ namespace DiaryScheduler.ScheduleManagement.Core.Interfaces
         /// <param name="entry"></param>
         void EditCalendarEntry(CalEntry entry);
 
+        /// <summary>
+        /// Delete a calendar entry.
+        /// </summary>
+        /// <param name="id"></param>
+        void DeleteCalendarEntry(Guid id);
+
         #endregion
     }
 }
