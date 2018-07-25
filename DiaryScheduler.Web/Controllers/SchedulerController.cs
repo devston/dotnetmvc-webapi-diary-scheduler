@@ -47,7 +47,7 @@ namespace DiaryScheduler.Web.Controllers
                 DateTo = laterToday.AddMinutes(15)
             };
 
-            return PartialView(entry);
+            return View(entry);
         }
 
         // GET: Create view with filled in options.
@@ -60,7 +60,28 @@ namespace DiaryScheduler.Web.Controllers
                 DateTo = end
             };
 
-            return PartialView("Create", entry);
+            return View("Create", entry);
+        }
+
+        // GET: Edit event view.
+        public ActionResult Edit(Guid id)
+        {
+            // Check if an id was sent.
+            if (id == Guid.Empty)
+            {
+                return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> Invalid calendar event id.", "");
+            }
+
+            var entry = _scheduleRepository.GetCalendarEntry(id);
+
+            if (entry == null)
+            {
+                return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> The calendar event could not be found.", "");
+            }
+
+            var vm = _mapper.Map<CalendarEventViewModel>(entry);
+
+            return View(vm);
         }
 
         // GET: Quick create modal.
@@ -116,16 +137,48 @@ namespace DiaryScheduler.Web.Controllers
             // Return calendar record for fullCalendar.js.
             return Json(new
             {
-                success = true,
                 message = "<strong>Success:</strong> Calendar entry created.",
                 calEntry = new
                 {
-                    id = id,
+                    id,
                     title = entry.Title,
                     start = entry.DateFrom,
                     end = entry.DateTo,
                     allDay = entry.AllDay
                 }
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        // Edit calendar entry.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditEntry(CalendarEventViewModel vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> Input is invalid.", "");
+            }
+
+            // Date range check.
+            if (vm.DateFrom > vm.DateTo)
+            {
+                return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> Start date cannot be after the end date.", "");
+            }
+
+            // Check if the calendar entry exists.
+            if (!_scheduleRepository.DoesCalEntryExist(vm.CalendarEntryId))
+            {
+                return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> The calendar event could not be found.", "");
+            }
+
+            var entry = _mapper.Map<CalEntry>(vm);
+
+            // Save event.
+            _scheduleRepository.EditCalendarEntry(entry);
+
+            return Json(new
+            {
+                message = "<strong>Success:</strong> Calendar entry saved."
             }, JsonRequestBehavior.AllowGet);
         }
 

@@ -43,6 +43,10 @@ export namespace Scheduler {
                 initCreate();
                 break;
 
+            case "edit":
+                initEdit();
+                break;
+
             default:
                 initIndex();
                 break;
@@ -54,7 +58,7 @@ export namespace Scheduler {
      */
     function initIndex() {
         const sourceUrl = "/Scheduler/UserEntries/";
-        SiteCalendar.init(calendarSelector, sourceUrl, showQuickCreateModal);
+        SiteCalendar.init(calendarSelector, sourceUrl, showQuickCreateModal, Navigate.toEdit);
 
         $("#create-event-btn").on("click", function (e) {
             e.preventDefault();
@@ -67,6 +71,13 @@ export namespace Scheduler {
      * */
     function initCreate() {
         initEventCard("#create-cal-entry-form", "/Scheduler/CreateEntry/");
+    }
+
+    /**
+     *  Initialise the edit event page.
+     * */
+    function initEdit() {
+        initEventCard("#edit-cal-entry-form", "/Scheduler/EditEntry/");
     }
 
     /**
@@ -164,7 +175,7 @@ export namespace Scheduler {
                 $("#back-to-cal-btn").removeAttr("disabled");
             })
             .done(function (data: any) {
-                VisibilityHelpers.alert("success", data.message, false);
+                VisibilityHelpers.alert("success", data.message, true);
                 Navigate.toIndex();
             })
             .fail(function (jqXHR) {
@@ -258,6 +269,14 @@ export namespace Scheduler {
          */
         export function toCreateMoreOptions(title: string, start: string, end: string) {
             Site.loadPartial("/Scheduler/CreateMoreOptions/", { "title": title, "start": start, "end": end })
+        }
+
+        /**
+         * Navigate to the edit event page.
+         * @param id
+         */
+        export function toEdit(id: string) {
+            Site.loadPartial(`/Scheduler/Edit/${id}`);
         }
     }
 }

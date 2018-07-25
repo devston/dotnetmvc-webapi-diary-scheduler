@@ -31,6 +31,24 @@ namespace DiaryScheduler.ScheduleManagement.Data.Repositories
                 );
         }
 
+        // Get a calendar entry by id.
+        public CalEntry GetCalendarEntry(Guid id)
+        {
+            return _mapper.Map<CalEntry>(
+                    _context.CalendarEntries.AsNoTracking().FirstOrDefault(x => x.CalendarEntryId == id)
+                );
+        }
+
+        #endregion
+
+        #region Checks
+
+        // Check if the calendar entry exists.
+        public bool DoesCalEntryExist(Guid id)
+        {
+            return _context.CalendarEntries.Any(x => x.CalendarEntryId == id);
+        }
+
         #endregion
 
         #region Create, update and delete
@@ -43,6 +61,30 @@ namespace DiaryScheduler.ScheduleManagement.Data.Repositories
             _context.Entry(mappedEntry).State = EntityState.Added;
             SaveChanges();
             return mappedEntry.CalendarEntryId;
+        }
+
+        // Edit an existing calendar entry.
+        public void EditCalendarEntry(CalEntry entry)
+        {
+            // Get the original entry.
+            var originalEntry = _context.CalendarEntries.FirstOrDefault(x => x.CalendarEntryId == entry.CalendarEntryId);
+
+            // Double check the entry exists.
+            if (originalEntry == null)
+            {
+                throw new Exception("The calendar entry could not be found.");
+            }
+
+            // Update values.
+            originalEntry.Title = entry.Title;
+            originalEntry.Description = entry.Description;
+            originalEntry.DateFrom = entry.DateFrom;
+            originalEntry.DateTo = entry.DateTo;
+            originalEntry.AllDay = entry.AllDay;
+
+            // Save changes.
+            _context.Entry(originalEntry).State = EntityState.Modified;
+            SaveChanges();
         }
 
         #endregion

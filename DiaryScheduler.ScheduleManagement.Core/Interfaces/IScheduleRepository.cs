@@ -17,6 +17,24 @@ namespace DiaryScheduler.ScheduleManagement.Core.Interfaces
         /// <returns></returns>
         List<CalEntry> GetAllUserEntries(string id, DateTime start, DateTime end);
 
+        /// <summary>
+        /// Get a calendar entry by id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        CalEntry GetCalendarEntry(Guid id);
+
+        #endregion
+
+        #region Checks
+
+        /// <summary>
+        /// Check if the calendar entry exists.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        bool DoesCalEntryExist(Guid id);
+
         #endregion
 
         #region Create, update and delete
@@ -27,6 +45,12 @@ namespace DiaryScheduler.ScheduleManagement.Core.Interfaces
         /// <param name="entry"></param>
         /// <returns>Created entry id</returns>
         Guid CreateCalendarEntry(CalEntry entry);
+
+        /// <summary>
+        /// Edit an existing calendar entry.
+        /// </summary>
+        /// <param name="entry"></param>
+        void EditCalendarEntry(CalEntry entry);
 
         #endregion
     }

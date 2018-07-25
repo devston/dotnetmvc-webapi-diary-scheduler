@@ -1,0 +1,47 @@
+﻿@model DiaryScheduler.Web.Models.CalendarEventViewModel
+
+@{
+    ViewBag.Title = "Create event";
+}
+
+<div class="container" page-require="scheduler" page-module-name="Scheduler" page-module-variable="edit">
+    <form class="card" id="edit-cal-entry-form">
+        <div class="card-body">
+            <h2 class="card-title">Edit calendar event</h2>
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(x => x.CalendarEntryId)
+            <div class="form-group">
+                @Html.LabelFor(x => x.Title)
+                @Html.TextBoxFor(x => x.Title, htmlAttributes: new { @class = "form-control", maxlength = "100" })
+                @Html.ValidationMessageFor(x => x.Title, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(x => x.Description)
+                @Html.TextAreaFor(x => x.Description, htmlAttributes: new { @class = "form-control no-resize", maxlength = "200", rows = "3" })
+                @Html.ValidationMessageFor(x => x.Description, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-row">
+                <div class="col-md-6 form-group">
+                    <label for="DateStarting">@Html.DisplayNameFor(x => x.DateFrom)</label>
+                    <input class="form-control" data-id="@nameof(Model.DateFrom)" id="DateStarting" type="text" name="DateStarting" />
+                    @Html.EditorFor(x => x.DateFrom, new { htmlAttributes = new { @type = "hidden" } })
+                    @Html.ValidationMessageFor(x => x.DateFrom, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="DateEnding">@Html.DisplayNameFor(x => x.DateTo)</label>
+                    <input class="form-control" data-id="@nameof(Model.DateTo)" id="DateEnding" type="text" name="DateEnding" />
+                    @Html.EditorFor(x => x.DateTo, new { htmlAttributes = new { @type = "hidden" } })
+                    @Html.ValidationMessageFor(x => x.DateTo, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group form-check">
+                @Html.CheckBoxFor(x => x.AllDay, htmlAttributes: new { @class = "form-check-input" })
+                @Html.LabelFor(x => x.AllDay, htmlAttributes: new { @class = "form-check-label" })
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-success" id="save-entry-btn" type="submit">Create</button>
+            <button class="btn btn-outline-secondary" id="back-to-cal-btn" type="button">Back</button>
+        </div>
+    </form>
+</div>

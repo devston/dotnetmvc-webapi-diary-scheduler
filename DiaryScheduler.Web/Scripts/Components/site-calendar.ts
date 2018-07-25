@@ -9,11 +9,11 @@ export namespace SiteCalendar {
      * Initialise a calendar.
      * @param calendarSelector The calendar selector.
      */
-    export function init(calendarSelector: string, sourceUrl: string, createFunc: Function) {
+    export function init(calendarSelector: string, sourceUrl: string, createFunc: Function, editFunc: Function) {
         $(calendarSelector).fullCalendar({
-            //eventClick: function (calEvent) {
-            //    showEditEntryPanel(calEvent.id);
-            //},
+            eventClick: function (calEvent) {
+                editFunc(calEvent.id);
+            },
             eventLimit: true,
             eventSources: [{
                 url: sourceUrl,
