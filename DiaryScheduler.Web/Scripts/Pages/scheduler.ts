@@ -10,8 +10,9 @@
 
     1. Initialisation functions
     2. Create, update and delete functions
-    3. Helper functions
-    4. Navigation functions
+    3. Export functions
+    4. Helper functions
+    5. Navigation functions
     
 \*----------------------------------------------------------------------------*/
 
@@ -77,11 +78,17 @@ export namespace Scheduler {
      *  Initialise the edit event page.
      * */
     function initEdit() {
+        const eventId = <string>$("#CalendarEntryId").val();
         initEventCard("#edit-cal-entry-form", "/Scheduler/EditEntry/");
+
+        $("#export-event-btn").on("click", function (e) {
+            e.preventDefault();
+            exportEventToIcal(eventId);
+        });
 
         $("#delete-entry-btn").on("click", function (e) {
             e.preventDefault();
-            initDeleteModal();
+            initDeleteModal(eventId);
         });
     }
 
@@ -114,7 +121,7 @@ export namespace Scheduler {
     /**
      *  Initialise the delete event modal.
      * */
-    function initDeleteModal() {
+    function initDeleteModal(eventId: string) {
         const $modal = $("#confirm-delete-modal");
 
         $("#confirm-delete-btn").on("click", function (e) {
@@ -123,7 +130,7 @@ export namespace Scheduler {
 
             // Stop the modal from getting 'stuck'.
             $modal.on("hidden.bs.modal", function () {
-                deleteEvent();
+                deleteEvent(eventId);
             });
         });
 
@@ -213,38 +220,51 @@ export namespace Scheduler {
     /**
      *  Delete a calendar event.
      * */
-    function deleteEvent() {
-        const $form = $("#edit-cal-entry-form");
+    function deleteEvent(eventId: string) {
+        const token = <string>$("#edit-cal-entry-form").find("input[name=__RequestVerificationToken]").val();
 
-        if ($form.valid()) {
-            $.ajax({
-                beforeSend: function () {
-                    VisibilityHelpers.loader(true);
-                    $("#save-entry-btn").attr("disabled");
-                    $("#delete-entry-btn").attr("disabled");
-                    $("#back-to-cal-btn").attr("disabled");
-                },
-                url: "/Scheduler/DeleteEntry/",
-                type: "POST",
-                data: $form.serialize()
-            }).always(function () {
-                VisibilityHelpers.loader(false);
-                $("#save-entry-btn").removeAttr("disabled");
-                $("#delete-entry-btn").removeAttr("disabled");
-                $("#back-to-cal-btn").removeAttr("disabled");
-            })
-            .done(function (data: any) {
-                VisibilityHelpers.alert("success", data.message, true);
-                Navigate.toIndex();
-            })
-            .fail(function (jqXHR) {
-                Site.showJqXhrAsAlert(jqXHR);
-            });
-        }
+        $.ajax({
+            beforeSend: function () {
+                VisibilityHelpers.loader(true);
+                $("#save-entry-btn").attr("disabled");
+                $("#delete-entry-btn").attr("disabled");
+                $("#back-to-cal-btn").attr("disabled");
+            },
+            url: "/Scheduler/DeleteEntry/",
+            type: "POST",
+            data: {
+                "id": eventId,
+                "__RequestVerificationToken": token
+            }
+        }).always(function () {
+            VisibilityHelpers.loader(false);
+            $("#save-entry-btn").removeAttr("disabled");
+            $("#delete-entry-btn").removeAttr("disabled");
+            $("#back-to-cal-btn").removeAttr("disabled");
+        })
+        .done(function (data: any) {
+            VisibilityHelpers.alert("success", data.message, true);
+            Navigate.toIndex();
+        })
+        .fail(function (jqXHR) {
+            Site.showJqXhrAsAlert(jqXHR);
+        });
     }
 
     /*------------------------------------------------------------------------*\
-        3. Helper functions
+        3. Export functions
+    \*------------------------------------------------------------------------*/
+
+    /**
+     * Export a calendar event to Ical.
+     * @param eventId
+     */
+    function exportEventToIcal(eventId: string) {
+        window.location.href = `/Scheduler/ExportEventToIcal/${eventId}`;
+    }
+
+    /*------------------------------------------------------------------------*\
+        4. Helper functions
     \*------------------------------------------------------------------------*/
 
     // Show quick create modal.
@@ -299,7 +319,7 @@ export namespace Scheduler {
     }
 
     /*------------------------------------------------------------------------*\
-        4. Navigation functions
+        5. Navigation functions
     \*------------------------------------------------------------------------*/
 
     /**

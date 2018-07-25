@@ -191,16 +191,16 @@ namespace DiaryScheduler.Web.Controllers
         // Delete calendar entry.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteEntry(CalendarEventViewModel vm)
+        public ActionResult DeleteEntry(Guid id)
         {
             // Check if the calendar entry exists.
-            if (!_scheduleRepository.DoesCalEntryExist(vm.CalendarEntryId))
+            if (!_scheduleRepository.DoesCalEntryExist(id))
             {
                 return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> The calendar event could not be found.", "");
             }
 
             // Delete event.
-            _scheduleRepository.DeleteCalendarEntry(vm.CalendarEntryId);
+            _scheduleRepository.DeleteCalendarEntry(id);
 
             return Json(new
             {
@@ -228,6 +228,58 @@ namespace DiaryScheduler.Web.Controllers
             });
 
             return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        #endregion
+
+        #region Export
+
+        public ActionResult ExportEventToIcal(Guid id)
+        {
+            // Check if an id was sent.
+            if (id == Guid.Empty)
+            {
+                return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> Invalid calendar event id.", "");
+            }
+
+            var entry = _scheduleRepository.GetCalendarEntry(id);
+
+            if (entry == null)
+            {
+                return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> The calendar event could not be found.", "");
+            }
+
+            // Create iCal.
+            var iCal = new Ical.Net.Calendar()
+            {
+                ProductId = "ASP.Net Diary Scheduler",
+                Version = "2.0"
+            };
+
+            // Create event.
+            var evt = iCal.Create<Ical.Net.CalendarComponents.CalendarEvent>();
+
+            // Prepare ical event.
+            evt.Uid = entry.CalendarEntryId.ToString();
+            evt.Start = new Ical.Net.DataTypes.CalDateTime(entry.DateFrom);
+            evt.End = new Ical.Net.DataTypes.CalDateTime(entry.DateTo);
+            evt.Description = entry.Description;
+            evt.Summary = entry.Title;
+            evt.IsAllDay = entry.AllDay;
+
+            // Build the .ics file.
+            var ctx = new Ical.Net.Serialization.SerializationContext();
+            var serialiser = new Ical.Net.Serialization.CalendarSerializer(ctx);
+
+            string output = serialiser.SerializeToString(iCal);
+            string contentType = "text/calendar";
+            var bytes = System.Text.Encoding.UTF8.GetBytes(output);
+
+            // Create a name.
+            Guid fileId = Guid.NewGuid();
+            string fileName = fileId.ToString() + ".ics";
+
+            return File(bytes, contentType, fileName);
         }
 
         #endregion
