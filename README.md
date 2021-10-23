@@ -21,7 +21,7 @@ An ASP.Net MVC diary scheduling app based on the domain-driven design concept. T
 
 ## Credits
 
-[fullcalendar](https://fullcalendar.io/)
-[WebPack](https://webpack.js.org/)
-[jQuery](https://jquery.com/)
-[StructureMap](https://structuremap.github.io/)
+- [fullcalendar](https://fullcalendar.io/)
+- [WebPack](https://webpack.js.org/)
+- [jQuery](https://jquery.com/)
+- [StructureMap](https://structuremap.github.io/)
