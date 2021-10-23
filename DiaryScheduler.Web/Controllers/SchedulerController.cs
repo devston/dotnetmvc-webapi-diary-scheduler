@@ -133,7 +133,7 @@ namespace DiaryScheduler.Web.Controllers
                 return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> Start date cannot be after the end date.", "");
             }
 
-            var entry = new CalEntry()
+            var entry = new CalEntryDm()
             {
                 Title = vm.Title.Trim(),
                 Description = vm.Description == null ? null : vm.Description.Trim(),
@@ -183,7 +183,7 @@ namespace DiaryScheduler.Web.Controllers
                 return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> The calendar event could not be found.", "");
             }
 
-            var entry = _mapper.Map<CalEntry>(vm);
+            var entry = _mapper.Map<CalEntryDm>(vm);
 
             // Save event.
             _scheduleRepository.EditCalendarEntry(entry);
@@ -222,7 +222,7 @@ namespace DiaryScheduler.Web.Controllers
         public ActionResult UserEntries(DateTime start, DateTime end)
         {
             var userId = User.Identity.GetUserId();
-            List<CalEntry> userEntries = _scheduleRepository.GetAllUserEntries(userId, start, end);
+            List<CalEntryDm> userEntries = _scheduleRepository.GetAllUserEntries(userId, start, end);
 
             var result = userEntries.Select(x => new
             {
@@ -299,7 +299,7 @@ namespace DiaryScheduler.Web.Controllers
             }
 
             // Get user's calendar entries within the date range.
-            List<CalEntry> userEntries = _scheduleRepository.GetAllUserEntries(User.Identity.GetUserId(), start, end);
+            List<CalEntryDm> userEntries = _scheduleRepository.GetAllUserEntries(User.Identity.GetUserId(), start, end);
 
             // Check if there are any diary entries to sync.
             if (userEntries == null)
@@ -315,7 +315,7 @@ namespace DiaryScheduler.Web.Controllers
             };
 
             // Create a new event for each calendar entry.
-            foreach (CalEntry entry in userEntries)
+            foreach (CalEntryDm entry in userEntries)
             {
                 // Create event.
                 var evt = iCal.Create<Ical.Net.CalendarComponents.CalendarEvent>();

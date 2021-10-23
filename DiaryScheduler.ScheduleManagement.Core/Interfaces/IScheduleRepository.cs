@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace DiaryScheduler.ScheduleManagement.Core.Interfaces
 {
+    /// <summary>
+    /// The interface for the schedule repository.
+    /// </summary>
     public interface IScheduleRepository
     {
         #region Gets
@@ -14,15 +17,15 @@ namespace DiaryScheduler.ScheduleManagement.Core.Interfaces
         /// <param name="id">User id</param>
         /// <param name="start">Search start date</param>
         /// <param name="end">Search end date</param>
-        /// <returns></returns>
-        List<CalEntry> GetAllUserEntries(string id, DateTime start, DateTime end);
+        /// <returns>A collection of <see cref="CalEntryDm"/>.</returns>
+        List<CalEntryDm> GetAllUserEntries(string id, DateTime start, DateTime end);
 
         /// <summary>
         /// Get a calendar entry by id.
         /// </summary>
         /// <param name="id"></param>
-        /// <returns></returns>
-        CalEntry GetCalendarEntry(Guid id);
+        /// <returns>A <see cref="CalEntryDm"/>.</returns>
+        CalEntryDm GetCalendarEntry(Guid id);
 
         #endregion
 
@@ -32,7 +35,7 @@ namespace DiaryScheduler.ScheduleManagement.Core.Interfaces
         /// Check if the calendar entry exists.
         /// </summary>
         /// <param name="id"></param>
-        /// <returns></returns>
+        /// <returns>A value indicating whether the calendar entry exists.</returns>
         bool DoesCalEntryExist(Guid id);
 
         #endregion
@@ -44,18 +47,18 @@ namespace DiaryScheduler.ScheduleManagement.Core.Interfaces
         /// </summary>
         /// <param name="entry"></param>
         /// <returns>Created entry id</returns>
-        Guid CreateCalendarEntry(CalEntry entry);
+        Guid CreateCalendarEntry(CalEntryDm entry);
 
         /// <summary>
         /// Edit an existing calendar entry.
         /// </summary>
-        /// <param name="entry"></param>
-        void EditCalendarEntry(CalEntry entry);
+        /// <param name="entry">The calendar entry to edit.</param>
+        void EditCalendarEntry(CalEntryDm entry);
 
         /// <summary>
         /// Delete a calendar entry.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">The id of the entry to delete.</param>
         void DeleteCalendarEntry(Guid id);
 
         #endregion

@@ -2,7 +2,7 @@
 using DiaryScheduler.Data.Models;
 using DiaryScheduler.ScheduleManagement.Core.Models;
 
-namespace DiaryScheduler.ScheduleManagement.Data.Helpers
+namespace DiaryScheduler.ScheduleManagement.Data.Services
 {
     public class DomainMapperService
     {
@@ -12,7 +12,7 @@ namespace DiaryScheduler.ScheduleManagement.Data.Helpers
         {
             var config = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<CalendarEntry, CalEntry>()
+                cfg.CreateMap<CalendarEntry, CalEntryDm>()
                    .ReverseMap()
                    .ForMember(x => x.AspNetUser, opt => opt.Ignore());
             });

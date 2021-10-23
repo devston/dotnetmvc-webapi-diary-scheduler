@@ -16,7 +16,7 @@ namespace DiaryScheduler.DependencyResolution
                     scan.TheCallingAssembly();
                     scan.WithDefaultConventions();
 
-                    x.For<IScheduleRepository>().Use<ScheduleRepository>();
+                    x.For<IScheduleRepository>().Use<EFScheduleRepository>();
                 });
 
                 moreInitialization?.Invoke(x);

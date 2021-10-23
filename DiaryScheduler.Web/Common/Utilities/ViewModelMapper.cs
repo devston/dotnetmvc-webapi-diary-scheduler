@@ -13,7 +13,7 @@ namespace DiaryScheduler.Web.Common.Utilities
         {
             var config = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<CalEntry, CalendarEventViewModel>()
+                cfg.CreateMap<CalEntryDm, CalendarEventViewModel>()
                    .ReverseMap();
             });
 

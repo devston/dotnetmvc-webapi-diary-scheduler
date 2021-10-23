@@ -330,15 +330,15 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DiaryScheduler.Data\DiaryScheduler.Data.csproj">
-      <Project>{b477e728-e932-4db0-aa97-0dec92c9de48}</Project>
+      <Project>{0d8582ae-a513-4fbb-8cad-e1c6f5d8d5d6}</Project>
       <Name>DiaryScheduler.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\DiaryScheduler.DependencyResolution\DiaryScheduler.DependencyResolution.csproj">
-      <Project>{c43e4339-c440-449e-9095-271768078680}</Project>
+      <Project>{108a98be-96ae-467d-921b-2bc49d975e94}</Project>
       <Name>DiaryScheduler.DependencyResolution</Name>
     </ProjectReference>
     <ProjectReference Include="..\DiaryScheduler.ScheduleManagement.Core\DiaryScheduler.ScheduleManagement.Core.csproj">
-      <Project>{2e65bdc1-3ea8-4a49-84a6-2740cfecb225}</Project>
+      <Project>{aab72aad-12cb-4620-85a6-ed9f764829a3}</Project>
       <Name>DiaryScheduler.ScheduleManagement.Core</Name>
     </ProjectReference>
   </ItemGroup>
