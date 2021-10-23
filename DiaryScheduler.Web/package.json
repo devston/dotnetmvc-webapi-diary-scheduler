@@ -1,9 +1,9 @@
 {
   "version": "1.0.0",
-  "name": "asp.net",
+  "name": "diary.scheduler",
   "private": true,
   "devDependencies": {
-    "@types/bootstrap": "^4.1.2",
+    "@types/bootstrap": "4.6.1",
     "@types/datatables.net": "^1.10.12",
     "@types/eonasdan-bootstrap-datetimepicker": "^4.17.26",
     "@types/jquery": "^3.3.5",
@@ -16,7 +16,7 @@
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",
     "babel-preset-env": "^1.7.0",
-    "bootstrap": "^4.1.2",
+    "bootstrap": "4.6.0",
     "css-loader": "^1.0.0",
     "datatables.net-bs4": "^1.10.19",
     "eonasdan-bootstrap-datetimepicker-bootstrap4beta": "^4.17.47-a",
