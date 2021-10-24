@@ -6,6 +6,11 @@ An ASP.Net MVC diary scheduling app based on the domain-driven design concept. T
 - [Visual Studio 2019](https://visualstudio.microsoft.com/) with ASP.Net/ web component installed.
 - [Node js](https://nodejs.org/en/)
 
+## Running the solution
+- Run `update-database` in the **nuget package manager** console against the `DiaryScheduler.Data` project to create the initial datastore.
+- Start `DiaryScheduler.Web`
+- Create a user & navigate to the scheduler area
+
 ## TODO:
 - Update webpack to the latest version
 - Update bootstrap to the latest version
