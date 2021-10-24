@@ -8,7 +8,6 @@ An ASP.Net MVC diary scheduling app based on the domain-driven design concept. T
 
 ## TODO:
 - Update webpack to the latest version
-- Change DI from Structuremap to Autofac
 - Update bootstrap to the latest version
 - Update fullcalendar to the latest version
 - Seperate presentation models & services into their own projects
@@ -24,4 +23,4 @@ An ASP.Net MVC diary scheduling app based on the domain-driven design concept. T
 - [fullcalendar](https://fullcalendar.io/)
 - [WebPack](https://webpack.js.org/)
 - [jQuery](https://jquery.com/)
-- [StructureMap](https://structuremap.github.io/)
+- [Autofac](https://autofac.org/)
