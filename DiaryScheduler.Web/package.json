@@ -5,7 +5,6 @@
   "devDependencies": {
     "@types/bootstrap": "5.1.6",
     "@types/jquery": "3.5.8",
-    "@types/jquery.pjax": "0.0.30",
     "@types/jquery.validation": "1.16.7",
     "@types/jquery-validation-unobtrusive": "3.2.32",
     "@types/flatpickr": "3.1.2",
@@ -22,7 +21,6 @@
     "flatpickr": "4.6.9",
     "imports-loader": "3.1.1",
     "jquery": "3.6.0",
-    "jquery-pjax": "^2.0.1",
     "jquery-validation": "1.19.3",
     "jquery-validation-unobtrusive": "3.2.12",
     "mini-css-extract-plugin": "2.4.3",

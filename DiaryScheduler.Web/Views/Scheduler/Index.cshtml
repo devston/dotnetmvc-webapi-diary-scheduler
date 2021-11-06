@@ -1,13 +1,17 @@
-﻿@{
+﻿@model DiaryScheduler.Web.Models.Scheduler.SchedulerIndexViewModel
+@{
     ViewBag.Title = "Scheduler";
 }
 
-<div class="container" page-require="scheduler" page-module-name="Scheduler" page-module-variable="index">
+@Html.HiddenFor(x => x.CreateEventMoreOptionsUrl)
+@Html.HiddenFor(x => x.EditEventUrl)
+
+<div class="container" data-page-name="index" id="scheduler-main-container">
     <div class="card">
         <div class="card-body">
             <div id="calendar"></div>
             <div class="form-group">
-                <button class="btn btn-primary" id="create-event-btn" title="Create a new event" type="button">Create</button>
+                <a class="btn btn-primary" href="@Model.CreateEventUrl" id="create-event-btn" title="Create a new event">Create</a>
                 <button class="btn btn-info" id="export-events-btn" title="Export events" type="button">Export</button>
             </div>
         </div>

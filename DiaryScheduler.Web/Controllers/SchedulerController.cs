@@ -3,6 +3,7 @@ using DiaryScheduler.ScheduleManagement.Core.Models;
 using DiaryScheduler.Web.Common.Classes;
 using DiaryScheduler.Web.Common.Utilities;
 using DiaryScheduler.Web.Models;
+using DiaryScheduler.Web.Models.Scheduler;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
@@ -28,12 +29,18 @@ namespace DiaryScheduler.Web.Controllers
         // GET: Scheduler
         public ActionResult Index()
         {
-            return View();
+            // TODO: Add a presentation service to store this logic.
+            var vm = new SchedulerIndexViewModel();
+            vm.CreateEventUrl = Url.Action(nameof(Create), "Scheduler", null);
+            vm.CreateEventMoreOptionsUrl = Url.Action(nameof(CreateMoreOptions), "Scheduler", new { title = "title_placeholder", start = "start_placeholder", end = "end_placeholder" });
+            vm.EditEventUrl = Url.Action(nameof(Edit), "Scheduler", new { id = "id_placeholder" });
+            return View(vm);
         }
 
         // GET: Create view.
         public ActionResult Create()
         {
+            // TODO: Add a presentation service to store this logic.
             DateTime today = DateTime.UtcNow;
             TimeSpan amountToRound = TimeSpan.FromMinutes(15);
 
@@ -80,7 +87,6 @@ namespace DiaryScheduler.Web.Controllers
             }
 
             var vm = _mapper.Map<CalendarEventViewModel>(entry);
-
             return View(vm);
         }
 
@@ -157,8 +163,9 @@ namespace DiaryScheduler.Web.Controllers
                     start = entry.DateFrom,
                     end = entry.DateTo,
                     allDay = entry.AllDay
-                }
-            }, JsonRequestBehavior.AllowGet);
+                },
+                backUrl = Url.Action(nameof(Index), "Scheduler", null)
+            });
         }
 
         // Edit calendar entry.
@@ -190,8 +197,9 @@ namespace DiaryScheduler.Web.Controllers
 
             return Json(new
             {
-                message = "<strong>Success:</strong> Calendar event saved."
-            }, JsonRequestBehavior.AllowGet);
+                message = "<strong>Success:</strong> Calendar event saved.",
+                backUrl = Url.Action(nameof(Index), "Scheduler", null)
+            });
         }
 
         // Delete calendar entry.
@@ -210,8 +218,9 @@ namespace DiaryScheduler.Web.Controllers
 
             return Json(new
             {
-                message = "<strong>Success:</strong> Calendar entry deleted."
-            }, JsonRequestBehavior.AllowGet);
+                message = "<strong>Success:</strong> Calendar entry deleted.",
+                backUrl = Url.Action(nameof(Index), "Scheduler", null)
+            });
         }
 
         #endregion

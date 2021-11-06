@@ -2,6 +2,10 @@
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
+import "@fullcalendar/core/main.css";
+import "@fullcalendar/daygrid/main.css";
+import "@fullcalendar/timegrid/main.css";
+import "@fullcalendar/list/main.css";
 
 export namespace SiteCalendar {
     /**
@@ -32,11 +36,14 @@ export namespace SiteCalendar {
                 url: sourceUrl
             }],
             selectable: true,
-            selectMirror: true,
+            //selectMirror: true,
+            dateClick: function (info) {
+                console.log("click 2");
+            },
             select: function (info) {
+                console.log("click");
                 createFunc(info.start, info.end);
             },
-            themeSystem: "bootstrap4",
             eventTimeFormat: "HH:mm"
         });
 

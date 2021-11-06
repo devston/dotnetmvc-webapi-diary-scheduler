@@ -268,6 +268,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CalendarEventViewModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\Scheduler\SchedulerIndexViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -327,9 +328,6 @@
     <Content Include="Content\Partials\Component\_card.scss" />
     <Content Include="Content\Partials\Utility\_lightBootstrap.scss" />
     <None Include="packages.config" />
-    <Content Include="Scripts\Templates\alert.handlebars" />
-    <Content Include="Scripts\Templates\load-delay.handlebars" />
-    <Content Include="Views\Shared\_PjaxLayout.cshtml" />
     <Content Include="Views\Scheduler\Index.cshtml" />
     <Content Include="Views\Scheduler\_ModalQuickCreate.cshtml" />
     <Content Include="Views\Scheduler\_QuickCreate.cshtml" />
@@ -339,14 +337,13 @@
     <Content Include="Views\Scheduler\_ModalExport.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Scripts\Components\site-alert.ts" />
     <TypeScriptCompile Include="Scripts\Components\site-calendar.ts" />
     <TypeScriptCompile Include="Scripts\Components\site-datetimepicker.ts" />
     <TypeScriptCompile Include="Scripts\Components\site-loader.ts" />
     <TypeScriptCompile Include="Scripts\Pages\main.ts" />
     <TypeScriptCompile Include="Scripts\Pages\scheduler.ts" />
     <TypeScriptCompile Include="Scripts\Typings\jquery-typings.ts" />
-    <TypeScriptCompile Include="Scripts\Utilities\site-core.ts" />
-    <TypeScriptCompile Include="Scripts\Utilities\visibility-helpers.ts" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

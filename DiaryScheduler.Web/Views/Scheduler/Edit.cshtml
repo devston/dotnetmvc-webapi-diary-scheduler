@@ -4,7 +4,7 @@
     ViewBag.Title = "Create event";
 }
 
-<div class="container" page-require="scheduler" page-module-name="Scheduler" page-module-variable="edit">
+<div class="container" data-page-name="edit" id="scheduler-main-container">
     <div class="card">
         <form class="card-body" id="edit-cal-entry-form">
             <h2 class="card-title">Edit calendar event</h2>
@@ -42,7 +42,7 @@
                 <button class="btn btn-success" id="save-entry-btn" title="Save changes to this calendar event" type="submit">Save</button>
                 <button class="btn btn-danger" id="delete-entry-btn" title="Delete this calendar event" type="button">Delete</button>
                 <button class="btn btn-info" id="export-event-btn" title="Export this calendar event to an iCal" type="button">Export</button>
-                <button class="btn btn-outline-secondary" id="back-to-cal-btn" title="Go back to the calendar" type="button">Back</button>
+                @Html.ActionLink("Back", "Index", "Scheduler", null, new { @class = "btn btn-outline-secondary", id = "back-to-cal-btn", title = "Go back to the calendar" })
             </div>
         </form>
     </div>

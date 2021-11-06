@@ -37,4 +37,17 @@ export namespace SiteLoader {
         // Remove .overflow-hidden regardless as the loader maybe lost by the parents html being replaced.
         $(selector).removeClass("overflow-hidden position-relative");
     }
+
+    /**
+     * Toggle visibility of the site loader.
+     * @param show true = show the loader / false = hide the loader.
+     */
+    export function toggleGlobalLoader(show: boolean) {
+        if (show) {
+            $("#loader-wrapper").removeClass("hidden");
+        }
+        else {
+            $("#loader-wrapper").addClass("hidden");
+        }
+    }
 }

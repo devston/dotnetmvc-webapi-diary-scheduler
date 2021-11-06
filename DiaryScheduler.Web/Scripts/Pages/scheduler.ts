@@ -16,12 +16,15 @@
     
 \*----------------------------------------------------------------------------*/
 
+import "bootstrap";
 import $ from "jquery";
+import "jquery-validation";
+import "jquery-validation-unobtrusive";
 import moment from "moment";
-import { Site } from "./../Utilities/site-core";
-import { VisibilityHelpers } from "./../Utilities/visibility-helpers";
 import { SiteCalendar } from "./../Components/site-calendar";
 import { DateTimePicker } from "./../Components/site-datetimepicker";
+import { SiteAlert } from "./../Components/site-alert";
+import { SiteLoader } from "./../Components/site-loader";
 
 /**
  * A module containing all the logic for the scheduler area.
@@ -33,11 +36,14 @@ export namespace Scheduler {
     \*------------------------------------------------------------------------*/
 
     const calendarSelector = "#calendar";
+    const mainContainer = "#scheduler-main-container";
 
     /**
      * Initialise scheduler area.
      */
-    export function init(pageToLoad: string) {
+    export function init() {
+        const pageToLoad = $(mainContainer).data("page-name");
+
         switch (pageToLoad) {
             case "create":
                 initCreate();
@@ -59,11 +65,6 @@ export namespace Scheduler {
     function initIndex() {
         const sourceUrl = "/Scheduler/UserEntries/";
         SiteCalendar.init(calendarSelector, sourceUrl, showQuickCreateModal, Navigate.toEdit);
-
-        $("#create-event-btn").on("click", function (e) {
-            e.preventDefault();
-            Navigate.toCreate();
-        });
 
         $("#export-events-btn").on("click", function (e) {
             e.preventDefault();
@@ -112,11 +113,6 @@ export namespace Scheduler {
         $(formSelector).on("submit", function (e) {
             e.preventDefault();
             saveEvent($(this), url);
-        });
-
-        $("#back-to-cal-btn").on("click", function (e) {
-            e.preventDefault();
-            Navigate.toIndex();
         });
     }
 
@@ -204,7 +200,7 @@ export namespace Scheduler {
         if ($form.valid()) {
             $.ajax({
                 beforeSend: function () {
-                    VisibilityHelpers.loader(true);
+                    SiteLoader.toggleGlobalLoader(true);
                     $("#edit-entry-btn").attr("disabled");
                     $("#quick-create-btn").attr("disabled");
                 },
@@ -213,13 +209,13 @@ export namespace Scheduler {
                 data: $form.serialize()
             })
             .always(function () {
-                VisibilityHelpers.loader(false);
+                SiteLoader.toggleGlobalLoader(false);
                 $("#edit-entry-btn").removeAttr("disabled");
                 $("#quick-create-btn").removeAttr("disabled");
             })
             .done(function (data: any) {
                 SiteCalendar.addEvent(data.calEntry, calendarSelector);
-                VisibilityHelpers.alert("success", data.message, true);
+                SiteAlert.show("success", data.message, true);
 
                 // jQuery object is used multiple times so store it in a variable.
                 var $modal = $("#quick-create-modal");
@@ -232,7 +228,7 @@ export namespace Scheduler {
                 });
             })
             .fail(function (jqXHR) {
-                Site.showJqXhrAsAlert(jqXHR);
+                SiteAlert.showJqXhrError(jqXHR);
             });
         }
     }
@@ -246,7 +242,7 @@ export namespace Scheduler {
         if ($form.valid()) {
             $.ajax({
                 beforeSend: function () {
-                    VisibilityHelpers.loader(true);
+                    SiteLoader.toggleGlobalLoader(true);
                     $("#save-entry-btn").attr("disabled");
                     $("#delete-entry-btn").attr("disabled");
                     $("#back-to-cal-btn").attr("disabled");
@@ -255,17 +251,17 @@ export namespace Scheduler {
                 type: "POST",
                 data: $form.serialize()
             }).always(function () {
-                VisibilityHelpers.loader(false);
+                SiteLoader.toggleGlobalLoader(false);
                 $("#save-entry-btn").removeAttr("disabled");
                 $("#delete-entry-btn").removeAttr("disabled");
                 $("#back-to-cal-btn").removeAttr("disabled");
             })
             .done(function (data: any) {
-                VisibilityHelpers.alert("success", data.message, true);
-                Navigate.toIndex();
+                SiteAlert.show("success", data.message, true);
+                window.location.href = data.backUrl;
             })
             .fail(function (jqXHR) {
-                Site.showJqXhrAsAlert(jqXHR);
+                SiteAlert.showJqXhrError(jqXHR);
             });
         }
     }
@@ -278,7 +274,7 @@ export namespace Scheduler {
 
         $.ajax({
             beforeSend: function () {
-                VisibilityHelpers.loader(true);
+                SiteLoader.toggleGlobalLoader(true);
                 $("#save-entry-btn").attr("disabled");
                 $("#delete-entry-btn").attr("disabled");
                 $("#back-to-cal-btn").attr("disabled");
@@ -290,17 +286,17 @@ export namespace Scheduler {
                 "__RequestVerificationToken": token
             }
         }).always(function () {
-            VisibilityHelpers.loader(false);
+            SiteLoader.toggleGlobalLoader(false);
             $("#save-entry-btn").removeAttr("disabled");
             $("#delete-entry-btn").removeAttr("disabled");
             $("#back-to-cal-btn").removeAttr("disabled");
         })
         .done(function (data: any) {
-            VisibilityHelpers.alert("success", data.message, true);
-            Navigate.toIndex();
+            SiteAlert.show("success", data.message, true);
+            window.location.href = data.backUrl;
         })
         .fail(function (jqXHR) {
-            Site.showJqXhrAsAlert(jqXHR);
+            SiteAlert.showJqXhrError(jqXHR);
         });
     }
 
@@ -322,7 +318,7 @@ export namespace Scheduler {
     function exportVisibleEventsToIcal() {
         // Check if there are any events before going to the controller.
         if ($(".fc-view").has(".fc-event").length === 0) {
-            VisibilityHelpers.alert("info", "There are no events to sync.", true);
+            SiteAlert.show("info", "There are no events to sync.", true);
             return;
         }
 
@@ -338,7 +334,7 @@ export namespace Scheduler {
     function exportEventsFromDateRangeToIcal(start: string, end: string) {
         // Check if dates were entered before going to the server.
         if (start == null || end == null) {
-            VisibilityHelpers.alert("danger", "<strong>Error</strong>: No dates provided.", true);
+            SiteAlert.show("danger", "<strong>Error</strong>: No dates provided.", true);
             return;
         }
 
@@ -350,12 +346,12 @@ export namespace Scheduler {
     \*------------------------------------------------------------------------*/
 
     // Show quick create modal.
-    function showQuickCreateModal(start: moment.Moment, end: moment.Moment) {
-        VisibilityHelpers.loader(true);
+    function showQuickCreateModal(start: Date, end: Date) {
+        SiteLoader.toggleGlobalLoader(true);
 
         // Format moment object to ISO 8601 so no date conversion errors are made on model bind.
-        var startFormatted = start.format("YYYY-MM-DD HH:mm");
-        var endFormatted = end.format("YYYY-MM-DD HH:mm");
+        const startFormatted = start.toISOString();
+        const endFormatted = end.toISOString();
 
         // jQuery object is used multiple times so store it in a variable.
         var $container = $("#quick-create-container");
@@ -364,8 +360,8 @@ export namespace Scheduler {
         $container.load("/Scheduler/_QuickCreate/", { "start": startFormatted, "end": endFormatted }, function (_response: string, status: string) {
             if (status == "success") {
                 // Format date so it's human readable.
-                $("#DateStarting").val(start.local().format("LLL"));
-                $("#DateEnding").val(end.local().format("LLL"));
+                $("#DateStarting").val(moment(start).local().format("LLL"));
+                $("#DateEnding").val(moment(end).local().format("LLL"));
 
                 // jQuery objects are used multiple times so store them in variables.
                 var $modal = $("#quick-create-modal");
@@ -378,7 +374,7 @@ export namespace Scheduler {
                 $("#edit-entry-btn").on("click", function (event: JQueryEventObject) {
                     event.preventDefault();
 
-                    VisibilityHelpers.loader(true);
+                    SiteLoader.toggleGlobalLoader(true);
                     var title = <string>$("#Title").val();
 
                     // Close and empty the modal.
@@ -387,7 +383,7 @@ export namespace Scheduler {
                     // Stop the modal from getting 'stuck'.
                     $modal.on("hidden.bs.modal", function () {
                         Navigate.toCreateMoreOptions(title, startFormatted, endFormatted);
-                        VisibilityHelpers.loader(false);
+                        SiteLoader.toggleGlobalLoader(false);
                     });
                 });
 
@@ -397,7 +393,7 @@ export namespace Scheduler {
                     quickCreate();
                 });
 
-                VisibilityHelpers.loader(false);
+                SiteLoader.toggleGlobalLoader(false);
             }
         });
     }
@@ -411,27 +407,15 @@ export namespace Scheduler {
      */
     namespace Navigate {
         /**
-         * Navigate to the scheduler index page.
-         */
-        export function toIndex() {
-            Site.loadPartial("/Scheduler/");
-        }
-
-        /**
-         *  Navigate to the create page.
-         * */
-        export function toCreate() {
-            Site.loadPartial("/Scheduler/Create/");
-        }
-
-        /**
          * Navigate to the quick entry create page.
          * @param title
          * @param start
          * @param end
          */
         export function toCreateMoreOptions(title: string, start: string, end: string) {
-            Site.loadPartial("/Scheduler/CreateMoreOptions/", { "title": title, "start": start, "end": end })
+            let url = $("#CreateEventMoreOptionsUrl").val() as string;
+            url = url.replace("title_placeholder", title).replace("start_placeholder", start).replace("end_placeholder", end);
+            window.location.href = url;
         }
 
         /**
@@ -439,7 +423,14 @@ export namespace Scheduler {
          * @param id
          */
         export function toEdit(id: string) {
-            Site.loadPartial(`/Scheduler/Edit/${id}`);
+            let url = $("#EditEventUrl").val() as string;
+            url = url.replace("id_placeholder", id);
+            window.location.href = url;
         }
     }
 }
+
+// Initialise the datatables demo module on page load.
+$(() => {
+    Scheduler.init();
+});

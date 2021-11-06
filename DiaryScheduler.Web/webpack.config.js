@@ -9,7 +9,7 @@ const path = require("path");
 module.exports = (env, argv) => {
     return {
         mode: argv.mode === "production" ? "production" : "development",
-        entry: ["./Scripts/Pages/main.ts", "./Content/style.scss"],
+        entry: ["./Scripts/Pages/scheduler.ts", "./Content/style.scss"],
         output: {
             filename: bundleFileName + ".js",
             path: path.resolve(__dirname, dirName)

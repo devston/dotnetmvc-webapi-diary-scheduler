@@ -9,6 +9,7 @@
 
 import flatpickr from "flatpickr";
 import rangePlugin from "flatpickr/dist/plugins/rangePlugin";
+import "flatpickr/dist/flatpickr.css";
 
 export namespace DateTimePicker {
     /**
