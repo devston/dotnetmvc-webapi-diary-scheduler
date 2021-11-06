@@ -21,8 +21,12 @@ export namespace VisibilityHelpers {
             return this;
         };
 
-        var hbObj = { "type": type, "message": message };
-        var alert = require("handlebarsTemplates/alert")(hbObj);
+        const alert = `<div class="alert alert-${type}" role="alert">
+                        ${message}
+                        <button aria-label="Close" class="close" type="button">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>`;
 
         if (timeout) {
             $(alert).appendTo(alertContainerId).timeout(8000, function (this: any) {

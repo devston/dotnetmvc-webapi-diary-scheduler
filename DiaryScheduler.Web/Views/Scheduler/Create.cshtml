@@ -22,15 +22,13 @@
             </div>
             <div class="form-row">
                 <div class="col-md-6 form-group">
-                    <label for="DateStarting">@Html.DisplayNameFor(x => x.DateFrom)</label>
-                    <input class="form-control" data-id="@nameof(Model.DateFrom)" id="DateStarting" type="text" name="DateStarting" />
-                    @Html.EditorFor(x => x.DateFrom, new { htmlAttributes = new { @type = "hidden" } })
+                    @Html.LabelFor(x => x.DateFrom)
+                    @Html.TextBoxFor(x => x.DateFrom, new { @class = "form-control" })
                     @Html.ValidationMessageFor(x => x.DateFrom, "", new { @class = "text-danger" })
                 </div>
                 <div class="col-md-6 form-group">
-                    <label for="DateEnding">@Html.DisplayNameFor(x => x.DateTo)</label>
-                    <input class="form-control" data-id="@nameof(Model.DateTo)" id="DateEnding" type="text" name="DateEnding" />
-                    @Html.EditorFor(x => x.DateTo, new { htmlAttributes = new { @type = "hidden" } })
+                    @Html.LabelFor(x => x.DateTo)
+                    @Html.TextBoxFor(x => x.DateTo, new { @class = "form-control" })
                     @Html.ValidationMessageFor(x => x.DateTo, "", new { @class = "text-danger" })
                 </div>
             </div>

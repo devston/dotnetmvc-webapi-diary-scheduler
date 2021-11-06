@@ -34,13 +34,11 @@
                     <div class="row">
                         <div class="col-md-6 form-group">
                             <label for="SyncFrom">Sync From</label>
-                            <input class="form-control" data-id="SyncFromHid" id="SyncFrom" type="text" name="DateStarting" />
-                            <input id="SyncFromHid" type="hidden" value="@DateTime.UtcNow.ToString("yyyy/MM/dd")" />
+                            <input class="form-control" id="SyncFrom" type="text" name="DateStarting" value="@DateTime.UtcNow.ToString("yyyy/MM/dd")" />
                         </div>
                         <div class="col-md-6 form-group">
                             <label for="SyncTo">Sync To</label>
-                            <input class="form-control" data-id="SyncToHid" id="SyncTo" type="text" name="DateEnding" />
-                            <input id="SyncToHid" type="hidden" value="@DateTime.UtcNow.AddDays(1).ToString("yyyy/MM/dd")" />
+                            <input class="form-control" id="SyncTo" type="text" name="DateEnding" value="@DateTime.UtcNow.AddDays(1).ToString("yyyy/MM/dd")" />
                         </div>
                     </div>
                 </div>

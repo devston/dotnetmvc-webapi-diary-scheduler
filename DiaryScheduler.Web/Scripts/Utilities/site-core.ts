@@ -1,6 +1,6 @@
 ﻿import $ from "jquery";
 import "jquery-pjax";
-import { VisibilityHelpers } from "Scripts/Utilities/visibility-helpers";
+import { VisibilityHelpers } from "./../Utilities/visibility-helpers";
 
 /**
  * A module containing all of our core site functionality.
@@ -27,11 +27,9 @@ export namespace Site {
             $(document).on("pjax:timeout", function (event) {
                 // Prevent default timeout redirection behaviour
                 event.preventDefault();
-                var loadDelayHtml = require("handlebarsTemplates/load-delay")({});
-                $(loadDelayHtml).appendTo("#alert-container");
                 $("#alert-container").find(".js-hard-refresh").on("click", function (e) {
                     e.preventDefault();
-                    location.reload(true);
+                    location.reload();
                 });
             });
 
@@ -59,7 +57,7 @@ export namespace Site {
                 // This seemed like a necessary evil as pjax caches a lot of the page,
                 // so incorrect data was being shown, duplicate controls (if controls were initialised)
                 // whereas reloading the page alleviated these problems.
-                location.reload(true);
+                location.reload();
             });
 
             // Load any embedded modules on first load.

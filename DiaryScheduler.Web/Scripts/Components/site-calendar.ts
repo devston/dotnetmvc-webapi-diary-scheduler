@@ -1,50 +1,47 @@
-﻿import $ from "jquery";
-import moment from "moment";
-import "fullcalendar";
-import "fullcalendar/dist/fullcalendar.min.css";
-import { VisibilityHelpers } from "Scripts/Utilities/visibility-helpers";
+﻿import { Calendar } from "@fullcalendar/core";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import listPlugin from "@fullcalendar/list";
 
 export namespace SiteCalendar {
+    /**
+     *  An object to store any calendar instances.
+     * */
+    let calendars = {};
+
     /**
      * Initialise a calendar.
      * @param calendarSelector The calendar selector.
      */
     export function init(calendarSelector: string, sourceUrl: string, createFunc: Function, editFunc: Function) {
-        $(calendarSelector).fullCalendar({
+        const calendarEl = document.querySelector(calendarSelector) as HTMLElement;
+        let calendar = new Calendar(calendarEl, {
+            plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
+            defaultView: "dayGridMonth",
             header: {
                 left: "prev,next today",
                 center: "title",
-                right: "month,agendaWeek,agendaDay,listWeek"
+                right: "dayGridMonth, timeGridWeek, listWeek"
             },
             eventClick: function (calEvent) {
-                editFunc(calEvent.id);
+                editFunc(calEvent.event.id);
             },
             eventLimit: true,
             eventSources: [{
-                url: sourceUrl,
-                error: function () {
-                    VisibilityHelpers.alert("danger", "There was an error while fetching entries.", true);
-                }
+                id: "default",
+                url: sourceUrl
             }],
-            eventDataTransform: function (eventData) {
-                // Convert the UTC date to the user's local time.
-                return {
-                    "id": eventData.id,
-                    "title": eventData.title,
-                    "allDay": eventData.allDay,
-                    "start": moment.utc(eventData.start).local(),
-                    "end": moment.utc(eventData.end).local(),
-                    "className": eventData.className
-                };
-            },
             selectable: true,
-            selectHelper: true,
-            select: function (start: moment.Moment, end: moment.Moment) {
-                createFunc(start, end);
+            selectMirror: true,
+            select: function (info) {
+                createFunc(info.start, info.end);
             },
             themeSystem: "bootstrap4",
-            timeFormat: "HH:mm"
+            eventTimeFormat: "HH:mm"
         });
+
+        calendars[calendarSelector] = calendar;
+        calendar.render();
     }
 
     /**
@@ -52,7 +49,7 @@ export namespace SiteCalendar {
      * @param calendarSelector
      */
     export function getVisibleDates(calendarSelector: string) {
-        const view = $(calendarSelector).fullCalendar("getView");
+        const view = calendars[calendarSelector].view;
         const dates = {
             start: view.intervalStart.format(),
             end: view.intervalEnd.format()
@@ -70,12 +67,12 @@ export namespace SiteCalendar {
         const event = {
             "id": eventData.id,
             "title": eventData.title,
-            "start": moment(eventData.start),
-            "end": moment(eventData.end),
+            "start": eventData.start,
+            "end": eventData.end,
             "allDay": eventData.allDay,
             "className": eventData.className
         };
 
-        $(calendarSelector).fullCalendar("renderEvent", event);
+        calendars[calendarSelector].addEvent(event);
     }
 }

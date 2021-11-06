@@ -18,11 +18,10 @@
 
 import $ from "jquery";
 import moment from "moment";
-import "fullcalendar";
-import { Site } from "Scripts/Utilities/site-core";
-import { VisibilityHelpers } from "Scripts/Utilities/visibility-helpers";
-import { SiteCalendar } from "Scripts/Components/site-calendar";
-import { DateTimePicker } from "Scripts/Components/site-datetimepicker";
+import { Site } from "./../Utilities/site-core";
+import { VisibilityHelpers } from "./../Utilities/visibility-helpers";
+import { SiteCalendar } from "./../Components/site-calendar";
+import { DateTimePicker } from "./../Components/site-datetimepicker";
 
 /**
  * A module containing all the logic for the scheduler area.
@@ -103,13 +102,11 @@ export namespace Scheduler {
      * @param url
      */
     function initEventCard(formSelector: string, url: string) {
-        const startPickerSelector = "#DateStarting";
-        const endPickerSelector = "#DateEnding";
+        const startPickerSelector = "#DateFrom";
+        const endPickerSelector = "#DateTo";
 
         // Initialise the datetime pickers.
-        DateTimePicker.initDateTime(startPickerSelector);
-        DateTimePicker.initDateTime(endPickerSelector);
-        DateTimePicker.initRange(startPickerSelector, endPickerSelector);
+        DateTimePicker.initDateTimeRange(startPickerSelector, endPickerSelector);
 
         // Form submit.
         $(formSelector).on("submit", function (e) {
@@ -133,9 +130,7 @@ export namespace Scheduler {
         let radioVal = "0";
 
         // Initialise the datetime pickers.
-        DateTimePicker.initDateTime(startPickerSelector);
-        DateTimePicker.initDateTime(endPickerSelector);
-        DateTimePicker.initRange(startPickerSelector, endPickerSelector);
+        DateTimePicker.initDateTimeRange(startPickerSelector, endPickerSelector);
 
         // Initialise the radio controls.
         $("#calendar-sync-options-container").find("input[name=\"calsync\"]").on("change", function (this: HTMLInputElement) {
@@ -165,8 +160,8 @@ export namespace Scheduler {
                     exportVisibleEventsToIcal();
                 }
                 else if (radioVal == "2") {
-                    var start = <string>$("#SyncFromHid").val();
-                    var end = <string>$("#SyncToHid").val();
+                    var start = <string>$("#SyncFrom").val();
+                    var end = <string>$("#SyncTo").val();
 
                     exportEventsFromDateRangeToIcal(start, end);
                 }

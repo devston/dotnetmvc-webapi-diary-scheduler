@@ -7,10 +7,8 @@
     
 \*----------------------------------------------------------------------------*/
 
-import $ from "jquery";
-import moment from "moment";
-import "eonasdan-bootstrap-datetimepicker-bootstrap4beta";
-import "eonasdan-bootstrap-datetimepicker-bootstrap4beta/build/css/bootstrap-datetimepicker.min.css";
+import flatpickr from "flatpickr";
+import rangePlugin from "flatpickr/dist/plugins/rangePlugin";
 
 export namespace DateTimePicker {
     /**
@@ -18,32 +16,10 @@ export namespace DateTimePicker {
      * @param pickerSelector The date picker selector.
      */
     export function initDate(pickerSelector: string) {
-        // jQuery objects are used multiple times so store them in variables.
-        var $picker = $(pickerSelector);
-        var valueSelector = "#" + $picker.attr("data-id");
-        var $value = $(valueSelector);
-
-        // Convert the time from utc to the user's timezone.
-        var date = moment($value.val(), "YYYY-MM-DD").local();
-
-        $picker.datetimepicker({
-            format: "LL",
-            icons: {
-                time: "far fa-clock",
-                date: "far fa-calendar-alt",
-                up: "fas fa-angle-up",
-                down: "fas fa-angle-down",
-                previous: "fas fa-angle-left",
-                next: "fas fa-angle-right",
-                today: "far fa-calendar-check",
-                clear: "fas fa-trash-alt",
-                close: "fas fa-times"
-            },
-        })
-        .data("DateTimePicker").date(date);
-
-        $picker.on("dp.change", function (e) {
-            $value.val(moment(e.date).format("YYYY-MM-DD"));
+        flatpickr(pickerSelector, {
+            altInput: true,
+            altFormat: "F j, Y",
+            dateFormat: "Y-m-d",
         });
     }
 
@@ -52,32 +28,11 @@ export namespace DateTimePicker {
      * @param pickerSelector
      */
     export function initDateTime(pickerSelector: string) {
-        // jQuery objects are used multiple times so store them in variables.
-        var $picker = $(pickerSelector);
-        var valueSelector = "#" + $picker.attr("data-id");
-        var $value = $(valueSelector);
-
-        // Convert the time from utc to the user's timezone.
-        var date = moment($value.val(), "YYYY-MM-DD HH:mm").local();
-
-        $picker.datetimepicker({
-            format: "llll",
-            icons: {
-                time: "far fa-clock",
-                date: "far fa-calendar-alt",
-                up: "fas fa-angle-up",
-                down: "fas fa-angle-down",
-                previous: "fas fa-angle-left",
-                next: "fas fa-angle-right",
-                today: "far fa-calendar-check",
-                clear: "fas fa-trash-alt",
-                close: "fas fa-times"
-            },
-        })
-        .data("DateTimePicker").date(date);
-
-        $picker.on("dp.change", function (e) {
-            $value.val(moment(e.date).format("YYYY-MM-DD HH:mm"));
+        flatpickr(pickerSelector, {
+            altInput: true,
+            altFormat: "F j, Y H:i",
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
         });
     }
 
@@ -86,21 +41,30 @@ export namespace DateTimePicker {
      * @param startSelector
      * @param endSelector
      */
-    export function initRange(startSelector: string, endSelector: string) {
-        const $startPicker = $(startSelector);
-        const $endPicker = $(endSelector);
-
-        $startPicker.on("dp.change", function (event) {
-            // Date range.
-            if (moment($endPicker.data("DateTimePicker").date()).isBefore(event.date)) {
-                $endPicker.data("DateTimePicker").date(moment(event.date));
-            }
+    export function initDateRange(startSelector: string, endSelector: string) {
+        flatpickr(startSelector, {
+            altInput: true,
+            altFormat: "F j, Y",
+            enableTime: true,
+            dateFormat: "Y-m-d",
+            // @ts-ignore: Included types have not configured the range plugin.
+            plugins: [new rangePlugin({ input: endSelector })]
         });
+    }
 
-        $endPicker.on("dp.change", function (event) {
-            if (moment($startPicker.data("DateTimePicker").date()).isAfter(event.date)) {
-                $startPicker.data("DateTimePicker").date(moment(event.date));
-            }
+    /**
+     * Initialise a datetime range between two datepickers.
+     * @param startSelector
+     * @param endSelector
+     */
+    export function initDateTimeRange(startSelector: string, endSelector: string) {
+        flatpickr(startSelector, {
+            altInput: true,
+            altFormat: "F j, Y H:i",
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            // @ts-ignore: Included types have not configured the range plugin.
+            plugins: [new rangePlugin({ input: endSelector })]
         });
     }
 }
