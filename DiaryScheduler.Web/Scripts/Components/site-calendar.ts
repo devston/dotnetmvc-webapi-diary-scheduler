@@ -2,10 +2,10 @@
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
-import "@fullcalendar/core/main.css";
-import "@fullcalendar/daygrid/main.css";
-import "@fullcalendar/timegrid/main.css";
-import "@fullcalendar/list/main.css";
+//import "@fullcalendar/core/main.css";
+//import "@fullcalendar/daygrid/main.css";
+//import "@fullcalendar/timegrid/main.css";
+//import "@fullcalendar/list/main.css";
 
 export namespace SiteCalendar {
     /**
@@ -21,8 +21,8 @@ export namespace SiteCalendar {
         const calendarEl = document.querySelector(calendarSelector) as HTMLElement;
         let calendar = new Calendar(calendarEl, {
             plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
-            defaultView: "dayGridMonth",
-            header: {
+            initialView: "dayGridMonth",
+            headerToolbar: {
                 left: "prev,next today",
                 center: "title",
                 right: "dayGridMonth, timeGridWeek, listWeek"
@@ -30,21 +30,17 @@ export namespace SiteCalendar {
             eventClick: function (calEvent) {
                 editFunc(calEvent.event.id);
             },
-            eventLimit: true,
+            dayMaxEventRows: true,
             eventSources: [{
                 id: "default",
                 url: sourceUrl
             }],
             selectable: true,
             //selectMirror: true,
-            dateClick: function (info) {
-                console.log("click 2");
-            },
             select: function (info) {
                 console.log("click");
                 createFunc(info.start, info.end);
-            },
-            eventTimeFormat: "HH:mm"
+            }
         });
 
         calendars[calendarSelector] = calendar;
