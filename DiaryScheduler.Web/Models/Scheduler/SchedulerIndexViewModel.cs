@@ -19,5 +19,10 @@
         /// Gets or sets the edit event url.
         /// </summary>
         public string EditEventUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the calendar source url.
+        /// </summary>
+        public string CalendarSourceUrl { get; set; }
     }
 }

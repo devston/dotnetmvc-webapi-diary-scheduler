@@ -1,8 +1,7 @@
 ﻿using DiaryScheduler.ScheduleManagement.Core.Interfaces;
 using DiaryScheduler.ScheduleManagement.Core.Models;
 using DiaryScheduler.Web.Common.Classes;
-using DiaryScheduler.Web.Common.Utilities;
-using DiaryScheduler.Web.Models;
+using DiaryScheduler.Web.Common.Services.Scheduler;
 using DiaryScheduler.Web.Models.Scheduler;
 using Microsoft.AspNet.Identity;
 using System;
@@ -15,13 +14,15 @@ namespace DiaryScheduler.Web.Controllers
     [Authorize]
     public class SchedulerController : Controller
     {
+        private readonly ISchedulerPresentationService _schedulerPresentationService;
         private readonly IScheduleRepository _scheduleRepository;
-        private readonly ViewModelMapper _mapper;
 
-        public SchedulerController(IScheduleRepository scheduleRepository, ViewModelMapper mapper)
+        public SchedulerController(
+            ISchedulerPresentationService schedulerPresentationService,
+            IScheduleRepository scheduleRepository)
         {
+            _schedulerPresentationService = schedulerPresentationService;
             _scheduleRepository = scheduleRepository;
-            _mapper = mapper;
         }
 
         #region Views
@@ -29,45 +30,22 @@ namespace DiaryScheduler.Web.Controllers
         // GET: Scheduler
         public ActionResult Index()
         {
-            // TODO: Add a presentation service to store this logic.
-            var vm = new SchedulerIndexViewModel();
-            vm.CreateEventUrl = Url.Action(nameof(Create), "Scheduler", null);
-            vm.CreateEventMoreOptionsUrl = Url.Action(nameof(CreateMoreOptions), "Scheduler", new { title = "title_placeholder", start = "start_placeholder", end = "end_placeholder" });
-            vm.EditEventUrl = Url.Action(nameof(Edit), "Scheduler", new { id = "id_placeholder" });
+            var vm = _schedulerPresentationService.CreateSchedulerIndexViewModel();
             return View(vm);
         }
 
         // GET: Create view.
         public ActionResult Create()
         {
-            // TODO: Add a presentation service to store this logic.
-            DateTime today = DateTime.UtcNow;
-            TimeSpan amountToRound = TimeSpan.FromMinutes(15);
-
-            // Rounds date to the nearest specified minute.
-            // "+ amountToRound.Ticks - 1" makes sure today will round up if necessary. E.g. (12 + 5 - 1) = 16, 16 / 5 = 3,  3 * 5 = 15.
-            DateTime laterToday = new DateTime(((today.Ticks + amountToRound.Ticks - 1) / amountToRound.Ticks) * amountToRound.Ticks);
-
-            var entry = new CalendarEventViewModel()
-            {
-                DateFrom = laterToday,
-                DateTo = laterToday.AddMinutes(15)
-            };
-
-            return View(entry);
+            var vm = _schedulerPresentationService.CreateSchedulerCreateViewModel();
+            return View("Edit", vm);
         }
 
         // GET: Create view with filled in options.
         public ActionResult CreateMoreOptions(string title, DateTime start, DateTime end)
         {
-            var entry = new CalendarEventViewModel()
-            {
-                Title = title,
-                DateFrom = start,
-                DateTo = end
-            };
-
-            return View("Create", entry);
+            var vm = _schedulerPresentationService.CreateSchedulerCreateViewModel(title, start, end);
+            return View("Edit", vm);
         }
 
         // GET: Edit event view.
@@ -79,14 +57,13 @@ namespace DiaryScheduler.Web.Controllers
                 return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> Invalid calendar event id.", "");
             }
 
-            var entry = _scheduleRepository.GetCalendarEntry(id);
+            var vm = _schedulerPresentationService.CreateSchedulerEditViewModel(id);
 
-            if (entry == null)
+            if (vm == null)
             {
                 return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> The calendar event could not be found.", "");
             }
 
-            var vm = _mapper.Map<CalendarEventViewModel>(entry);
             return View(vm);
         }
 
@@ -139,18 +116,8 @@ namespace DiaryScheduler.Web.Controllers
                 return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> Start date cannot be after the end date.", "");
             }
 
-            var entry = new CalEntryDm()
-            {
-                Title = vm.Title.Trim(),
-                Description = vm.Description == null ? null : vm.Description.Trim(),
-                DateFrom = vm.DateFrom,
-                DateTo = vm.DateTo,
-                AllDay = vm.AllDay,
-                UserId = User.Identity.GetUserId()
-            };
-
             // Save event.
-            var id = _scheduleRepository.CreateCalendarEntry(entry);
+            var id = _schedulerPresentationService.CreateCalendarEvent(vm, User.Identity.GetUserId());
 
             // Return calendar record for fullCalendar.js.
             return Json(new
@@ -159,10 +126,10 @@ namespace DiaryScheduler.Web.Controllers
                 calEntry = new
                 {
                     id,
-                    title = entry.Title,
-                    start = entry.DateFrom,
-                    end = entry.DateTo,
-                    allDay = entry.AllDay
+                    title = vm.Title,
+                    start = vm.DateFrom,
+                    end = vm.DateTo,
+                    allDay = vm.AllDay
                 },
                 backUrl = Url.Action(nameof(Index), "Scheduler", null)
             });
@@ -190,10 +157,8 @@ namespace DiaryScheduler.Web.Controllers
                 return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> The calendar event could not be found.", "");
             }
 
-            var entry = _mapper.Map<CalEntryDm>(vm);
-
             // Save event.
-            _scheduleRepository.EditCalendarEntry(entry);
+            _schedulerPresentationService.UpdateCalendarEvent(vm);
 
             return Json(new
             {
@@ -214,7 +179,7 @@ namespace DiaryScheduler.Web.Controllers
             }
 
             // Delete event.
-            _scheduleRepository.DeleteCalendarEntry(id);
+            _schedulerPresentationService.DeleteCalendarEvent(id);
 
             return Json(new
             {

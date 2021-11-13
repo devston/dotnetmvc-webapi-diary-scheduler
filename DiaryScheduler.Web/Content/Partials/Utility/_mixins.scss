@@ -13,6 +13,8 @@
 //
 //----------------------------------------------------------------------------//
 
+@use "sass:math";
+
 //  1. Vendor prefixes
 //------------------------------------------------------------------------------
 
@@ -170,7 +172,7 @@
 // Calculate the rem size from a pixel size - change 16px to whatever the body
 // font size is.
 @function calculateRem($size) {
-    $remSize: $size / 16px;
+    $remSize: math.div($size, 16px);
     @return $remSize * 1rem;
 }
 

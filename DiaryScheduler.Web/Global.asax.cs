@@ -3,7 +3,8 @@ using Autofac.Integration.Mvc;
 using DiaryScheduler.Data.Data;
 using DiaryScheduler.Data.Models;
 using DiaryScheduler.DependencyResolution;
-using DiaryScheduler.Web.Common.Utilities;
+using DiaryScheduler.Web.Common.Services.Scheduler;
+using DiaryScheduler.Web.Common.Utilities.UrlHelper;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
@@ -27,7 +28,12 @@ namespace DiaryScheduler.Web
             builder.RegisterType<ApplicationDbContext>()
                 .InstancePerRequest();
 
-            builder.RegisterType<ViewModelMapper>()
+            builder.RegisterType<UrlHelperService>()
+                .As<IUrlHelperService>()
+                .InstancePerRequest();
+
+            builder.RegisterType<SchedulerPresentationService>()
+                .As<ISchedulerPresentationService>()
                 .InstancePerRequest();
 
             // Register the MVC controllers.

@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace DiaryScheduler.Web.Models
+namespace DiaryScheduler.Web.Models.Scheduler
 {
     /// <summary>
     /// The calendar event view model.
@@ -24,7 +24,7 @@ namespace DiaryScheduler.Web.Models
         /// </summary>
         [DisplayName("From date")]
         [Required(ErrorMessage = "Select a {0}")]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}", ApplyFormatInEditMode = true)]
         public DateTime DateFrom { get; set; }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace DiaryScheduler.Web.Models
         /// </summary>
         [DisplayName("To date")]
         [Required(ErrorMessage = "Select a {0}")]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}", ApplyFormatInEditMode = true)]
         public DateTime DateTo { get; set; }
 
         /// <summary>

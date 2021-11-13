@@ -256,8 +256,11 @@
     <Compile Include="Common\Classes\JsonContentResult.cs" />
     <Compile Include="Common\Classes\SiteErrorHandler.cs" />
     <Compile Include="Common\Exceptions\SiteValidationException.cs" />
+    <Compile Include="Common\Services\Scheduler\ISchedulerPresentationService.cs" />
+    <Compile Include="Common\Services\Scheduler\SchedulerPresentationService.cs" />
     <Compile Include="Common\Utilities\SelectedPageHtmlHelper.cs" />
-    <Compile Include="Common\Utilities\ViewModelMapper.cs" />
+    <Compile Include="Common\Utilities\UrlHelper\IUrlHelperService.cs" />
+    <Compile Include="Common\Utilities\UrlHelper\UrlHelperService.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -266,9 +269,10 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\CalendarEventViewModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\Scheduler\CalendarEventViewModel.cs" />
     <Compile Include="Models\Scheduler\SchedulerIndexViewModel.cs" />
+    <Compile Include="Models\Scheduler\SchedulerModifyViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -328,11 +332,11 @@
     <Content Include="Content\Partials\Utility\_lightBootstrap.scss" />
     <Content Include="Content\Partials\Component\_calendar.scss" />
     <Content Include="Content\Partials\Component\_alert.scss" />
+    <Content Include="Content\Partials\Component\_formControl.scss" />
     <None Include="packages.config" />
     <Content Include="Views\Scheduler\Index.cshtml" />
     <Content Include="Views\Scheduler\_ModalQuickCreate.cshtml" />
     <Content Include="Views\Scheduler\_QuickCreate.cshtml" />
-    <Content Include="Views\Scheduler\Create.cshtml" />
     <Content Include="Views\Scheduler\Edit.cshtml" />
     <Content Include="Views\Scheduler\_ModalDeleteConfirmation.cshtml" />
     <Content Include="Views\Scheduler\_ModalExport.cshtml" />

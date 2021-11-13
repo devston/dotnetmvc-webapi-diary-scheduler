@@ -45,12 +45,8 @@ export namespace Scheduler {
         const pageToLoad = $(mainContainer).data("page-name");
 
         switch (pageToLoad) {
-            case "create":
-                initCreate();
-                break;
-
-            case "edit":
-                initEdit();
+            case "modify":
+                initModify();
                 break;
 
             default:
@@ -63,7 +59,7 @@ export namespace Scheduler {
      * Initialise the index page.
      */
     function initIndex() {
-        const sourceUrl = "/Scheduler/UserEntries/";
+        const sourceUrl = (document.getElementById("CalendarSourceUrl") as HTMLInputElement).value;
         SiteCalendar.init(calendarSelector, sourceUrl, showQuickCreateModal, Navigate.toEdit);
 
         $("#export-events-btn").on("click", function (e) {
@@ -73,18 +69,21 @@ export namespace Scheduler {
     }
 
     /**
-     *  Initialise the create page.
-     * */
-    function initCreate() {
-        initEventCard("#create-cal-entry-form", "/Scheduler/CreateEntry/");
-    }
-
-    /**
      *  Initialise the edit event page.
      * */
-    function initEdit() {
+    function initModify() {
         const eventId = <string>$("#CalendarEntryId").val();
-        initEventCard("#edit-cal-entry-form", "/Scheduler/EditEntry/");
+        const startPickerSelector = "#DateFrom";
+        const endPickerSelector = "#DateTo";
+
+        // Initialise the datetime pickers.
+        DateTimePicker.initDateTimeRange(startPickerSelector, endPickerSelector);
+
+        // Form submit.
+        $("#edit-cal-entry-form").on("submit", function (e) {
+            e.preventDefault();
+            saveEvent($(this));
+        });
 
         $("#export-event-btn").on("click", function (e) {
             e.preventDefault();
@@ -98,29 +97,10 @@ export namespace Scheduler {
     }
 
     /**
-     * Initialise the event card.
-     * @param formSelector
-     * @param url
-     */
-    function initEventCard(formSelector: string, url: string) {
-        const startPickerSelector = "#DateFrom";
-        const endPickerSelector = "#DateTo";
-
-        // Initialise the datetime pickers.
-        DateTimePicker.initDateTimeRange(startPickerSelector, endPickerSelector);
-
-        // Form submit.
-        $(formSelector).on("submit", function (e) {
-            e.preventDefault();
-            saveEvent($(this), url);
-        });
-    }
-
-    /**
      *  Initialise the export calendar event modal.
      * */
     function initExportModal() {
-        const modal = new bootstrap.Modal(document.getElementById("export-events-modal"));
+        const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById("export-events-modal"));
         const startPickerSelector = "#SyncFrom";
         const endPickerSelector = "#SyncTo";
         let radioVal = "0";
@@ -239,7 +219,9 @@ export namespace Scheduler {
      * @param formId
      * @param url
      */
-    function saveEvent($form: JQuery<HTMLElement>, url: string) {
+    function saveEvent($form: JQuery<HTMLElement>) {
+        const url = $(this).data("url");
+
         if ($form.valid()) {
             $.ajax({
                 beforeSend: function () {
