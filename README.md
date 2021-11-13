@@ -12,12 +12,8 @@ An ASP.Net MVC diary scheduling app based on the domain-driven design concept. T
 - Create a user & navigate to the scheduler area
 
 ## TODO:
-- Update webpack to the latest version
-- Update bootstrap to the latest version
-- Update fullcalendar to the latest version
 - Seperate presentation models & services into their own projects
 - Update projects to .net 5
-- Change datepicker to flatpickr
 - Remove jQuery
 - Add unit tests
 - Add google calendar integration

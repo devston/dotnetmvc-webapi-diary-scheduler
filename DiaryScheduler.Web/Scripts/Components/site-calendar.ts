@@ -30,7 +30,6 @@ export namespace SiteCalendar {
             dayMaxEventRows: true,
             events: sourceUrl,
             selectable: true,
-            //selectMirror: true,
             select: function (info) {
                 console.log("click");
                 createFunc(info.start, info.end);
