@@ -28,10 +28,7 @@ export namespace SiteCalendar {
                 editFunc(calEvent.event.id);
             },
             dayMaxEventRows: true,
-            eventSources: [{
-                id: "default",
-                url: sourceUrl
-            }],
+            events: sourceUrl,
             selectable: true,
             //selectMirror: true,
             select: function (info) {
