@@ -16,7 +16,7 @@
     
 \*----------------------------------------------------------------------------*/
 
-import "bootstrap";
+import * as bootstrap from "bootstrap";
 import $ from "jquery";
 import "jquery-validation";
 import "jquery-validation-unobtrusive";
@@ -120,7 +120,7 @@ export namespace Scheduler {
      *  Initialise the export calendar event modal.
      * */
     function initExportModal() {
-        const $modal = $("#export-events-modal");
+        const modal = new bootstrap.Modal(document.getElementById("export-events-modal"));
         const startPickerSelector = "#SyncFrom";
         const endPickerSelector = "#SyncTo";
         let radioVal = "0";
@@ -150,7 +150,7 @@ export namespace Scheduler {
                 return;
             }
             else {
-                $modal.modal("hide");
+                modal.hide();
 
                 if (radioVal == "1") {
                     exportVisibleEventsToIcal();
@@ -164,26 +164,28 @@ export namespace Scheduler {
             }
         });
 
-        $modal.modal("show");
+        modal.show();
     }
 
     /**
      *  Initialise the delete event modal.
      * */
     function initDeleteModal(eventId: string) {
-        const $modal = $("#confirm-delete-modal");
+        const modalEl = document.getElementById("confirm-delete-modal");
+        const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
 
         $("#confirm-delete-btn").on("click", function (e) {
             e.preventDefault();
-            $modal.modal("hide");
 
             // Stop the modal from getting 'stuck'.
-            $modal.on("hidden.bs.modal", function () {
+            modalEl.addEventListener("hidden.bs.modal", function () {
                 deleteEvent(eventId);
             });
+
+            modal.hide();
         });
 
-        $modal.modal("show");
+        modal.show();
     }
 
     /*------------------------------------------------------------------------*\
@@ -216,16 +218,15 @@ export namespace Scheduler {
             .done(function (data: any) {
                 SiteCalendar.addEvent(data.calEntry, calendarSelector);
                 SiteAlert.show("success", data.message, true);
+                const modalEl = document.getElementById("quick-create-modal");
+                const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
 
-                // jQuery object is used multiple times so store it in a variable.
-                var $modal = $("#quick-create-modal");
-
-                // Close and empty the modal.
-                $modal.modal("hide");
-
-                $modal.on("hidden.bs.modal", function () {
+                modalEl.addEventListener("hidden.bs.modal", function () {
                     $("#quick-create-container").empty();
                 });
+
+                // Close and empty the modal.
+                modal.hide();
             })
             .fail(function (jqXHR) {
                 SiteAlert.showJqXhrError(jqXHR);
@@ -362,13 +363,12 @@ export namespace Scheduler {
                 // Format date so it's human readable.
                 $("#DateStarting").val(moment(start).local().format("LLL"));
                 $("#DateEnding").val(moment(end).local().format("LLL"));
-
-                // jQuery objects are used multiple times so store them in variables.
-                var $modal = $("#quick-create-modal");
+                const modalEl = document.getElementById("quick-create-modal");
+                const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
                 var $form = $("#quick-create-form");
 
                 // Show the modal.
-                $modal.modal("show");
+                modal.show();
 
                 // Show full create view.
                 $("#edit-entry-btn").on("click", function (event: JQueryEventObject) {
@@ -377,14 +377,14 @@ export namespace Scheduler {
                     SiteLoader.toggleGlobalLoader(true);
                     var title = <string>$("#Title").val();
 
-                    // Close and empty the modal.
-                    $modal.modal("hide");
-
                     // Stop the modal from getting 'stuck'.
-                    $modal.on("hidden.bs.modal", function () {
+                    modalEl.addEventListener("hidden.bs.modal", function () {
                         Navigate.toCreateMoreOptions(title, startFormatted, endFormatted);
                         SiteLoader.toggleGlobalLoader(false);
                     });
+
+                    // Close and empty the modal.
+                    modal.hide();
                 });
 
                 // Submit form.

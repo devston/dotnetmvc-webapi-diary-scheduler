@@ -6,4 +6,11 @@
 //
 //----------------------------------------------------------------------------//
 
-@use '~bootstrap/scss/bootstrap' with ( $body-bg: #f5f6fa );
+@use '~bootstrap/scss/bootstrap' with ( 
+    $body-bg: #f5f6fa,
+    $primary: #009ef7,
+    $success: #50cd89,
+    $danger: #f1416c,
+    $warning: #ffc700,
+    $info: #7239ea
+);

@@ -10,40 +10,41 @@
             <h2 class="card-title">Edit calendar event</h2>
             @Html.AntiForgeryToken()
             @Html.HiddenFor(x => x.CalendarEntryId)
-            <div class="form-group">
-                @Html.LabelFor(x => x.Title)
+
+            <div class="mb-3">
+                @Html.LabelFor(x => x.Title, new { @class = "form-label" })
                 @Html.TextBoxFor(x => x.Title, htmlAttributes: new { @class = "form-control", maxlength = "100" })
                 @Html.ValidationMessageFor(x => x.Title, "", new { @class = "text-danger" })
             </div>
-            <div class="form-group">
-                @Html.LabelFor(x => x.Description)
+
+            <div class="mb-3">
+                @Html.LabelFor(x => x.Description, new { @class = "form-label" })
                 @Html.TextAreaFor(x => x.Description, htmlAttributes: new { @class = "form-control no-resize", maxlength = "200", rows = "3" })
                 @Html.ValidationMessageFor(x => x.Description, "", new { @class = "text-danger" })
             </div>
-            <div class="form-row">
-                <div class="col-md-6 form-group">
-                    <label for="DateStarting">@Html.DisplayNameFor(x => x.DateFrom)</label>
-                    <input class="form-control" data-id="@nameof(Model.DateFrom)" id="DateStarting" type="text" name="DateStarting" />
-                    @Html.EditorFor(x => x.DateFrom, new { htmlAttributes = new { @type = "hidden" } })
+
+            <div class="row">
+                <div class="col-md-6">
+                    @Html.LabelFor(x => x.DateFrom, new { @class = "form-label" })
+                    @Html.TextBoxFor(x => x.DateFrom, "{0:yyyy-MM-dd HH:mm}", new { @class = "form-control" })
                     @Html.ValidationMessageFor(x => x.DateFrom, "", new { @class = "text-danger" })
                 </div>
-                <div class="col-md-6 form-group">
-                    <label for="DateEnding">@Html.DisplayNameFor(x => x.DateTo)</label>
-                    <input class="form-control" data-id="@nameof(Model.DateTo)" id="DateEnding" type="text" name="DateEnding" />
-                    @Html.EditorFor(x => x.DateTo, new { htmlAttributes = new { @type = "hidden" } })
+                <div class="col-md-6">
+                    @Html.LabelFor(x => x.DateTo, new { @class = "form-label" })
+                    @Html.TextBoxFor(x => x.DateTo, "{0:yyyy-MM-dd HH:mm}", new { @class = "form-control" })
                     @Html.ValidationMessageFor(x => x.DateTo, "", new { @class = "text-danger" })
                 </div>
             </div>
-            <div class="form-group form-check">
-                @Html.CheckBoxFor(x => x.AllDay, htmlAttributes: new { @class = "form-check-input" })
-                @Html.LabelFor(x => x.AllDay, htmlAttributes: new { @class = "form-check-label" })
+
+            <div class="mb-3 form-check">
+                @Html.CheckBoxFor(x => x.AllDay, new { @class = "form-check-input" })
+                @Html.LabelFor(x => x.AllDay, new { @class = "form-check-label" })
             </div>
-            <div class="form-group">
-                <button class="btn btn-success" id="save-entry-btn" title="Save changes to this calendar event" type="submit">Save</button>
-                <button class="btn btn-danger" id="delete-entry-btn" title="Delete this calendar event" type="button">Delete</button>
-                <button class="btn btn-info" id="export-event-btn" title="Export this calendar event to an iCal" type="button">Export</button>
-                @Html.ActionLink("Back", "Index", "Scheduler", null, new { @class = "btn btn-outline-secondary", id = "back-to-cal-btn", title = "Go back to the calendar" })
-            </div>
+
+            <button class="btn btn-success" id="save-entry-btn" title="Save changes to this calendar event" type="submit">Save</button>
+            <button class="btn btn-danger" id="delete-entry-btn" title="Delete this calendar event" type="button">Delete</button>
+            <button class="btn btn-info" id="export-event-btn" title="Export this calendar event to an iCal" type="button">Export</button>
+            @Html.ActionLink("Back", "Index", "Scheduler", null, new { @class = "btn btn-outline-secondary", id = "back-to-cal-btn", title = "Go back to the calendar" })
         </form>
     </div>
 </div>

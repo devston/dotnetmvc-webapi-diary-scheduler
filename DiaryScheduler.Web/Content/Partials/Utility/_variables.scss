@@ -8,7 +8,8 @@
 //  --------
 //
 //  1. Colours
-//  2. Media queries
+//  2. Sizes
+//  3. Media queries
 //
 //----------------------------------------------------------------------------//
 
@@ -16,38 +17,42 @@
 //------------------------------------------------------------------------------
 
 // Bootstrap replacement colours.
-$colour-primary: #4285f4;
-$colour-primary-dark: #0d47a1;
+$colour-primary: #009ef7;
+$colour-on-primary: #fff;
 $colour-secondary: #343a40;
-$colour-secondary-dark: #3E4551;
-$colour-success: #00c851;
-$colour-success-dark: #9933CC;
-$colour-info: #33b5e5;
-$colour-info-dark: #0099CC;
-$colour-warning: #f80;
-$colour-warning-dark: #FF8800;
-$colour-danger: #ff3547;
-$colour-danger-dark: #CC0000;
+$colour-on-secondary: #fff;
+$colour-success: #50cd89;
+$colour-info: #7239ea;
+$colour-warning: #ffc700;
+$colour-danger: #f1416c;
+$colour-on-status: #fff;
 
 // Buttons.
-$colour-btn-primary-bg: $colour-primary;
-$colour-btn-primary-text: #fff;
-$colour-btn-secondary-bg: $colour-secondary;
-$colour-btn-secondary-text: #fff;
-$colour-btn-success-bg: $colour-success;
-$colour-btn-success-text: #fff;
-$colour-btn-info-bg: $colour-info;
-$colour-btn-info-text: #fff;
-$colour-btn-warning-bg: $colour-warning;
-$colour-btn-warning-text: #fff;
-$colour-btn-danger-bg: $colour-danger;
-$colour-btn-danger-text: #fff;
+$colour-btn-primary-text: $colour-on-primary;
+$colour-btn-success-text: $colour-on-status;
+$colour-btn-info-text: $colour-on-status;
+$colour-btn-warning-text: $colour-on-status;
+$colour-btn-danger-text: $colour-on-status;
 
 // Misc.
-$colour-page-bg: #eee;
-$colour-jumbotron-bg: #fff;
+$colour-page-bg: #f5f8fa;
 
-//  2. Media queries
+//  2. Sizes
+//------------------------------------------------------------------------------
+
+// Base.
+$size-base-border-radius: 0.475rem;
+
+// Alerts.
+$size-alert-border-radius: $size-base-border-radius;
+
+// Buttons.
+$size-button-border-radius: $size-base-border-radius;
+
+// Cards.
+$size-card-border-radius: $size-base-border-radius;
+
+//  3. Media queries
 //------------------------------------------------------------------------------
 
 $xs: 0; // Extra small devices (default styling)

@@ -27,7 +27,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <TypeScriptToolsVersion>4.4</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>4.3</TypeScriptToolsVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -323,10 +323,11 @@
     <Content Include="Content\Partials\Component\_container.scss" />
     <Content Include="Content\Partials\Utility\_helperClasses.scss" />
     <Content Include="Content\Partials\Component\_primary.scss" />
-    <Content Include="Content\Partials\Component\_jumbotron.scss" />
     <Content Include="Content\Partials\Component\_button.scss" />
     <Content Include="Content\Partials\Component\_card.scss" />
     <Content Include="Content\Partials\Utility\_lightBootstrap.scss" />
+    <Content Include="Content\Partials\Component\_calendar.scss" />
+    <Content Include="Content\Partials\Component\_alert.scss" />
     <None Include="packages.config" />
     <Content Include="Views\Scheduler\Index.cshtml" />
     <Content Include="Views\Scheduler\_ModalQuickCreate.cshtml" />

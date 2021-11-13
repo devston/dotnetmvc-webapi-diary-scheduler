@@ -1,12 +1,11 @@
 ﻿/*----------------------------------------------------------------------------*\
-     Jumbotrons
+     Alerts
 --------------------------------------------------------------------------------
 
-    All styles related to jumbotrons can be found here.
+    All styles related to alerts can be found here.
 
 \*----------------------------------------------------------------------------*/
 
-.jumbotron {
-    background-color: $colour-jumbotron-bg;
-    box-shadow: 0 2px 5px 0 rgba(0,0,0,.16),0 2px 10px 0 rgba(0,0,0,.12);
+.alert {
+    border-radius: $size-alert-border-radius;
 }
