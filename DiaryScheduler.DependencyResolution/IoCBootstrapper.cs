@@ -43,6 +43,15 @@ namespace DiaryScheduler.DependencyResolution
         }
 
         /// <summary>
+        /// Configure IoC Container using Autofac: Register DI.
+        /// </summary>
+        /// <param name="builder"></param>
+        public static void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterModule(new DataModule());
+        }
+
+        /// <summary>
         /// Get the built IoC container.
         /// </summary>
         /// <returns>The IoC container.</returns>
