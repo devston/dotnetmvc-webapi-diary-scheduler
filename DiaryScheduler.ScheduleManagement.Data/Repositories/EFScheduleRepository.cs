@@ -3,9 +3,9 @@ using DiaryScheduler.Data.Models;
 using DiaryScheduler.ScheduleManagement.Core.Interfaces;
 using DiaryScheduler.ScheduleManagement.Core.Models;
 using DiaryScheduler.ScheduleManagement.Data.Services;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 
 namespace DiaryScheduler.ScheduleManagement.Data.Repositories
@@ -18,9 +18,11 @@ namespace DiaryScheduler.ScheduleManagement.Data.Repositories
         private readonly ApplicationDbContext _context;
         private readonly DomainMapperService _mapper;
 
-        public EFScheduleRepository(DomainMapperService mapper)
+        public EFScheduleRepository(
+            ApplicationDbContext context,
+            DomainMapperService mapper)
         {
-            _context = new ApplicationDbContext();
+            _context = context;
             _mapper = mapper;
         }
 
@@ -30,7 +32,7 @@ namespace DiaryScheduler.ScheduleManagement.Data.Repositories
         public List<CalEventDm> GetAllUserEntries(string id, DateTime start, DateTime end)
         {
             return _mapper.Map<List<CalEventDm>>(
-                    _context.CalendarEntries.AsNoTracking().Where(x => x.UserId == id && x.DateFrom >= start && x.DateTo <= end)
+                    _context.CalendarEvents.AsNoTracking().Where(x => x.UserId == id && x.DateFrom >= start && x.DateTo <= end)
                 );
         }
 
@@ -38,7 +40,7 @@ namespace DiaryScheduler.ScheduleManagement.Data.Repositories
         public CalEventDm GetCalendarEntry(Guid id)
         {
             return _mapper.Map<CalEventDm>(
-                    _context.CalendarEntries.AsNoTracking().FirstOrDefault(x => x.CalendarEntryId == id)
+                    _context.CalendarEvents.AsNoTracking().FirstOrDefault(x => x.CalendarEventId == id)
                 );
         }
 
@@ -49,7 +51,7 @@ namespace DiaryScheduler.ScheduleManagement.Data.Repositories
         // Check if the calendar entry exists.
         public bool DoesCalEntryExist(Guid id)
         {
-            return _context.CalendarEntries.Any(x => x.CalendarEntryId == id);
+            return _context.CalendarEvents.Any(x => x.CalendarEventId == id);
         }
 
         #endregion
@@ -59,18 +61,18 @@ namespace DiaryScheduler.ScheduleManagement.Data.Repositories
         // Add new calendar entry.
         public Guid CreateCalendarEntry(CalEventDm entry)
         {
-            var mappedEntry = _mapper.Map<CalendarEntry>(entry);
-            _context.CalendarEntries.Attach(mappedEntry);
+            var mappedEntry = _mapper.Map<CalendarEvent>(entry);
+            _context.CalendarEvents.Attach(mappedEntry);
             _context.Entry(mappedEntry).State = EntityState.Added;
             SaveChanges();
-            return mappedEntry.CalendarEntryId;
+            return mappedEntry.CalendarEventId;
         }
 
         // Edit an existing calendar entry.
         public void EditCalendarEntry(CalEventDm entry)
         {
             // Get the original entry.
-            var originalEntry = _context.CalendarEntries.FirstOrDefault(x => x.CalendarEntryId == entry.CalendarEntryId);
+            var originalEntry = _context.CalendarEvents.FirstOrDefault(x => x.CalendarEventId == entry.CalendarEntryId);
 
             // Double check the entry exists.
             if (originalEntry == null)
@@ -94,7 +96,7 @@ namespace DiaryScheduler.ScheduleManagement.Data.Repositories
         public void DeleteCalendarEntry(Guid id)
         {
             // Get the original entry.
-            var originalEntry = _context.CalendarEntries.FirstOrDefault(x => x.CalendarEntryId == id);
+            var originalEntry = _context.CalendarEvents.FirstOrDefault(x => x.CalendarEventId == id);
 
             // Double check the entry exists.
             if (originalEntry == null)
@@ -103,7 +105,7 @@ namespace DiaryScheduler.ScheduleManagement.Data.Repositories
             }
 
             // Save changes.
-            _context.CalendarEntries.Remove(originalEntry);
+            _context.CalendarEvents.Remove(originalEntry);
             SaveChanges();
         }
 

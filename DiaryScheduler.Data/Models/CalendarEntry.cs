@@ -4,11 +4,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DiaryScheduler.Data.Models
 {
-    public class CalendarEntry
+    public class CalendarEvent
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid CalendarEntryId { get; set; }
+        public Guid CalendarEventId { get; set; }
 
         [Required]
         public string UserId { get; set; }
