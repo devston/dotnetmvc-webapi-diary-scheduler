@@ -93,10 +93,10 @@ namespace DiaryScheduler.Web.Controllers
 
         #region Posts
 
-        // Create calendar entry.
+        // Create calendar event.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateEntry(CalendarEventViewModel vm)
+        public ActionResult CreateEvent(CalendarEventViewModel vm)
         {
             if (!ModelState.IsValid)
             {
@@ -128,10 +128,10 @@ namespace DiaryScheduler.Web.Controllers
             });
         }
 
-        // Edit calendar entry.
+        // Edit calendar event.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditEntry(CalendarEventViewModel vm)
+        public ActionResult EditEvent(CalendarEventViewModel vm)
         {
             if (!ModelState.IsValid)
             {
@@ -160,10 +160,10 @@ namespace DiaryScheduler.Web.Controllers
             });
         }
 
-        // Delete calendar entry.
+        // Delete calendar event.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteEntry(Guid id)
+        public ActionResult DeleteEvent(Guid id)
         {
             // Check if the calendar entry exists.
             if (!_schedulerPresentationService.CheckCalendarEventExists(id))
@@ -185,8 +185,8 @@ namespace DiaryScheduler.Web.Controllers
 
         #region Calendar Sources
 
-        // GET: User calendar entries.
-        public ActionResult UserEntries(DateTime start, DateTime end)
+        // GET: User calendar events.
+        public ActionResult UserEvents(DateTime start, DateTime end)
         {
             var userId = User.Identity.GetUserId();
             var result = _schedulerPresentationService.GetCalendarEventsForUserBetweenDateRange(start, end, userId);

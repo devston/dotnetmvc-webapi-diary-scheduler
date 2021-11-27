@@ -3,9 +3,9 @@
 namespace DiaryScheduler.ScheduleManagement.Core.Models
 {
     /// <summary>
-    /// The calendar entry domain model.
+    /// The calendar event domain model.
     /// </summary>
-    public class CalEntryDm
+    public class CalEventDm
     {
         /// <summary>
         /// Gets or sets the calendar entry id.

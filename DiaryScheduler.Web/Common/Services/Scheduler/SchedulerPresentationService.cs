@@ -30,7 +30,7 @@ namespace DiaryScheduler.Web.Common.Services.Scheduler
             vm.CreateEventUrl = urlHelper.Action(nameof(Controllers.SchedulerController.Create), "Scheduler", null);
             vm.CreateEventMoreOptionsUrl = urlHelper.Action(nameof(Controllers.SchedulerController.CreateMoreOptions), "Scheduler", new { title = "title_placeholder", start = "start_placeholder", end = "end_placeholder" });
             vm.EditEventUrl = urlHelper.Action(nameof(Controllers.SchedulerController.Edit), "Scheduler", new { id = "id_placeholder" });
-            vm.CalendarSourceUrl = urlHelper.Action(nameof(Controllers.SchedulerController.UserEntries), "Scheduler", null);
+            vm.CalendarSourceUrl = urlHelper.Action(nameof(Controllers.SchedulerController.UserEvents), "Scheduler", null);
             return vm;
         }
 
@@ -76,7 +76,7 @@ namespace DiaryScheduler.Web.Common.Services.Scheduler
             vm.Description = entry.Description;
             vm.Title = entry.Title;
             vm.UserId = entry.UserId;
-            vm.SaveUrl = urlHelper.Action(nameof(Controllers.SchedulerController.EditEntry), "Scheduler", null);
+            vm.SaveUrl = urlHelper.Action(nameof(Controllers.SchedulerController.EditEvent), "Scheduler", null);
             vm.ShowDeleteBtn = true;
             vm.ShowExportBtn = true;
             vm.PageTitle = "Edit calendar event";
@@ -146,7 +146,7 @@ namespace DiaryScheduler.Web.Common.Services.Scheduler
             };
 
             // Create a new event for each calendar entry.
-            foreach (CalEntryDm entry in userEntries)
+            foreach (CalEventDm entry in userEntries)
             {
                 CreateCalendarIcalEventFromCalendarEvent(iCal, entry);
             }
@@ -157,7 +157,7 @@ namespace DiaryScheduler.Web.Common.Services.Scheduler
 
         public Guid CreateCalendarEvent(CalendarEventViewModel eventVm, string userId)
         {
-            var entry = new CalEntryDm()
+            var entry = new CalEventDm()
             {
                 Title = eventVm.Title.Trim(),
                 Description = eventVm.Description == null ? null : eventVm.Description.Trim(),
@@ -174,7 +174,7 @@ namespace DiaryScheduler.Web.Common.Services.Scheduler
 
         public void UpdateCalendarEvent(CalendarEventViewModel eventVm)
         {
-            var entry = new CalEntryDm()
+            var entry = new CalEventDm()
             {
                 CalendarEntryId = eventVm.CalendarEntryId,
                 Title = eventVm.Title.Trim(),
@@ -202,7 +202,7 @@ namespace DiaryScheduler.Web.Common.Services.Scheduler
         {
             var urlHelper = _urlHelperService.GetUrlHelper();
             var vm = new SchedulerModifyViewModel();
-            vm.SaveUrl = urlHelper.Action(nameof(Controllers.SchedulerController.CreateEntry), "Scheduler", null);
+            vm.SaveUrl = urlHelper.Action(nameof(Controllers.SchedulerController.CreateEvent), "Scheduler", null);
             vm.PageTitle = "Create calendar event";
             return vm;
         }
@@ -212,7 +212,7 @@ namespace DiaryScheduler.Web.Common.Services.Scheduler
         /// </summary>
         /// <param name="iCal">The calendar to add the event to.</param>
         /// <param name="entry">The event to add.</param>
-        private void CreateCalendarIcalEventFromCalendarEvent(Ical.Net.Calendar iCal, CalEntryDm entry)
+        private void CreateCalendarIcalEventFromCalendarEvent(Ical.Net.Calendar iCal, CalEventDm entry)
         {
             // Create event.
             var evt = iCal.Create<Ical.Net.CalendarComponents.CalendarEvent>();

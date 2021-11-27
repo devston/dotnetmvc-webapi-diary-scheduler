@@ -27,17 +27,17 @@ namespace DiaryScheduler.ScheduleManagement.Data.Repositories
         #region Gets
 
         // Return all user calendar entries.
-        public List<CalEntryDm> GetAllUserEntries(string id, DateTime start, DateTime end)
+        public List<CalEventDm> GetAllUserEntries(string id, DateTime start, DateTime end)
         {
-            return _mapper.Map<List<CalEntryDm>>(
+            return _mapper.Map<List<CalEventDm>>(
                     _context.CalendarEntries.AsNoTracking().Where(x => x.UserId == id && x.DateFrom >= start && x.DateTo <= end)
                 );
         }
 
         // Get a calendar entry by id.
-        public CalEntryDm GetCalendarEntry(Guid id)
+        public CalEventDm GetCalendarEntry(Guid id)
         {
-            return _mapper.Map<CalEntryDm>(
+            return _mapper.Map<CalEventDm>(
                     _context.CalendarEntries.AsNoTracking().FirstOrDefault(x => x.CalendarEntryId == id)
                 );
         }
@@ -57,7 +57,7 @@ namespace DiaryScheduler.ScheduleManagement.Data.Repositories
         #region Create, update and delete
 
         // Add new calendar entry.
-        public Guid CreateCalendarEntry(CalEntryDm entry)
+        public Guid CreateCalendarEntry(CalEventDm entry)
         {
             var mappedEntry = _mapper.Map<CalendarEntry>(entry);
             _context.CalendarEntries.Attach(mappedEntry);
@@ -67,7 +67,7 @@ namespace DiaryScheduler.ScheduleManagement.Data.Repositories
         }
 
         // Edit an existing calendar entry.
-        public void EditCalendarEntry(CalEntryDm entry)
+        public void EditCalendarEntry(CalEventDm entry)
         {
             // Get the original entry.
             var originalEntry = _context.CalendarEntries.FirstOrDefault(x => x.CalendarEntryId == entry.CalendarEntryId);

@@ -17,15 +17,15 @@ namespace DiaryScheduler.ScheduleManagement.Core.Interfaces
         /// <param name="id">User id</param>
         /// <param name="start">Search start date</param>
         /// <param name="end">Search end date</param>
-        /// <returns>A collection of <see cref="CalEntryDm"/>.</returns>
-        List<CalEntryDm> GetAllUserEntries(string id, DateTime start, DateTime end);
+        /// <returns>A collection of <see cref="CalEventDm"/>.</returns>
+        List<CalEventDm> GetAllUserEntries(string id, DateTime start, DateTime end);
 
         /// <summary>
         /// Get a calendar entry by id.
         /// </summary>
         /// <param name="id"></param>
-        /// <returns>A <see cref="CalEntryDm"/>.</returns>
-        CalEntryDm GetCalendarEntry(Guid id);
+        /// <returns>A <see cref="CalEventDm"/>.</returns>
+        CalEventDm GetCalendarEntry(Guid id);
 
         #endregion
 
@@ -47,13 +47,13 @@ namespace DiaryScheduler.ScheduleManagement.Core.Interfaces
         /// </summary>
         /// <param name="entry"></param>
         /// <returns>Created entry id</returns>
-        Guid CreateCalendarEntry(CalEntryDm entry);
+        Guid CreateCalendarEntry(CalEventDm entry);
 
         /// <summary>
         /// Edit an existing calendar entry.
         /// </summary>
         /// <param name="entry">The calendar entry to edit.</param>
-        void EditCalendarEntry(CalEntryDm entry);
+        void EditCalendarEntry(CalEventDm entry);
 
         /// <summary>
         /// Delete a calendar entry.

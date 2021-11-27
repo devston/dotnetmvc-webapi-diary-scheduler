@@ -12,7 +12,7 @@ namespace DiaryScheduler.ScheduleManagement.Data.Services
         {
             var config = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<CalendarEntry, CalEntryDm>()
+                cfg.CreateMap<CalendarEntry, CalEventDm>()
                    .ReverseMap()
                    .ForMember(x => x.AspNetUser, opt => opt.Ignore());
             });
