@@ -37,6 +37,38 @@ namespace DiaryScheduler.Web.Common.Services.Scheduler
         SchedulerModifyViewModel CreateSchedulerEditViewModel(Guid id);
 
         /// <summary>
+        /// Check if a calendar event exists by event id.
+        /// </summary>
+        /// <param name="eventId">The calendar event id.</param>
+        /// <returns>A value indicating whether the calendar event exists.</returns>
+        bool CheckCalendarEventExists(Guid eventId);
+
+        /// <summary>
+        /// Get the calendar events for a user between a date range.
+        /// </summary>
+        /// <param name="start">The start date.</param>
+        /// <param name="end">The end date.</param>
+        /// <param name="userId">The user id.</param>
+        /// <returns>The calendar events as an object.</returns>
+        object GetCalendarEventsForUserBetweenDateRange(DateTime start, DateTime end, string userId);
+
+        /// <summary>
+        /// Generate an ical file for a calendar event.
+        /// </summary>
+        /// <param name="id">The event id.</param>
+        /// <returns>The file data stored in <see cref="CalendarIcalViewModel"/>.</returns>
+        CalendarIcalViewModel GenerateIcalForCalendarEvent(Guid id);
+
+        /// <summary>
+        /// Generate an ical file between a date range.
+        /// </summary>
+        /// <param name="start">The start date.</param>
+        /// <param name="end">The end date.</param>
+        /// <param name="userId">The user id to check events for.</param>
+        /// <returns>The file data stored in <see cref="CalendarIcalViewModel"/>.</returns>
+        CalendarIcalViewModel GenerateIcalBetweenDateRange(DateTime start, DateTime end, string userId);
+
+        /// <summary>
         /// Create a calendar event.
         /// </summary>
         /// <param name="eventVm">The calendar entry to event.</param>

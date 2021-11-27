@@ -3,6 +3,7 @@ using DiaryScheduler.ScheduleManagement.Core.Models;
 using DiaryScheduler.Web.Common.Utilities.UrlHelper;
 using DiaryScheduler.Web.Models.Scheduler;
 using System;
+using System.Linq;
 
 namespace DiaryScheduler.Web.Common.Services.Scheduler
 {
@@ -82,6 +83,78 @@ namespace DiaryScheduler.Web.Common.Services.Scheduler
             return vm;
         }
 
+        public bool CheckCalendarEventExists(Guid eventId)
+        {
+            return _scheduleRepository.DoesCalEntryExist(eventId);
+        }
+
+        public object GetCalendarEventsForUserBetweenDateRange(DateTime start, DateTime end, string userId)
+        {
+            var userEntries = _scheduleRepository.GetAllUserEntries(userId, start, end);
+
+            object result = userEntries.Select(x => new
+            {
+                title = x.Title,
+                start = x.DateFrom.ToString("o"),
+                end = x.DateTo.ToString("o"),
+                id = x.CalendarEntryId,
+                allDay = x.AllDay
+            });
+
+            return result;
+        }
+
+        public CalendarIcalViewModel GenerateIcalForCalendarEvent(Guid id)
+        {
+            var entry = _scheduleRepository.GetCalendarEntry(id);
+
+            if (entry == null)
+            {
+                return null;
+            }
+
+            // Create iCal.
+            var iCal = new Ical.Net.Calendar()
+            {
+                ProductId = "ASP.Net Diary Scheduler",
+                Version = "2.0"
+            };
+
+            // Create event.
+            CreateCalendarIcalEventFromCalendarEvent(iCal, entry);
+
+            // Build the .ics file.
+            return CreateCalendarIcalViewModelFromIcal(iCal);
+        }
+
+        public CalendarIcalViewModel GenerateIcalBetweenDateRange(DateTime start, DateTime end, string userId)
+        {
+            // Get user's calendar entries within the date range.
+            var userEntries = _scheduleRepository.GetAllUserEntries(userId, start, end);
+
+            // Check if there are any diary entries to sync.
+            if (userEntries == null)
+            {
+                return null;
+            }
+
+            // Create iCal.
+            var iCal = new Ical.Net.Calendar()
+            {
+                ProductId = "ASP.Net Diary Scheduler",
+                Version = "2.0"
+            };
+
+            // Create a new event for each calendar entry.
+            foreach (CalEntryDm entry in userEntries)
+            {
+                CreateCalendarIcalEventFromCalendarEvent(iCal, entry);
+            }
+
+            // Build the .ics file.
+            return CreateCalendarIcalViewModelFromIcal(iCal);
+        }
+
         public Guid CreateCalendarEvent(CalendarEventViewModel eventVm, string userId)
         {
             var entry = new CalEntryDm()
@@ -132,6 +205,46 @@ namespace DiaryScheduler.Web.Common.Services.Scheduler
             vm.SaveUrl = urlHelper.Action(nameof(Controllers.SchedulerController.CreateEntry), "Scheduler", null);
             vm.PageTitle = "Create calendar event";
             return vm;
+        }
+
+        /// <summary>
+        /// Create a calendar event in the <see cref="Ical.Net.Calendar"/>.
+        /// </summary>
+        /// <param name="iCal">The calendar to add the event to.</param>
+        /// <param name="entry">The event to add.</param>
+        private void CreateCalendarIcalEventFromCalendarEvent(Ical.Net.Calendar iCal, CalEntryDm entry)
+        {
+            // Create event.
+            var evt = iCal.Create<Ical.Net.CalendarComponents.CalendarEvent>();
+
+            // Prepare ical event.
+            evt.Uid = entry.CalendarEntryId.ToString();
+            evt.Start = new Ical.Net.DataTypes.CalDateTime(entry.DateFrom);
+            evt.End = new Ical.Net.DataTypes.CalDateTime(entry.DateTo);
+            evt.Description = entry.Description;
+            evt.Summary = entry.Title;
+            evt.IsAllDay = entry.AllDay;
+        }
+
+        /// <summary>
+        /// Create the <see cref="CalendarIcalViewModel"/> using the <see cref="Ical.Net.Calendar"/>.
+        /// </summary>
+        /// <param name="iCal">The calendar to generate an ics from.</param>
+        /// <returns>THe <see cref="CalendarIcalViewModel"/> holding the ics data.</returns>
+        private CalendarIcalViewModel CreateCalendarIcalViewModelFromIcal(Ical.Net.Calendar iCal)
+        {
+            var fileData = new CalendarIcalViewModel();
+            Ical.Net.Serialization.SerializationContext ctx = new Ical.Net.Serialization.SerializationContext();
+            var serialiser = new Ical.Net.Serialization.CalendarSerializer(ctx);
+
+            string output = serialiser.SerializeToString(iCal);
+            fileData.ContentType = "text/calendar";
+            fileData.Data = System.Text.Encoding.UTF8.GetBytes(output);
+
+            // Create a name.
+            Guid fileId = Guid.NewGuid();
+            fileData.FileName = fileId.ToString() + ".ics";
+            return fileData;
         }
     }
 }

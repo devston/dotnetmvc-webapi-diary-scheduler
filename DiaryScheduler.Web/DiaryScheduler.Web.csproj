@@ -271,6 +271,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Scheduler\CalendarEventViewModel.cs" />
+    <Compile Include="Models\Scheduler\CalendarIcalViewModel.cs" />
     <Compile Include="Models\Scheduler\SchedulerIndexViewModel.cs" />
     <Compile Include="Models\Scheduler\SchedulerModifyViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

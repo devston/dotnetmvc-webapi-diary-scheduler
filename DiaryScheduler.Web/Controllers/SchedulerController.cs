@@ -1,12 +1,8 @@
-﻿using DiaryScheduler.ScheduleManagement.Core.Interfaces;
-using DiaryScheduler.ScheduleManagement.Core.Models;
-using DiaryScheduler.Web.Common.Classes;
+﻿using DiaryScheduler.Web.Common.Classes;
 using DiaryScheduler.Web.Common.Services.Scheduler;
 using DiaryScheduler.Web.Models.Scheduler;
 using Microsoft.AspNet.Identity;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web.Mvc;
 
 namespace DiaryScheduler.Web.Controllers
@@ -15,14 +11,11 @@ namespace DiaryScheduler.Web.Controllers
     public class SchedulerController : Controller
     {
         private readonly ISchedulerPresentationService _schedulerPresentationService;
-        private readonly IScheduleRepository _scheduleRepository;
 
         public SchedulerController(
-            ISchedulerPresentationService schedulerPresentationService,
-            IScheduleRepository scheduleRepository)
+            ISchedulerPresentationService schedulerPresentationService)
         {
             _schedulerPresentationService = schedulerPresentationService;
-            _scheduleRepository = scheduleRepository;
         }
 
         #region Views
@@ -152,7 +145,7 @@ namespace DiaryScheduler.Web.Controllers
             }
 
             // Check if the calendar entry exists.
-            if (!_scheduleRepository.DoesCalEntryExist(vm.CalendarEntryId))
+            if (!_schedulerPresentationService.CheckCalendarEventExists(vm.CalendarEntryId))
             {
                 return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> The calendar event could not be found.", "");
             }
@@ -173,7 +166,7 @@ namespace DiaryScheduler.Web.Controllers
         public ActionResult DeleteEntry(Guid id)
         {
             // Check if the calendar entry exists.
-            if (!_scheduleRepository.DoesCalEntryExist(id))
+            if (!_schedulerPresentationService.CheckCalendarEventExists(id))
             {
                 return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> The calendar event could not be found.", "");
             }
@@ -196,17 +189,7 @@ namespace DiaryScheduler.Web.Controllers
         public ActionResult UserEntries(DateTime start, DateTime end)
         {
             var userId = User.Identity.GetUserId();
-            List<CalEntryDm> userEntries = _scheduleRepository.GetAllUserEntries(userId, start, end);
-
-            var result = userEntries.Select(x => new
-            {
-                title = x.Title,
-                start = x.DateFrom.ToString("o"),
-                end = x.DateTo.ToString("o"),
-                id = x.CalendarEntryId,
-                allDay = x.AllDay
-            });
-
+            var result = _schedulerPresentationService.GetCalendarEventsForUserBetweenDateRange(start, end, userId);
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
@@ -223,44 +206,14 @@ namespace DiaryScheduler.Web.Controllers
                 return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> Invalid calendar event id.", "");
             }
 
-            var entry = _scheduleRepository.GetCalendarEntry(id);
+            var fileData = _schedulerPresentationService.GenerateIcalForCalendarEvent(id);
 
-            if (entry == null)
+            if (fileData == null)
             {
                 return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> The calendar event could not be found.", "");
             }
 
-            // Create iCal.
-            var iCal = new Ical.Net.Calendar()
-            {
-                ProductId = "ASP.Net Diary Scheduler",
-                Version = "2.0"
-            };
-
-            // Create event.
-            var evt = iCal.Create<Ical.Net.CalendarComponents.CalendarEvent>();
-
-            // Prepare ical event.
-            evt.Uid = entry.CalendarEntryId.ToString();
-            evt.Start = new Ical.Net.DataTypes.CalDateTime(entry.DateFrom);
-            evt.End = new Ical.Net.DataTypes.CalDateTime(entry.DateTo);
-            evt.Description = entry.Description;
-            evt.Summary = entry.Title;
-            evt.IsAllDay = entry.AllDay;
-
-            // Build the .ics file.
-            var ctx = new Ical.Net.Serialization.SerializationContext();
-            var serialiser = new Ical.Net.Serialization.CalendarSerializer(ctx);
-
-            string output = serialiser.SerializeToString(iCal);
-            string contentType = "text/calendar";
-            var bytes = System.Text.Encoding.UTF8.GetBytes(output);
-
-            // Create a name.
-            Guid fileId = Guid.NewGuid();
-            string fileName = fileId.ToString() + ".ics";
-
-            return File(bytes, contentType, fileName);
+            return File(fileData.Data, fileData.ContentType, fileData.FileName);
         }
 
         // Create a .ics file for calendar events from a date range.
@@ -272,50 +225,16 @@ namespace DiaryScheduler.Web.Controllers
                 return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> No date range provided.", "");
             }
 
-            // Get user's calendar entries within the date range.
-            List<CalEntryDm> userEntries = _scheduleRepository.GetAllUserEntries(User.Identity.GetUserId(), start, end);
+            var userId = User.Identity.GetUserId();
+            var fileData = _schedulerPresentationService.GenerateIcalBetweenDateRange(start, end, userId);
 
             // Check if there are any diary entries to sync.
-            if (userEntries == null)
+            if (fileData == null)
             {
                 return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> No calendar events to sync.", "");
             }
 
-            // Create iCal.
-            var iCal = new Ical.Net.Calendar()
-            {
-                ProductId = "ASP.Net Diary Scheduler",
-                Version = "2.0"
-            };
-
-            // Create a new event for each calendar entry.
-            foreach (CalEntryDm entry in userEntries)
-            {
-                // Create event.
-                var evt = iCal.Create<Ical.Net.CalendarComponents.CalendarEvent>();
-
-                // Prepare ical event.
-                evt.Uid = entry.CalendarEntryId.ToString();
-                evt.Start = new Ical.Net.DataTypes.CalDateTime(entry.DateFrom);
-                evt.End = new Ical.Net.DataTypes.CalDateTime(entry.DateTo);
-                evt.Description = entry.Description;
-                evt.Summary = entry.Title;
-                evt.IsAllDay = entry.AllDay;
-            }
-
-            // Build the .ics file.
-            Ical.Net.Serialization.SerializationContext ctx = new Ical.Net.Serialization.SerializationContext();
-            var serialiser = new Ical.Net.Serialization.CalendarSerializer(ctx);
-
-            string output = serialiser.SerializeToString(iCal);
-            string contentType = "text/calendar";
-            var bytes = System.Text.Encoding.UTF8.GetBytes(output);
-
-            // Create a name.
-            Guid fileId = Guid.NewGuid();
-            string fileName = fileId.ToString() + ".ics";
-
-            return File(bytes, contentType, fileName);
+            return File(fileData.Data, fileData.ContentType, fileData.FileName);
         }
 
         #endregion
