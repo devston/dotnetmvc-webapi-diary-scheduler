@@ -2,7 +2,6 @@
 using DiaryScheduler.Data.Models;
 using DiaryScheduler.ScheduleManagement.Core.Interfaces;
 using DiaryScheduler.ScheduleManagement.Core.Models;
-using DiaryScheduler.ScheduleManagement.Data.Services;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -16,14 +15,11 @@ namespace DiaryScheduler.ScheduleManagement.Data.Repositories
     public class EFScheduleRepository : IScheduleRepository
     {
         private readonly ApplicationDbContext _context;
-        private readonly DomainMapperService _mapper;
 
         public EFScheduleRepository(
-            ApplicationDbContext context,
-            DomainMapperService mapper)
+            ApplicationDbContext context)
         {
             _context = context;
-            _mapper = mapper;
         }
 
         #region Gets
@@ -31,17 +27,37 @@ namespace DiaryScheduler.ScheduleManagement.Data.Repositories
         // Return all user calendar entries.
         public List<CalEventDm> GetAllUserEntries(string id, DateTime start, DateTime end)
         {
-            return _mapper.Map<List<CalEventDm>>(
-                    _context.CalendarEvents.AsNoTracking().Where(x => x.UserId == id && x.DateFrom >= start && x.DateTo <= end)
-                );
+            return _context.CalendarEvents.AsNoTracking()
+                .Where(x => x.UserId == id && x.DateFrom >= start && x.DateTo <= end)
+                .Select(x => new CalEventDm
+                {
+                    AllDay = x.AllDay,
+                    CalendarEntryId = x.CalendarEventId,
+                    DateFrom = x.DateFrom,
+                    DateTo = x.DateTo,
+                    Description = x.Description,
+                    Title = x.Title,
+                    UserId = x.UserId
+                })
+                .ToList();
         }
 
         // Get a calendar entry by id.
         public CalEventDm GetCalendarEntry(Guid id)
         {
-            return _mapper.Map<CalEventDm>(
-                    _context.CalendarEvents.AsNoTracking().FirstOrDefault(x => x.CalendarEventId == id)
-                );
+            return _context.CalendarEvents.AsNoTracking()
+                .Where(x => x.CalendarEventId == id)
+                .Select(x => new CalEventDm
+                {
+                    AllDay = x.AllDay,
+                    CalendarEntryId = x.CalendarEventId,
+                    DateFrom = x.DateFrom,
+                    DateTo = x.DateTo,
+                    Description = x.Description,
+                    Title = x.Title,
+                    UserId = x.UserId
+                })
+                .FirstOrDefault();
         }
 
         #endregion
@@ -61,10 +77,10 @@ namespace DiaryScheduler.ScheduleManagement.Data.Repositories
         // Add new calendar entry.
         public Guid CreateCalendarEntry(CalEventDm entry)
         {
-            var mappedEntry = _mapper.Map<CalendarEvent>(entry);
+            var mappedEntry = ConvertCalendarEventDomainModelToEntity(entry);
             _context.CalendarEvents.Attach(mappedEntry);
             _context.Entry(mappedEntry).State = EntityState.Added;
-            SaveChanges();
+            _context.SaveChanges();
             return mappedEntry.CalendarEventId;
         }
 
@@ -89,7 +105,7 @@ namespace DiaryScheduler.ScheduleManagement.Data.Repositories
 
             // Save changes.
             _context.Entry(originalEntry).State = EntityState.Modified;
-            SaveChanges();
+            _context.SaveChanges();
         }
 
         // Delete a calendar entry.
@@ -106,16 +122,29 @@ namespace DiaryScheduler.ScheduleManagement.Data.Repositories
 
             // Save changes.
             _context.CalendarEvents.Remove(originalEntry);
-            SaveChanges();
+            _context.SaveChanges();
         }
 
         #endregion
 
         #region Helpers
 
-        private void SaveChanges()
+        /// <summary>
+        /// Convert a <see cref="CalEventDm"/> to a <see cref="CalendarEvent"/>.
+        /// </summary>
+        /// <param name="entry">The domain model to convert.</param>
+        /// <returns>The converted <see cref="CalendarEvent"/>.</returns>
+        private CalendarEvent ConvertCalendarEventDomainModelToEntity(CalEventDm entry)
         {
-            _context.SaveChanges();
+            var newEntity = new CalendarEvent();
+            newEntity.AllDay = entry.AllDay;
+            newEntity.CalendarEventId = entry.CalendarEntryId;
+            newEntity.DateFrom = entry.DateFrom;
+            newEntity.DateTo = entry.DateTo;
+            newEntity.Description = entry.Description;
+            newEntity.Title = entry.Title;
+            newEntity.UserId = entry.UserId;
+            return newEntity;
         }
 
         #endregion
