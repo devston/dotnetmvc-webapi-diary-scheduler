@@ -16,5 +16,5 @@
         </div>
     </div>
 </div>
-@*@{ Html.RenderAction("_ModalQuickCreate", "Scheduler", new { area = "" }); }
-@{ Html.RenderAction("_ModalExport", "Scheduler", new { area = "" }); }*@
+@await Component.InvokeAsync(nameof(DiaryScheduler.Presentation.Web.ViewComponents.SchedulerQuickCreateModal), new { maxPriority = 4, isDone = true })
+@await Component.InvokeAsync(nameof(DiaryScheduler.Presentation.Web.ViewComponents.SchedulerExportModal), new { maxPriority = 4, isDone = true })

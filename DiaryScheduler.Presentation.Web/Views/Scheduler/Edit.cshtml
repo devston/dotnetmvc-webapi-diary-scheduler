@@ -55,4 +55,4 @@
         @Html.ActionLink("Back", "Index", "Scheduler", null, new { @class = "btn btn-outline-secondary", id = "back-to-cal-btn", title = "Go back to the calendar" })
     </form>
 </div>
-@*@{ Html.RenderAction("_ModalDeleteConfirmation", "Scheduler", new { area = "" }); }*@
+@await Component.InvokeAsync(nameof(DiaryScheduler.Presentation.Web.ViewComponents.SchedulerDeleteConfirmationModal), new { maxPriority = 4, isDone = true })

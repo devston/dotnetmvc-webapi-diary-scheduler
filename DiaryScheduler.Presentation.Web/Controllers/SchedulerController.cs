@@ -46,23 +46,17 @@ namespace DiaryScheduler.Presentation.Web.Controllers
             // Check if an id was sent.
             if (id == Guid.Empty)
             {
-                //return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> Invalid calendar event id.", "");
+                return BadRequest("<strong>Error:</strong> Invalid calendar event id.");
             }
 
             var vm = _schedulerPresentationService.CreateSchedulerEditViewModel(id);
 
             if (vm == null)
             {
-                //return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> The calendar event could not be found.", "");
+                return BadRequest("<strong>Error:</strong> The calendar event could not be found.");
             }
 
             return View(vm);
-        }
-
-        // GET: Quick create modal.
-        public ActionResult _ModalQuickCreate()
-        {
-            return PartialView();
         }
 
         // GET: Quick create view.
@@ -76,18 +70,6 @@ namespace DiaryScheduler.Presentation.Web.Controllers
             return PartialView(vm);
         }
 
-        // GET: Export calendar events modal.
-        public ActionResult _ModalExport()
-        {
-            return PartialView();
-        }
-
-        // GET: Confirm event deletion modal.
-        public ActionResult _ModalDeleteConfirmation()
-        {
-            return PartialView();
-        }
-
         #endregion
 
         #region Posts
@@ -99,13 +81,13 @@ namespace DiaryScheduler.Presentation.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                //return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> Input is invalid.", "");
+                return BadRequest("<strong>Error:</strong> Input is invalid.");
             }
 
             // Date range check.
             if (vm.DateFrom > vm.DateTo)
             {
-                //return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> Start date cannot be after the end date.", "");
+                return BadRequest("<strong>Error:</strong> Start date cannot be after the end date.");
             }
 
             // Save event.
@@ -134,19 +116,19 @@ namespace DiaryScheduler.Presentation.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                //return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> Input is invalid.", "");
+                return BadRequest("<strong>Error:</strong> Input is invalid.");
             }
 
             // Date range check.
             if (vm.DateFrom > vm.DateTo)
             {
-                //return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> Start date cannot be after the end date.", "");
+                return BadRequest("<strong>Error:</strong> Start date cannot be after the end date.");
             }
 
             // Check if the calendar entry exists.
             if (!_schedulerPresentationService.CheckCalendarEventExists(vm.CalendarEntryId))
             {
-                //return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> The calendar event could not be found.", "");
+                return BadRequest("<strong>Error:</strong> The calendar event could not be found.");
             }
 
             // Save event.
@@ -167,7 +149,7 @@ namespace DiaryScheduler.Presentation.Web.Controllers
             // Check if the calendar entry exists.
             if (!_schedulerPresentationService.CheckCalendarEventExists(id))
             {
-                //return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> The calendar event could not be found.", "");
+                return BadRequest("<strong>Error:</strong> The calendar event could not be found.");
             }
 
             // Delete event.
@@ -202,35 +184,35 @@ namespace DiaryScheduler.Presentation.Web.Controllers
             // Check if an id was sent.
             if (id == Guid.Empty)
             {
-                //return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> Invalid calendar event id.", "");
+                return BadRequest("<strong>Error:</strong> Invalid calendar event id.");
             }
 
             var fileData = _schedulerPresentationService.GenerateIcalForCalendarEvent(id);
 
             if (fileData == null)
             {
-                //return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> The calendar event could not be found.", "");
+                return BadRequest("<strong>Error:</strong> The calendar event could not be found.");
             }
 
             return File(fileData.Data, fileData.ContentType, fileData.FileName);
         }
 
         // Create a .ics file for calendar events from a date range.
-        public ActionResult ExportEventsToIcal(DateTime start, DateTime end)
+        public ActionResult ExportEventsToIcal(DateTime? start, DateTime? end)
         {
             // Check if dates are null before doing anything.
-            if (start == null || end == null)
+            if (!start.HasValue || !end.HasValue)
             {
-                //return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> No date range provided.", "");
+                return BadRequest("<strong>Error:</strong> No calendar events to sync.");
             }
 
             var userId = User.Identity.Name;
-            var fileData = _schedulerPresentationService.GenerateIcalBetweenDateRange(start, end, userId);
+            var fileData = _schedulerPresentationService.GenerateIcalBetweenDateRange(start.Value, end.Value, userId);
 
             // Check if there are any diary entries to sync.
             if (fileData == null)
             {
-                //return SiteErrorHandler.GetBadRequestActionResult("<strong>Error:</strong> No calendar events to sync.", "");
+                return BadRequest("<strong>Error:</strong> No calendar events to sync.");
             }
 
             return File(fileData.Data, fileData.ContentType, fileData.FileName);
