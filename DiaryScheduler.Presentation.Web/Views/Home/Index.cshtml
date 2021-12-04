@@ -2,7 +2,11 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="card">
+    <div class="card-body">
+        <h1>Welcome</h1>
+        <p class="lead">This is the ASP.Net MVC diary scheduler.</p>
+        <p>If you haven't already, please make an account to use the scheduler. If an account has been made, use the button below to navigate to the scheduling area.</p>
+        <p><a class="btn btn-primary btn-lg" asp-area="" asp-controller="Scheduler" asp-action="Index">Go to the scheduler</a></p>
+    </div>
 </div>

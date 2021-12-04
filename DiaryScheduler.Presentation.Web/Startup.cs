@@ -1,9 +1,10 @@
 using Autofac;
+using DiaryScheduler.Data.Data;
+using DiaryScheduler.Data.Models;
 using DiaryScheduler.DependencyResolution;
-using DiaryScheduler.Presentation.Web.Data;
+using DiaryScheduler.Presentation.Web.Common.Services.Scheduler;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,7 +27,7 @@ namespace DiaryScheduler.Presentation.Web
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
@@ -66,6 +67,9 @@ namespace DiaryScheduler.Presentation.Web
         public void ConfigureContainer(ContainerBuilder builder)
         {
             IoCBootstrapper.ConfigureContainer(builder);
+            builder.RegisterType<SchedulerPresentationService>()
+                .As<ISchedulerPresentationService>()
+                .InstancePerLifetimeScope();
         }
     }
 }

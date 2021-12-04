@@ -1,0 +1,35 @@
+﻿/*----------------------------------------------------------------------------*\
+    Helper Classes
+--------------------------------------------------------------------------------
+
+    All helper classes can be found here.
+
+    Contents
+    --------
+
+    1. Misc
+
+\*----------------------------------------------------------------------------*/
+
+/*  1. Misc
+------------------------------------------------------------------------------*/
+
+// Hide an element.
+.hidden {
+    display: none !important;
+}
+
+// Hide an element.
+.invisible {
+    visibility: hidden !important;
+}
+
+// Hide the overflow.
+.overflow-hidden {
+    overflow: hidden !important;
+}
+
+// Set the position to relative.
+.position-relative {
+    position: relative;
+}

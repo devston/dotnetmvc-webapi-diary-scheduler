@@ -1,0 +1,65 @@
+﻿//----------------------------------------------------------------------------\\
+//   Variables
+//------------------------------------------------------------------------------
+//
+//  This stylesheet contains all the variables used.
+//
+//  Contents
+//  --------
+//
+//  1. Colours
+//  2. Sizes
+//  3. Media queries
+//
+//----------------------------------------------------------------------------//
+
+//  1. Default colours
+//------------------------------------------------------------------------------
+
+// Bootstrap replacement colours.
+$colour-primary: #009ef7;
+$colour-on-primary: #fff;
+$colour-secondary: #343a40;
+$colour-on-secondary: #fff;
+$colour-success: #50cd89;
+$colour-info: #7239ea;
+$colour-warning: #ffc700;
+$colour-danger: #f1416c;
+$colour-on-status: #fff;
+
+// Buttons.
+$colour-btn-primary-text: $colour-on-primary;
+$colour-btn-success-text: $colour-on-status;
+$colour-btn-info-text: $colour-on-status;
+$colour-btn-warning-text: $colour-on-status;
+$colour-btn-danger-text: $colour-on-status;
+
+// Misc.
+$colour-page-bg: #f5f8fa;
+
+//  2. Sizes
+//------------------------------------------------------------------------------
+
+// Base.
+$size-base-border-radius: 0.475rem;
+
+// Alerts.
+$size-alert-border-radius: $size-base-border-radius;
+
+// Buttons.
+$size-button-border-radius: $size-base-border-radius;
+
+// Cards.
+$size-card-border-radius: $size-base-border-radius;
+
+// Form controls.
+$size-form-control-border-radius: $size-base-border-radius;
+
+//  3. Media queries
+//------------------------------------------------------------------------------
+
+$xs: 0; // Extra small devices (default styling)
+$sm: 576px; // Small devices (landscape phones, 576px and up)
+$md: 768px; // Medium devices (tablets, 768px and up)
+$lg: 992px; // Large devices (desktops, 992px and up)
+$xl: 1200px; // Extra large devices (large desktops, 1200px and up)

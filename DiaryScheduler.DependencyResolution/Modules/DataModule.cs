@@ -17,11 +17,11 @@ namespace DiaryScheduler.DependencyResolution.Modules
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<DomainMapperService>()
-                .InstancePerRequest();
+                .InstancePerLifetimeScope();
 
             builder.RegisterType<EFScheduleRepository>()
                 .As<IScheduleRepository>()
-                .InstancePerRequest();
+                .InstancePerLifetimeScope();
         }
     }
 }

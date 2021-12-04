@@ -1,6 +1,7 @@
 ﻿using DiaryScheduler.Presentation.Web.Models.Scheduler;
 using DiaryScheduler.ScheduleManagement.Core.Interfaces;
 using DiaryScheduler.ScheduleManagement.Core.Models;
+using Microsoft.AspNetCore.Routing;
 using System;
 using System.Linq;
 
@@ -12,24 +13,23 @@ namespace DiaryScheduler.Presentation.Web.Common.Services.Scheduler
     public class SchedulerPresentationService : ISchedulerPresentationService
     {
         private readonly IScheduleRepository _scheduleRepository;
-        private readonly IUrlHelperService _urlHelperService;
+        private readonly LinkGenerator _linkGenerator;
 
         public SchedulerPresentationService(
             IScheduleRepository scheduleRepository,
-            IUrlHelperService urlHelperService)
+            LinkGenerator linkGenerator)
         {
             _scheduleRepository = scheduleRepository;
-            _urlHelperService = urlHelperService;
+            _linkGenerator = linkGenerator;
         }
 
         public SchedulerIndexViewModel CreateSchedulerIndexViewModel()
         {
-            var urlHelper = _urlHelperService.GetUrlHelper();
             var vm = new SchedulerIndexViewModel();
-            vm.CreateEventUrl = urlHelper.Action(nameof(Controllers.SchedulerController.Create), "Scheduler", null);
-            vm.CreateEventMoreOptionsUrl = urlHelper.Action(nameof(Controllers.SchedulerController.CreateMoreOptions), "Scheduler", new { title = "title_placeholder", start = "start_placeholder", end = "end_placeholder" });
-            vm.EditEventUrl = urlHelper.Action(nameof(Controllers.SchedulerController.Edit), "Scheduler", new { id = "id_placeholder" });
-            vm.CalendarSourceUrl = urlHelper.Action(nameof(Controllers.SchedulerController.UserEvents), "Scheduler", null);
+            vm.CreateEventUrl = _linkGenerator.GetPathByAction(nameof(Controllers.SchedulerController.Create), "Scheduler", null);
+            vm.CreateEventMoreOptionsUrl = _linkGenerator.GetPathByAction(nameof(Controllers.SchedulerController.CreateMoreOptions), "Scheduler", new { title = "title_placeholder", start = "start_placeholder", end = "end_placeholder" });
+            vm.EditEventUrl = _linkGenerator.GetPathByAction(nameof(Controllers.SchedulerController.Edit), "Scheduler", new { id = "id_placeholder" });
+            vm.CalendarSourceUrl = _linkGenerator.GetPathByAction(nameof(Controllers.SchedulerController.UserEvents), "Scheduler", null);
             return vm;
         }
 
@@ -66,7 +66,6 @@ namespace DiaryScheduler.Presentation.Web.Common.Services.Scheduler
                 return null;
             }
 
-            var urlHelper = _urlHelperService.GetUrlHelper();
             var vm = new SchedulerModifyViewModel();
             vm.AllDay = entry.AllDay;
             vm.CalendarEntryId = entry.CalendarEntryId;
@@ -75,7 +74,7 @@ namespace DiaryScheduler.Presentation.Web.Common.Services.Scheduler
             vm.Description = entry.Description;
             vm.Title = entry.Title;
             vm.UserId = entry.UserId;
-            vm.SaveUrl = urlHelper.Action(nameof(Controllers.SchedulerController.EditEvent), "Scheduler", null);
+            vm.SaveUrl = _linkGenerator.GetPathByAction(nameof(Controllers.SchedulerController.EditEvent), "Scheduler", null);
             vm.ShowDeleteBtn = true;
             vm.ShowExportBtn = true;
             vm.PageTitle = "Edit calendar event";
@@ -199,9 +198,8 @@ namespace DiaryScheduler.Presentation.Web.Common.Services.Scheduler
         /// <returns>The <see cref="SchedulerModifyViewModel"/>.</returns>
         private SchedulerModifyViewModel CreateBaseSchedulerCreateViewModel()
         {
-            var urlHelper = _urlHelperService.GetUrlHelper();
             var vm = new SchedulerModifyViewModel();
-            vm.SaveUrl = urlHelper.Action(nameof(Controllers.SchedulerController.CreateEvent), "Scheduler", null);
+            vm.SaveUrl = _linkGenerator.GetPathByAction(nameof(Controllers.SchedulerController.CreateEvent), "Scheduler", null);
             vm.PageTitle = "Create calendar event";
             return vm;
         }
