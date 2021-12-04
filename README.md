@@ -1,5 +1,5 @@
-# ASP.Net MVC Diary Scheduler
-An ASP.Net MVC diary scheduling app based on the domain-driven design concept. This makes use of MVC 5, WebPack and fullcalendar.
+# ASP.Net Core MVC Diary Scheduler
+An ASP.Net Core 5 MVC diary scheduling app based on the domain-driven design concept. This makes use of Asp.Net Core 5 MVC, WebPack and fullcalendar.
 
 # Getting Started:
 ## Prerequisites
@@ -14,6 +14,7 @@ An ASP.Net MVC diary scheduling app based on the domain-driven design concept. T
 ## TODO:
 - Seperate presentation models & services into their own projects
 - Update projects to .net 6
+- Improve styling for account pages.
 - Remove jQuery
 - Add unit tests
 - Add google calendar integration
