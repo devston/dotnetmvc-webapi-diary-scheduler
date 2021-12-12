@@ -261,3 +261,4 @@ __pycache__/
 *.pyc
 /DiaryScheduler.Web/dist
 /DiaryScheduler.Web/package-lock.json
+/DiaryScheduler.Presentation.Web/wwwroot/dist
