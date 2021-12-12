@@ -3,6 +3,7 @@ using DiaryScheduler.Presentation.Web.Models.Scheduler;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Security.Claims;
 
 namespace DiaryScheduler.Presentation.Web.Controllers
 {
@@ -91,7 +92,8 @@ namespace DiaryScheduler.Presentation.Web.Controllers
             }
 
             // Save event.
-            var id = _schedulerPresentationService.CreateCalendarEvent(vm, User.Identity.Name);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var id = _schedulerPresentationService.CreateCalendarEvent(vm, userId);
 
             // Return calendar record for fullCalendar.js.
             return Json(new
@@ -126,7 +128,7 @@ namespace DiaryScheduler.Presentation.Web.Controllers
             }
 
             // Check if the calendar entry exists.
-            if (!_schedulerPresentationService.CheckCalendarEventExists(vm.CalendarEntryId))
+            if (!_schedulerPresentationService.CheckCalendarEventExists(vm.CalendarEventId))
             {
                 return BadRequest("<strong>Error:</strong> The calendar event could not be found.");
             }
@@ -169,7 +171,7 @@ namespace DiaryScheduler.Presentation.Web.Controllers
         // GET: User calendar events.
         public ActionResult UserEvents(DateTime start, DateTime end)
         {
-            var userId = User.Identity.Name;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var result = _schedulerPresentationService.GetCalendarEventsForUserBetweenDateRange(start, end, userId);
             return Json(result);
         }

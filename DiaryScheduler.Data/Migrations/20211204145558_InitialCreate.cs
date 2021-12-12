@@ -202,7 +202,7 @@ namespace DiaryScheduler.Data.Migrations
                     DateTo = table.Column<DateTime>(nullable: false),
                     AllDay = table.Column<bool>(nullable: false),
                     Title = table.Column<string>(nullable: false, maxLength: 100),
-                    Description = table.Column<string>(maxLength: 200),
+                    Description = table.Column<string>(maxLength: 200, nullable: true),
                 },
                 constraints: table => {
                     table.PrimaryKey("PK_CalendarEvents", t => t.CalendarEventId);
@@ -217,6 +217,9 @@ namespace DiaryScheduler.Data.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "CalendarEvents");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -237,9 +240,6 @@ namespace DiaryScheduler.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "CalendarEvents");
         }
     }
 }

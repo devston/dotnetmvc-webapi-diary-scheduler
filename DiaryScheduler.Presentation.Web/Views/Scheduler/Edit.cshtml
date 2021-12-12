@@ -8,51 +8,51 @@
     <form class="card-body" data-url="@Model.SaveUrl" id="edit-cal-entry-form">
         <h2 class="card-title">@Model.PageTitle</h2>
         @Html.AntiForgeryToken()
-        @Html.HiddenFor(x => x.CalendarEntryId)
+        <input asp-for="CalendarEventId" type="hidden" />
 
         <div class="mb-3">
-            @Html.LabelFor(x => x.Title, new { @class = "form-label" })
-            @Html.TextBoxFor(x => x.Title, new { @class = "form-control", maxlength = "100" })
-            @Html.ValidationMessageFor(x => x.Title, "", new { @class = "text-danger" })
+            <label asp-for="Title" class="form-label"></label>
+            <input asp-for="Title" class="form-control" maxlength="100" type="text" />
+            <span asp-validation-for="Title" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            @Html.LabelFor(x => x.Description, new { @class = "form-label" })
-            @Html.TextAreaFor(x => x.Description, new { @class = "form-control no-resize", maxlength = "200", rows = "3" })
-            @Html.ValidationMessageFor(x => x.Description, "", new { @class = "text-danger" })
+            <label asp-for="Description" class="form-label"></label>
+            <textarea asp-for="Description" class="form-control no-resize" maxlength="200" rows="3"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
         </div>
 
-        <div class="row">
+        <div class="row mb-3">
             <div class="col-md-6">
-                @Html.LabelFor(x => x.DateFrom, new { @class = "form-label" })
-                @Html.TextBoxFor(x => x.DateFrom, "{0:yyyy-MM-dd HH:mm}", new { @class = "form-control" })
-                @Html.ValidationMessageFor(x => x.DateFrom, "", new { @class = "text-danger" })
+                <label asp-for="DateFrom" class="form-label"></label>
+                <input asp-for="DateFrom" class="form-control" type="text" />
+                <span asp-validation-for="DateFrom" class="text-danger"></span>
             </div>
             <div class="col-md-6">
-                @Html.LabelFor(x => x.DateTo, new { @class = "form-label" })
-                @Html.TextBoxFor(x => x.DateTo, "{0:yyyy-MM-dd HH:mm}", new { @class = "form-control" })
-                @Html.ValidationMessageFor(x => x.DateTo, "", new { @class = "text-danger" })
+                <label asp-for="DateTo" class="form-label"></label>
+                <input asp-for="DateTo" class="form-control" type="text" />
+                <span asp-validation-for="DateTo" class="text-danger"></span>
             </div>
         </div>
 
         <div class="mb-3 form-check">
-            @Html.CheckBoxFor(x => x.AllDay, new { @class = "form-check-input" })
-            @Html.LabelFor(x => x.AllDay, new { @class = "form-check-label" })
+            <input asp-for="AllDay" class="form-check-input" type="checkbox" />
+            <label asp-for="AllDay" class="form-check-label"></label>
         </div>
 
         <button class="btn btn-success" id="save-entry-btn" title="Save changes to this calendar event" type="submit">Save</button>
 
         @if (Model.ShowDeleteBtn)
         {
-            <button class="btn btn-danger" id="delete-entry-btn" title="Delete this calendar event" type="button">Delete</button>
+            <button class="btn btn-danger" id="delete-entry-btn" data-url="@Model.DeleteUrl" title="Delete this calendar event" type="button">Delete</button>
         }
 
         @if (Model.ShowExportBtn)
         {
-            <button class="btn btn-info" id="export-event-btn" title="Export this calendar event to an iCal" type="button">Export</button>
+            <button class="btn btn-info" id="export-event-btn" data-url="@Model.ExportUrl" title="Export this calendar event to an iCal" type="button">Export</button>
         }
 
-        @Html.ActionLink("Back", "Index", "Scheduler", null, new { @class = "btn btn-outline-secondary", id = "back-to-cal-btn", title = "Go back to the calendar" })
+        <a class="btn btn-outline-secondary" id="back-to-cal-btn" title="Go back to the calendar" asp-area="" asp-controller="Scheduler" asp-action="Index">Back</a>
     </form>
 </div>
 @await Component.InvokeAsync(nameof(DiaryScheduler.Presentation.Web.ViewComponents.SchedulerDeleteConfirmationModal), new { maxPriority = 4, isDone = true })

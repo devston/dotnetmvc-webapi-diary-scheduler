@@ -12,7 +12,7 @@ namespace DiaryScheduler.Presentation.Web.Models.Scheduler
         /// <summary>
         /// Gets or sets the calendar entry id.
         /// </summary>
-        public Guid CalendarEntryId { get; set; }
+        public Guid CalendarEventId { get; set; }
 
         /// <summary>
         /// Gets or sets the user id.

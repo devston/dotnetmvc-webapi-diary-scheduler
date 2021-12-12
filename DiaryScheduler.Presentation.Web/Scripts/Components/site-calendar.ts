@@ -46,9 +46,10 @@ export namespace SiteCalendar {
      */
     export function getVisibleDates(calendarSelector: string) {
         const view = calendars[calendarSelector].view;
+        const viewData = view.getCurrentData();
         const dates = {
-            start: view.intervalStart.format(),
-            end: view.intervalEnd.format()
+            start: viewData.dateProfile.currentRange.start,
+            end: viewData.dateProfile.currentRange.end
         };
 
         return dates;

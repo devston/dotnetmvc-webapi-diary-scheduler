@@ -30,6 +30,8 @@ namespace DiaryScheduler.Presentation.Web.Common.Services.Scheduler
             vm.CreateEventMoreOptionsUrl = _linkGenerator.GetPathByAction(nameof(Controllers.SchedulerController.CreateMoreOptions), "Scheduler", new { title = "title_placeholder", start = "start_placeholder", end = "end_placeholder" });
             vm.EditEventUrl = _linkGenerator.GetPathByAction(nameof(Controllers.SchedulerController.Edit), "Scheduler", new { id = "id_placeholder" });
             vm.CalendarSourceUrl = _linkGenerator.GetPathByAction(nameof(Controllers.SchedulerController.UserEvents), "Scheduler", null);
+            vm.PostCreateEventUrl = _linkGenerator.GetPathByAction(nameof(Controllers.SchedulerController.CreateEvent), "Scheduler", null);
+            vm.ExportIcalUrl = _linkGenerator.GetPathByAction(nameof(Controllers.SchedulerController.ExportEventsToIcal), "Scheduler", new { start = "start_placeholder", end = "end_placeholder" });
             return vm;
         }
 
@@ -68,13 +70,15 @@ namespace DiaryScheduler.Presentation.Web.Common.Services.Scheduler
 
             var vm = new SchedulerModifyViewModel();
             vm.AllDay = entry.AllDay;
-            vm.CalendarEntryId = entry.CalendarEntryId;
+            vm.CalendarEventId = entry.CalendarEntryId;
             vm.DateFrom = entry.DateFrom;
             vm.DateTo = entry.DateTo;
             vm.Description = entry.Description;
             vm.Title = entry.Title;
             vm.UserId = entry.UserId;
             vm.SaveUrl = _linkGenerator.GetPathByAction(nameof(Controllers.SchedulerController.EditEvent), "Scheduler", null);
+            vm.DeleteUrl = _linkGenerator.GetPathByAction(nameof(Controllers.SchedulerController.DeleteEvent), "Scheduler", null);
+            vm.ExportUrl = _linkGenerator.GetPathByAction(nameof(Controllers.SchedulerController.ExportEventToIcal), "Scheduler", null);
             vm.ShowDeleteBtn = true;
             vm.ShowExportBtn = true;
             vm.PageTitle = "Edit calendar event";
@@ -174,7 +178,7 @@ namespace DiaryScheduler.Presentation.Web.Common.Services.Scheduler
         {
             var entry = new CalEventDm()
             {
-                CalendarEntryId = eventVm.CalendarEntryId,
+                CalendarEntryId = eventVm.CalendarEventId,
                 Title = eventVm.Title.Trim(),
                 Description = eventVm.Description == null ? null : eventVm.Description.Trim(),
                 DateFrom = eventVm.DateFrom,

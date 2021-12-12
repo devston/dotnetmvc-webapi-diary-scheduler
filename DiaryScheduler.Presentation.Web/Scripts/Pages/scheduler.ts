@@ -72,7 +72,7 @@ export namespace Scheduler {
      *  Initialise the edit event page.
      * */
     function initModify() {
-        const eventId = <string>$("#CalendarEntryId").val();
+        const eventId = (document.getElementById("CalendarEventId") as HTMLInputElement).value;
         const startPickerSelector = "#DateFrom";
         const endPickerSelector = "#DateTo";
 
@@ -87,7 +87,8 @@ export namespace Scheduler {
 
         $("#export-event-btn").on("click", function (e) {
             e.preventDefault();
-            exportEventToIcal(eventId);
+            const url = $(this).data("url");
+            exportEventToIcal(eventId, url);
         });
 
         $("#delete-entry-btn").on("click", function (e) {
@@ -136,9 +137,8 @@ export namespace Scheduler {
                     exportVisibleEventsToIcal();
                 }
                 else if (radioVal == "2") {
-                    var start = <string>$("#SyncFrom").val();
-                    var end = <string>$("#SyncTo").val();
-
+                    const start = (document.getElementById("SyncFrom") as HTMLInputElement).value;
+                    const end = (document.getElementById("SyncTo") as HTMLInputElement).value;
                     exportEventsFromDateRangeToIcal(start, end);
                 }
             }
@@ -178,6 +178,7 @@ export namespace Scheduler {
     function quickCreate() {
         // jQuery object is used multiple times so store it in a variable.
         var $form = $("#quick-create-form");
+        const createUrl = (document.getElementById("PostCreateEventUrl") as HTMLInputElement).value;
 
         if ($form.valid()) {
             $.ajax({
@@ -186,7 +187,7 @@ export namespace Scheduler {
                     $("#edit-entry-btn").attr("disabled");
                     $("#quick-create-btn").attr("disabled");
                 },
-                url: "/Scheduler/CreateEntry/",
+                url: createUrl,
                 type: "POST",
                 data: $form.serialize()
             })
@@ -220,7 +221,7 @@ export namespace Scheduler {
      * @param url
      */
     function saveEvent($form: JQuery<HTMLElement>) {
-        const url = $(this).data("url");
+        const url = $form.data("url");
 
         if ($form.valid()) {
             $.ajax({
@@ -239,13 +240,13 @@ export namespace Scheduler {
                 $("#delete-entry-btn").removeAttr("disabled");
                 $("#back-to-cal-btn").removeAttr("disabled");
             })
-                .done(function (data: any) {
-                    SiteAlert.show("success", data.message, true);
-                    window.location.href = data.backUrl;
-                })
-                .fail(function (jqXHR) {
-                    SiteAlert.showJqXhrError(jqXHR);
-                });
+            .done(function (data: any) {
+                SiteAlert.show("success", data.message, true);
+                window.location.href = data.backUrl;
+            })
+            .fail(function (jqXHR) {
+                SiteAlert.showJqXhrError(jqXHR);
+            });
         }
     }
 
@@ -253,7 +254,8 @@ export namespace Scheduler {
      *  Delete a calendar event.
      * */
     function deleteEvent(eventId: string) {
-        const token = <string>$("#edit-cal-entry-form").find("input[name=__RequestVerificationToken]").val();
+        const deleteUrl = $("#delete-entry-btn").data("url") as string;
+        const token = $("#edit-cal-entry-form").find("input[name=__RequestVerificationToken]").val() as string;
 
         $.ajax({
             beforeSend: function () {
@@ -262,7 +264,7 @@ export namespace Scheduler {
                 $("#delete-entry-btn").attr("disabled");
                 $("#back-to-cal-btn").attr("disabled");
             },
-            url: "/Scheduler/DeleteEntry/",
+            url: deleteUrl,
             type: "POST",
             data: {
                 "id": eventId,
@@ -274,13 +276,13 @@ export namespace Scheduler {
             $("#delete-entry-btn").removeAttr("disabled");
             $("#back-to-cal-btn").removeAttr("disabled");
         })
-            .done(function (data: any) {
-                SiteAlert.show("success", data.message, true);
-                window.location.href = data.backUrl;
-            })
-            .fail(function (jqXHR) {
-                SiteAlert.showJqXhrError(jqXHR);
-            });
+        .done(function (data: any) {
+            SiteAlert.show("success", data.message, true);
+            window.location.href = data.backUrl;
+        })
+        .fail(function (jqXHR) {
+            SiteAlert.showJqXhrError(jqXHR);
+        });
     }
 
     /*------------------------------------------------------------------------*\
@@ -291,8 +293,8 @@ export namespace Scheduler {
      * Export a calendar event to Ical.
      * @param eventId
      */
-    function exportEventToIcal(eventId: string) {
-        window.location.href = `/Scheduler/ExportEventToIcal/${eventId}`;
+    function exportEventToIcal(eventId: string, exportUrl: string) {
+        window.location.href = `${exportUrl}/${eventId}`;
     }
 
     /**
@@ -306,7 +308,10 @@ export namespace Scheduler {
         }
 
         const dates = SiteCalendar.getVisibleDates(calendarSelector);
-        window.location.href = `/Scheduler/ExportEventsToIcal?start=${dates.start}&end=${dates.end}`;
+        let url = (document.getElementById("ExportIcalUrl") as HTMLInputElement).value;
+        url = url.replace("start_placeholder", dates.start.toISOString()).replace("end_placeholder", dates.end.toISOString());
+        console.log(dates.start);
+        window.location.href = url;
     }
 
     /**
@@ -321,7 +326,9 @@ export namespace Scheduler {
             return;
         }
 
-        window.location.href = `/Scheduler/ExportEventsToIcal?start=${start}&end=${end}`;
+        let url = (document.getElementById("ExportIcalUrl") as HTMLInputElement).value;
+        url = url.replace("start_placeholder", start).replace("end_placeholder", end);
+        window.location.href = url;
     }
 
     /*------------------------------------------------------------------------*\
@@ -357,7 +364,7 @@ export namespace Scheduler {
                     event.preventDefault();
 
                     SiteLoader.toggleGlobalLoader(true);
-                    var title = <string>$("#Title").val();
+                    const title = (document.getElementById("Title") as HTMLInputElement).value;
 
                     // Stop the modal from getting 'stuck'.
                     modalEl.addEventListener("hidden.bs.modal", function () {
@@ -395,7 +402,7 @@ export namespace Scheduler {
          * @param end
          */
         export function toCreateMoreOptions(title: string, start: string, end: string) {
-            let url = $("#CreateEventMoreOptionsUrl").val() as string;
+            let url = (document.getElementById("CreateEventMoreOptionsUrl") as HTMLInputElement).value;
             url = url.replace("title_placeholder", title).replace("start_placeholder", start).replace("end_placeholder", end);
             window.location.href = url;
         }
@@ -405,7 +412,7 @@ export namespace Scheduler {
          * @param id
          */
         export function toEdit(id: string) {
-            let url = $("#EditEventUrl").val() as string;
+            let url = (document.getElementById("EditEventUrl") as HTMLInputElement).value;
             url = url.replace("id_placeholder", id);
             window.location.href = url;
         }

@@ -21,8 +21,18 @@
         public bool ShowDeleteBtn { get; set; }
 
         /// <summary>
+        /// Gets or sets the delete url.
+        /// </summary>
+        public string DeleteUrl { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to show the export button.
         /// </summary>
         public bool ShowExportBtn { get; set; }
+
+        /// <summary>
+        /// Gets or sets the export url.
+        /// </summary>
+        public string ExportUrl { get; set; }
     }
 }
