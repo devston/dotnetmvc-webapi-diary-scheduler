@@ -1,11 +1,10 @@
 ﻿using DiaryScheduler.Presentation.Models.Scheduler;
 using DiaryScheduler.ScheduleManagement.Core.Interfaces;
 using DiaryScheduler.ScheduleManagement.Core.Models;
-using Microsoft.AspNetCore.Routing;
 using System;
 using System.Linq;
 
-namespace DiaryScheduler.Presentation.Web.Common.Services.Scheduler
+namespace DiaryScheduler.Presentation.Services.Scheduler
 {
     /// <summary>
     /// The mvc implementation of the <see cref="ISchedulerPresentationService"/>.
@@ -13,25 +12,16 @@ namespace DiaryScheduler.Presentation.Web.Common.Services.Scheduler
     public class SchedulerPresentationService : ISchedulerPresentationService
     {
         private readonly IScheduleRepository _scheduleRepository;
-        private readonly LinkGenerator _linkGenerator;
 
         public SchedulerPresentationService(
-            IScheduleRepository scheduleRepository,
-            LinkGenerator linkGenerator)
+            IScheduleRepository scheduleRepository)
         {
             _scheduleRepository = scheduleRepository;
-            _linkGenerator = linkGenerator;
         }
 
         public SchedulerIndexViewModel CreateSchedulerIndexViewModel()
         {
             var vm = new SchedulerIndexViewModel();
-            vm.CreateEventUrl = _linkGenerator.GetPathByAction(nameof(Controllers.SchedulerController.Create), "Scheduler", null);
-            vm.CreateEventMoreOptionsUrl = _linkGenerator.GetPathByAction(nameof(Controllers.SchedulerController.CreateMoreOptions), "Scheduler", new { title = "title_placeholder", start = "start_placeholder", end = "end_placeholder" });
-            vm.EditEventUrl = _linkGenerator.GetPathByAction(nameof(Controllers.SchedulerController.Edit), "Scheduler", new { id = "id_placeholder" });
-            vm.CalendarSourceUrl = _linkGenerator.GetPathByAction(nameof(Controllers.SchedulerController.UserEvents), "Scheduler", null);
-            vm.PostCreateEventUrl = _linkGenerator.GetPathByAction(nameof(Controllers.SchedulerController.CreateEvent), "Scheduler", null);
-            vm.ExportIcalUrl = _linkGenerator.GetPathByAction(nameof(Controllers.SchedulerController.ExportEventsToIcal), "Scheduler", new { start = "start_placeholder", end = "end_placeholder" });
             return vm;
         }
 
@@ -76,9 +66,6 @@ namespace DiaryScheduler.Presentation.Web.Common.Services.Scheduler
             vm.Description = entry.Description;
             vm.Title = entry.Title;
             vm.UserId = entry.UserId;
-            vm.SaveUrl = _linkGenerator.GetPathByAction(nameof(Controllers.SchedulerController.EditEvent), "Scheduler", null);
-            vm.DeleteUrl = _linkGenerator.GetPathByAction(nameof(Controllers.SchedulerController.DeleteEvent), "Scheduler", null);
-            vm.ExportUrl = _linkGenerator.GetPathByAction(nameof(Controllers.SchedulerController.ExportEventToIcal), "Scheduler", null);
             vm.ShowDeleteBtn = true;
             vm.ShowExportBtn = true;
             vm.PageTitle = "Edit calendar event";
@@ -203,7 +190,6 @@ namespace DiaryScheduler.Presentation.Web.Common.Services.Scheduler
         private SchedulerModifyViewModel CreateBaseSchedulerCreateViewModel()
         {
             var vm = new SchedulerModifyViewModel();
-            vm.SaveUrl = _linkGenerator.GetPathByAction(nameof(Controllers.SchedulerController.CreateEvent), "Scheduler", null);
             vm.PageTitle = "Create calendar event";
             return vm;
         }

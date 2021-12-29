@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DiaryScheduler.Presentation.Services\DiaryScheduler.Presentation.Services.csproj" />
     <ProjectReference Include="..\DiaryScheduler.ScheduleManagement.Core\DiaryScheduler.ScheduleManagement.Core.csproj" />
     <ProjectReference Include="..\DiaryScheduler.ScheduleManagement.Data\DiaryScheduler.ScheduleManagement.Data.csproj" />
   </ItemGroup>
