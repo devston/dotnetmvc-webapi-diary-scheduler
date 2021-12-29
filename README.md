@@ -12,7 +12,6 @@ An ASP.Net Core 5 MVC diary scheduling app based on the domain-driven design con
 - Create a user & navigate to the scheduler area
 
 ## TODO:
-- Seperate presentation models & services into their own projects
 - Update projects to .net 6
 - Improve styling for account pages.
 - Remove jQuery
