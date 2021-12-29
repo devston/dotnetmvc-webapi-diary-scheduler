@@ -110,7 +110,7 @@ export namespace Scheduler {
         DateTimePicker.initDateTimeRange(startPickerSelector, endPickerSelector);
 
         // Initialise the radio controls.
-        $("#calendar-sync-options-container").find("input[name=\"calsync\"]").on("change", function (this: HTMLInputElement) {
+        $("#calendar-sync-options-container").find("input[name=\"calsync\"]").off("change").on("change", function (this: HTMLInputElement) {
             if (this.value == "1") {
                 $("#date-sync-container").addClass("hidden");
                 $("#calendar-sync-container").removeClass("hidden");
@@ -123,7 +123,7 @@ export namespace Scheduler {
             radioVal = this.value;
         });
 
-        $("#confirm-export-btn").on("click", function (e) {
+        $("#confirm-export-btn").off("click").on("click", function (e) {
             e.preventDefault();
 
             // No value selected.
@@ -154,7 +154,7 @@ export namespace Scheduler {
         const modalEl = document.getElementById("confirm-delete-modal");
         const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
 
-        $("#confirm-delete-btn").on("click", function (e) {
+        $("#confirm-delete-btn").off("click").on("click", function (e) {
             e.preventDefault();
 
             // Stop the modal from getting 'stuck'.
@@ -310,7 +310,6 @@ export namespace Scheduler {
         const dates = SiteCalendar.getVisibleDates(calendarSelector);
         let url = (document.getElementById("ExportIcalUrl") as HTMLInputElement).value;
         url = url.replace("start_placeholder", dates.start.toISOString()).replace("end_placeholder", dates.end.toISOString());
-        console.log(dates.start);
         window.location.href = url;
     }
 
@@ -360,7 +359,7 @@ export namespace Scheduler {
                 modal.show();
 
                 // Show full create view.
-                $("#edit-entry-btn").on("click", function (event: JQueryEventObject) {
+                $("#edit-entry-btn").off("click").on("click", function (event: JQueryEventObject) {
                     event.preventDefault();
 
                     SiteLoader.toggleGlobalLoader(true);
@@ -377,7 +376,7 @@ export namespace Scheduler {
                 });
 
                 // Submit form.
-                $form.on("submit", function (event: JQueryEventObject) {
+                $form.off("submit").on("submit", function (event: JQueryEventObject) {
                     event.preventDefault();
                     quickCreate();
                 });

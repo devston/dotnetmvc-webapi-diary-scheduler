@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace DiaryScheduler.Presentation.Web.Models.Scheduler
+namespace DiaryScheduler.Presentation.Models.Scheduler
 {
     /// <summary>
     /// The calendar event view model.

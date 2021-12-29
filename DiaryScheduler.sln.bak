@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiaryScheduler.ScheduleMana
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiaryScheduler.Presentation.Web", "DiaryScheduler.Presentation.Web\DiaryScheduler.Presentation.Web.csproj", "{BAFD1D3E-4F6D-4AC0-8FA9-3325D43B1381}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiaryScheduler.Presentation.Models", "DiaryScheduler.Presentation.Models\DiaryScheduler.Presentation.Models.csproj", "{BD3546AC-422D-4479-967B-9CD86EDCB659}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiaryScheduler.Presentation.Model", "DiaryScheduler.Presentation.Model\DiaryScheduler.Presentation.Model.csproj", "{BD3546AC-422D-4479-967B-9CD86EDCB659}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,4 +1,4 @@
-﻿namespace DiaryScheduler.Presentation.Web.Models.Scheduler
+﻿namespace DiaryScheduler.Presentation.Models.Scheduler
 {
     /// <summary>
     /// The scheduler index view model.
