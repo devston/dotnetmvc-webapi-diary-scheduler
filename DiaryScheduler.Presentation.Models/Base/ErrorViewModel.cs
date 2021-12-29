@@ -1,4 +1,4 @@
-﻿namespace DiaryScheduler.Presentation.Model.Base
+﻿namespace DiaryScheduler.Presentation.Models.Base
 {
     /// <summary>
     /// The error view model.

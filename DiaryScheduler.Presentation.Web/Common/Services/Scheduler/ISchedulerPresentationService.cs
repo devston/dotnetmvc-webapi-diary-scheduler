@@ -1,4 +1,4 @@
-﻿using DiaryScheduler.Presentation.Model.Scheduler;
+﻿using DiaryScheduler.Presentation.Models.Scheduler;
 using System;
 
 namespace DiaryScheduler.Presentation.Web.Common.Services.Scheduler

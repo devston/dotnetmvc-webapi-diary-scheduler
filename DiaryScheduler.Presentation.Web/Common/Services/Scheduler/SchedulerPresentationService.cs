@@ -1,4 +1,4 @@
-﻿using DiaryScheduler.Presentation.Model.Scheduler;
+﻿using DiaryScheduler.Presentation.Models.Scheduler;
 using DiaryScheduler.ScheduleManagement.Core.Interfaces;
 using DiaryScheduler.ScheduleManagement.Core.Models;
 using Microsoft.AspNetCore.Routing;

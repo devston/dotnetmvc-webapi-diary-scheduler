@@ -1,4 +1,4 @@
-﻿using DiaryScheduler.Presentation.Model.Base;
+﻿using DiaryScheduler.Presentation.Models.Base;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;

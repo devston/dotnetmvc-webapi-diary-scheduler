@@ -1,4 +1,4 @@
-﻿namespace DiaryScheduler.Presentation.Model.Scheduler
+﻿namespace DiaryScheduler.Presentation.Models.Scheduler
 {
     /// <summary>
     /// A model to store any data for a calendar ical.
