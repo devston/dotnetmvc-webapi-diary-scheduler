@@ -57,6 +57,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DiaryScheduler.Data\DiaryScheduler.Data.csproj" />
     <ProjectReference Include="..\DiaryScheduler.DependencyResolution\DiaryScheduler.DependencyResolution.csproj" />
+    <ProjectReference Include="..\DiaryScheduler.Presentation.Model\DiaryScheduler.Presentation.Model.csproj" />
     <ProjectReference Include="..\DiaryScheduler.ScheduleManagement.Core\DiaryScheduler.ScheduleManagement.Core.csproj" />
   </ItemGroup>
 

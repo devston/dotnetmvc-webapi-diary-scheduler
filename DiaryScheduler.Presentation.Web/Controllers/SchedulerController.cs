@@ -1,5 +1,5 @@
-﻿using DiaryScheduler.Presentation.Web.Common.Services.Scheduler;
-using DiaryScheduler.Presentation.Web.Models.Scheduler;
+﻿using DiaryScheduler.Presentation.Model.Scheduler;
+using DiaryScheduler.Presentation.Web.Common.Services.Scheduler;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;

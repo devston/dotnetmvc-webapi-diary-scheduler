@@ -8,7 +8,7 @@ An ASP.Net Core 5 MVC diary scheduling app based on the domain-driven design con
 
 ## Running the solution
 - Run `update-database` in the **nuget package manager** console against the `DiaryScheduler.Data` project to create the initial datastore.
-- Start `DiaryScheduler.Presentation.Web`
+- Start `DiaryScheduler.Web`
 - Create a user & navigate to the scheduler area
 
 ## TODO:

@@ -1,4 +1,4 @@
-﻿using DiaryScheduler.Presentation.Web.Models;
+﻿using DiaryScheduler.Presentation.Model.Base;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
@@ -9,7 +9,8 @@ namespace DiaryScheduler.Presentation.Web.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(
+            ILogger<HomeController> logger)
         {
             _logger = logger;
         }

@@ -1,4 +1,4 @@
-﻿namespace DiaryScheduler.Presentation.Web.Models.Scheduler
+﻿namespace DiaryScheduler.Presentation.Model.Scheduler
 {
     /// <summary>
     /// The scheduler modify screen view model.
