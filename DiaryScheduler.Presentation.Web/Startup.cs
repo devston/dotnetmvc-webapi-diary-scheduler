@@ -67,8 +67,8 @@ namespace DiaryScheduler.Presentation.Web
         public void ConfigureContainer(ContainerBuilder builder)
         {
             IoCBootstrapper.ConfigureContainer(builder);
-            builder.RegisterType<SchedulerPresentationService>()
-                .As<ISchedulerPresentationService>()
+            builder.RegisterType<SchedulerUrlGenerationService>()
+                .As<ISchedulerUrlGenerationService>()
                 .InstancePerLifetimeScope();
         }
     }

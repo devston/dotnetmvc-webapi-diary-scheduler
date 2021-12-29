@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Ical.Net" Version="4.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DiaryScheduler.Presentation.Models\DiaryScheduler.Presentation.Models.csproj" />
+    <ProjectReference Include="..\DiaryScheduler.ScheduleManagement.Core\DiaryScheduler.ScheduleManagement.Core.csproj" />
+  </ItemGroup>
+
+</Project>

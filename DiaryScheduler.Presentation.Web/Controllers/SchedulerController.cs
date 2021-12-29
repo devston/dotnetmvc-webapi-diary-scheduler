@@ -1,4 +1,5 @@
 ﻿using DiaryScheduler.Presentation.Models.Scheduler;
+using DiaryScheduler.Presentation.Services.Scheduler;
 using DiaryScheduler.Presentation.Web.Common.Services.Scheduler;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,11 +12,14 @@ namespace DiaryScheduler.Presentation.Web.Controllers
     public class SchedulerController : Controller
     {
         private readonly ISchedulerPresentationService _schedulerPresentationService;
+        private readonly ISchedulerUrlGenerationService _schedulerUrlGenerationService;
 
         public SchedulerController(
-            ISchedulerPresentationService schedulerPresentationService)
+            ISchedulerPresentationService schedulerPresentationService,
+            ISchedulerUrlGenerationService schedulerUrlGenerationService)
         {
             _schedulerPresentationService = schedulerPresentationService;
+            _schedulerUrlGenerationService = schedulerUrlGenerationService;
         }
 
         #region Views
@@ -24,6 +28,7 @@ namespace DiaryScheduler.Presentation.Web.Controllers
         public ActionResult Index()
         {
             var vm = _schedulerPresentationService.CreateSchedulerIndexViewModel();
+            vm = _schedulerUrlGenerationService.SetIndexUrls(vm);
             return View(vm);
         }
 
@@ -31,6 +36,7 @@ namespace DiaryScheduler.Presentation.Web.Controllers
         public ActionResult Create()
         {
             var vm = _schedulerPresentationService.CreateSchedulerCreateViewModel();
+            vm = _schedulerUrlGenerationService.SetCreateUrls(vm);
             return View("Edit", vm);
         }
 
@@ -38,6 +44,7 @@ namespace DiaryScheduler.Presentation.Web.Controllers
         public ActionResult CreateMoreOptions(string title, DateTime start, DateTime end)
         {
             var vm = _schedulerPresentationService.CreateSchedulerCreateViewModel(title, start, end);
+            vm = _schedulerUrlGenerationService.SetCreateUrls(vm);
             return View("Edit", vm);
         }
 
@@ -57,6 +64,7 @@ namespace DiaryScheduler.Presentation.Web.Controllers
                 return BadRequest("<strong>Error:</strong> The calendar event could not be found.");
             }
 
+            vm = _schedulerUrlGenerationService.SetEditUrls(vm);
             return View(vm);
         }
 

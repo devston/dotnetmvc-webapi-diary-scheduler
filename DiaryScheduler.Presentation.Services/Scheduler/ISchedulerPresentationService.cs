@@ -1,7 +1,7 @@
 ﻿using DiaryScheduler.Presentation.Models.Scheduler;
 using System;
 
-namespace DiaryScheduler.Presentation.Web.Common.Services.Scheduler
+namespace DiaryScheduler.Presentation.Services.Scheduler
 {
     /// <summary>
     /// The interface for the scheduler presentation service.

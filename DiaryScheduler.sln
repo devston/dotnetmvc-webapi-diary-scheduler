@@ -17,7 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiaryScheduler.ScheduleMana
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiaryScheduler.Presentation.Web", "DiaryScheduler.Presentation.Web\DiaryScheduler.Presentation.Web.csproj", "{BAFD1D3E-4F6D-4AC0-8FA9-3325D43B1381}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiaryScheduler.Presentation.Models", "DiaryScheduler.Presentation.Models\DiaryScheduler.Presentation.Models.csproj", "{BD3546AC-422D-4479-967B-9CD86EDCB659}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiaryScheduler.Presentation.Models", "DiaryScheduler.Presentation.Models\DiaryScheduler.Presentation.Models.csproj", "{BD3546AC-422D-4479-967B-9CD86EDCB659}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiaryScheduler.Presentation.Services", "DiaryScheduler.Presentation.Services\DiaryScheduler.Presentation.Services.csproj", "{DBDE4309-FB48-4784-A16B-3F620667D29E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +51,10 @@ Global
 		{BD3546AC-422D-4479-967B-9CD86EDCB659}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD3546AC-422D-4479-967B-9CD86EDCB659}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BD3546AC-422D-4479-967B-9CD86EDCB659}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBDE4309-FB48-4784-A16B-3F620667D29E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBDE4309-FB48-4784-A16B-3F620667D29E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBDE4309-FB48-4784-A16B-3F620667D29E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBDE4309-FB48-4784-A16B-3F620667D29E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,6 +66,7 @@ Global
 		{36A38AB3-27BD-4FEC-BBD9-0DBD832763F7} = {5E6B638D-43B7-412A-B272-A3C8D072251A}
 		{BAFD1D3E-4F6D-4AC0-8FA9-3325D43B1381} = {31160D14-92EB-4715-9743-DD35F219FA4B}
 		{BD3546AC-422D-4479-967B-9CD86EDCB659} = {31160D14-92EB-4715-9743-DD35F219FA4B}
+		{DBDE4309-FB48-4784-A16B-3F620667D29E} = {31160D14-92EB-4715-9743-DD35F219FA4B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A1D1F504-E29C-48F9-BED2-A0DD86AB63E9}
