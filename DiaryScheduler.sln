@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.32014.148
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{31160D14-92EB-4715-9743-DD35F219FA4B}"
 EndProject
@@ -19,7 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiaryScheduler.Presentation
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiaryScheduler.Presentation.Models", "DiaryScheduler.Presentation.Models\DiaryScheduler.Presentation.Models.csproj", "{BD3546AC-422D-4479-967B-9CD86EDCB659}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiaryScheduler.Presentation.Services", "DiaryScheduler.Presentation.Services\DiaryScheduler.Presentation.Services.csproj", "{DBDE4309-FB48-4784-A16B-3F620667D29E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiaryScheduler.Presentation.Services", "DiaryScheduler.Presentation.Services\DiaryScheduler.Presentation.Services.csproj", "{DBDE4309-FB48-4784-A16B-3F620667D29E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiaryScheduler.Presentation.Services.Tests", "DiaryScheduler.Presentation.Services.Tests\DiaryScheduler.Presentation.Services.Tests.csproj", "{E57F8866-9919-4892-B633-3A4AEB191122}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +57,10 @@ Global
 		{DBDE4309-FB48-4784-A16B-3F620667D29E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DBDE4309-FB48-4784-A16B-3F620667D29E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DBDE4309-FB48-4784-A16B-3F620667D29E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E57F8866-9919-4892-B633-3A4AEB191122}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E57F8866-9919-4892-B633-3A4AEB191122}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E57F8866-9919-4892-B633-3A4AEB191122}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E57F8866-9919-4892-B633-3A4AEB191122}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,6 +73,7 @@ Global
 		{BAFD1D3E-4F6D-4AC0-8FA9-3325D43B1381} = {31160D14-92EB-4715-9743-DD35F219FA4B}
 		{BD3546AC-422D-4479-967B-9CD86EDCB659} = {31160D14-92EB-4715-9743-DD35F219FA4B}
 		{DBDE4309-FB48-4784-A16B-3F620667D29E} = {31160D14-92EB-4715-9743-DD35F219FA4B}
+		{E57F8866-9919-4892-B633-3A4AEB191122} = {31160D14-92EB-4715-9743-DD35F219FA4B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A1D1F504-E29C-48F9-BED2-A0DD86AB63E9}

@@ -15,7 +15,6 @@ An ASP.Net Core 5 MVC diary scheduling app based on the domain-driven design con
 - Update projects to .net 6
 - Improve styling for account pages.
 - Remove jQuery
-- Add unit tests
 - Add google calendar integration
 - Add Office 365 integration
 
