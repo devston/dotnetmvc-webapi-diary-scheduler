@@ -24,8 +24,7 @@ namespace DiaryScheduler.ScheduleManagement.Data.Repositories
 
         #region Gets
 
-        // Return all user calendar entries.
-        public List<CalEventDm> GetAllUserEntries(string id, DateTime start, DateTime end)
+        public List<CalEventDm> GetAllUserEvents(string id, DateTime start, DateTime end)
         {
             return _context.CalendarEvents.AsNoTracking()
                 .Where(x => x.UserId == id && x.DateFrom >= start && x.DateTo <= end)
@@ -42,8 +41,7 @@ namespace DiaryScheduler.ScheduleManagement.Data.Repositories
                 .ToList();
         }
 
-        // Get a calendar entry by id.
-        public CalEventDm GetCalendarEntry(Guid id)
+        public CalEventDm GetCalendarEvent(Guid id)
         {
             return _context.CalendarEvents.AsNoTracking()
                 .Where(x => x.CalendarEventId == id)
@@ -64,8 +62,7 @@ namespace DiaryScheduler.ScheduleManagement.Data.Repositories
 
         #region Checks
 
-        // Check if the calendar entry exists.
-        public bool DoesCalEntryExist(Guid id)
+        public bool DoesEventExist(Guid id)
         {
             return _context.CalendarEvents.Any(x => x.CalendarEventId == id);
         }
@@ -74,8 +71,7 @@ namespace DiaryScheduler.ScheduleManagement.Data.Repositories
 
         #region Create, update and delete
 
-        // Add new calendar entry.
-        public Guid CreateCalendarEntry(CalEventDm entry)
+        public Guid CreateCalendarEvent(CalEventDm entry)
         {
             var mappedEntry = ConvertCalendarEventDomainModelToEntity(entry);
             _context.CalendarEvents.Attach(mappedEntry);
@@ -84,16 +80,15 @@ namespace DiaryScheduler.ScheduleManagement.Data.Repositories
             return mappedEntry.CalendarEventId;
         }
 
-        // Edit an existing calendar entry.
-        public void EditCalendarEntry(CalEventDm entry)
+        public void EditCalendarEvent(CalEventDm entry)
         {
-            // Get the original entry.
+            // Get the original event.
             var originalEntry = _context.CalendarEvents.FirstOrDefault(x => x.CalendarEventId == entry.CalendarEntryId);
 
-            // Double check the entry exists.
+            // Double check the event exists.
             if (originalEntry == null)
             {
-                throw new Exception("The calendar entry could not be found.");
+                throw new Exception("The calendar event could not be found.");
             }
 
             // Update values.
@@ -108,16 +103,15 @@ namespace DiaryScheduler.ScheduleManagement.Data.Repositories
             _context.SaveChanges();
         }
 
-        // Delete a calendar entry.
-        public void DeleteCalendarEntry(Guid id)
+        public void DeleteCalendarEvent(Guid id)
         {
-            // Get the original entry.
+            // Get the original event.
             var originalEntry = _context.CalendarEvents.FirstOrDefault(x => x.CalendarEventId == id);
 
-            // Double check the entry exists.
+            // Double check the event exists.
             if (originalEntry == null)
             {
-                throw new Exception("The calendar entry could not be found.");
+                throw new Exception("The calendar event could not be found.");
             }
 
             // Save changes.

@@ -1,4 +1,5 @@
 ﻿using DiaryScheduler.Presentation.Models.Scheduler;
+using DiaryScheduler.Presentation.Services.Utility;
 using DiaryScheduler.ScheduleManagement.Core.Interfaces;
 using DiaryScheduler.ScheduleManagement.Core.Models;
 using System;
@@ -12,11 +13,14 @@ namespace DiaryScheduler.Presentation.Services.Scheduler
     public class SchedulerPresentationService : ISchedulerPresentationService
     {
         private readonly IScheduleRepository _scheduleRepository;
+        private readonly IDateTimeService _dateTimeService;
 
         public SchedulerPresentationService(
-            IScheduleRepository scheduleRepository)
+            IScheduleRepository scheduleRepository,
+            IDateTimeService dateTimeService)
         {
             _scheduleRepository = scheduleRepository;
+            _dateTimeService = dateTimeService;
         }
 
         public SchedulerIndexViewModel CreateSchedulerIndexViewModel()
@@ -28,7 +32,7 @@ namespace DiaryScheduler.Presentation.Services.Scheduler
         public SchedulerModifyViewModel CreateSchedulerCreateViewModel()
         {
             var vm = CreateBaseSchedulerCreateViewModel();
-            var today = DateTime.UtcNow;
+            var today = _dateTimeService.GetDateTimeUtcNow();
             var amountToRound = TimeSpan.FromMinutes(15);
 
             // Rounds date to the nearest specified minute.
@@ -51,7 +55,7 @@ namespace DiaryScheduler.Presentation.Services.Scheduler
 
         public SchedulerModifyViewModel CreateSchedulerEditViewModel(Guid id)
         {
-            var entry = _scheduleRepository.GetCalendarEntry(id);
+            var entry = _scheduleRepository.GetCalendarEvent(id);
 
             if (entry == null)
             {
@@ -74,14 +78,14 @@ namespace DiaryScheduler.Presentation.Services.Scheduler
 
         public bool CheckCalendarEventExists(Guid eventId)
         {
-            return _scheduleRepository.DoesCalEntryExist(eventId);
+            return _scheduleRepository.DoesEventExist(eventId);
         }
 
         public object GetCalendarEventsForUserBetweenDateRange(DateTime start, DateTime end, string userId)
         {
-            var userEntries = _scheduleRepository.GetAllUserEntries(userId, start, end);
+            var userEvents = _scheduleRepository.GetAllUserEvents(userId, start, end);
 
-            object result = userEntries.Select(x => new
+            object result = userEvents.Select(x => new
             {
                 title = x.Title,
                 start = x.DateFrom.ToString("o"),
@@ -95,7 +99,7 @@ namespace DiaryScheduler.Presentation.Services.Scheduler
 
         public CalendarIcalViewModel GenerateIcalForCalendarEvent(Guid id)
         {
-            var entry = _scheduleRepository.GetCalendarEntry(id);
+            var entry = _scheduleRepository.GetCalendarEvent(id);
 
             if (entry == null)
             {
@@ -119,7 +123,7 @@ namespace DiaryScheduler.Presentation.Services.Scheduler
         public CalendarIcalViewModel GenerateIcalBetweenDateRange(DateTime start, DateTime end, string userId)
         {
             // Get user's calendar entries within the date range.
-            var userEntries = _scheduleRepository.GetAllUserEntries(userId, start, end);
+            var userEntries = _scheduleRepository.GetAllUserEvents(userId, start, end);
 
             // Check if there are any diary entries to sync.
             if (userEntries == null)
@@ -146,41 +150,24 @@ namespace DiaryScheduler.Presentation.Services.Scheduler
 
         public Guid CreateCalendarEvent(CalendarEventViewModel eventVm, string userId)
         {
-            var entry = new CalEventDm()
-            {
-                Title = eventVm.Title.Trim(),
-                Description = eventVm.Description == null ? null : eventVm.Description.Trim(),
-                DateFrom = eventVm.DateFrom,
-                DateTo = eventVm.DateTo,
-                AllDay = eventVm.AllDay,
-                UserId = userId
-            };
+            var calEvent = ConvertCalendarEventViewModelToDomainModel(eventVm);
 
             // Save event.
-            var id = _scheduleRepository.CreateCalendarEntry(entry);
+            var id = _scheduleRepository.CreateCalendarEvent(calEvent);
             return id;
         }
 
         public void UpdateCalendarEvent(CalendarEventViewModel eventVm)
         {
-            var entry = new CalEventDm()
-            {
-                CalendarEntryId = eventVm.CalendarEventId,
-                Title = eventVm.Title.Trim(),
-                Description = eventVm.Description == null ? null : eventVm.Description.Trim(),
-                DateFrom = eventVm.DateFrom,
-                DateTo = eventVm.DateTo,
-                AllDay = eventVm.AllDay,
-                UserId = eventVm.UserId
-            };
+            var calEvent = ConvertCalendarEventViewModelToDomainModel(eventVm);
 
             // Save event.
-            _scheduleRepository.EditCalendarEntry(entry);
+            _scheduleRepository.EditCalendarEvent(calEvent);
         }
 
         public void DeleteCalendarEvent(Guid id)
         {
-            _scheduleRepository.DeleteCalendarEntry(id);
+            _scheduleRepository.DeleteCalendarEvent(id);
         }
 
         /// <summary>
@@ -211,6 +198,26 @@ namespace DiaryScheduler.Presentation.Services.Scheduler
             evt.Description = entry.Description;
             evt.Summary = entry.Title;
             evt.IsAllDay = entry.AllDay;
+        }
+
+        /// <summary>
+        /// Convert a <see cref="CalendarEventViewModel"/> to a <see cref="CalEventDm"/>.
+        /// </summary>
+        /// <param name="eventVm">The model to convert.</param>
+        /// <returns>The converted <see cref="CalEventDm"/>.</returns>
+        private CalEventDm ConvertCalendarEventViewModelToDomainModel(CalendarEventViewModel eventVm)
+        {
+            var calEvent = new CalEventDm()
+            {
+                CalendarEntryId = eventVm.CalendarEventId,
+                Title = eventVm.Title.Trim(),
+                Description = string.IsNullOrEmpty(eventVm.Description) ? null : eventVm.Description.Trim(),
+                DateFrom = eventVm.DateFrom,
+                DateTo = eventVm.DateTo,
+                AllDay = eventVm.AllDay,
+                UserId = eventVm.UserId
+            };
+            return calEvent;
         }
 
         /// <summary>
