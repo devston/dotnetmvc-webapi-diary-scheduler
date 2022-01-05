@@ -46,17 +46,11 @@
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.3.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.2.0" />
-    <PackageReference Include="Ical.Net" Version="4.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.12" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.12" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.12" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DiaryScheduler.Data\DiaryScheduler.Data.csproj" />
-    <ProjectReference Include="..\DiaryScheduler.DependencyResolution\DiaryScheduler.DependencyResolution.csproj" />
     <ProjectReference Include="..\DiaryScheduler.Presentation.Models\DiaryScheduler.Presentation.Models.csproj" />
-    <ProjectReference Include="..\DiaryScheduler.ScheduleManagement.Core\DiaryScheduler.ScheduleManagement.Core.csproj" />
+    <ProjectReference Include="..\DiaryScheduler.Presentation.Services\DiaryScheduler.Presentation.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,9 +1,9 @@
 ﻿using DiaryScheduler.Presentation.Models.Scheduler;
 using DiaryScheduler.Presentation.Services.Utility;
-using DiaryScheduler.ScheduleManagement.Core.Interfaces;
-using DiaryScheduler.ScheduleManagement.Core.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DiaryScheduler.Presentation.Services.Scheduler
 {
@@ -12,14 +12,14 @@ namespace DiaryScheduler.Presentation.Services.Scheduler
     /// </summary>
     public class SchedulerPresentationService : ISchedulerPresentationService
     {
-        private readonly IScheduleRepository _scheduleRepository;
+        private readonly IEventApiService _eventApiService;
         private readonly IDateTimeService _dateTimeService;
 
         public SchedulerPresentationService(
-            IScheduleRepository scheduleRepository,
+            IEventApiService eventApiService,
             IDateTimeService dateTimeService)
         {
-            _scheduleRepository = scheduleRepository;
+            _eventApiService = eventApiService;
             _dateTimeService = dateTimeService;
         }
 
@@ -53,54 +53,53 @@ namespace DiaryScheduler.Presentation.Services.Scheduler
             return vm;
         }
 
-        public SchedulerModifyViewModel CreateSchedulerEditViewModel(Guid id)
+        public async Task<SchedulerModifyViewModel> CreateSchedulerEditViewModelAsync(Guid id)
         {
-            var entry = _scheduleRepository.GetCalendarEventByEventId(id);
+            var endpoint = $"api/event-management/events/{id}";
+            var calendarEvent = await _eventApiService.GetApiAsync<CalendarEventViewModel>(endpoint);
 
-            if (entry == null)
+            if (calendarEvent == null)
             {
                 return null;
             }
 
             var vm = new SchedulerModifyViewModel();
-            vm.AllDay = entry.AllDay;
-            vm.CalendarEventId = entry.CalendarEntryId;
-            vm.DateFrom = entry.DateFrom;
-            vm.DateTo = entry.DateTo;
-            vm.Description = entry.Description;
-            vm.Title = entry.Title;
+            vm.AllDay = calendarEvent.AllDay;
+            vm.CalendarEventId = calendarEvent.CalendarEventId;
+            vm.DateFrom = calendarEvent.DateFrom;
+            vm.DateTo = calendarEvent.DateTo;
+            vm.Description = calendarEvent.Description;
+            vm.Title = calendarEvent.Title;
             vm.ShowDeleteBtn = true;
             vm.ShowExportBtn = true;
             vm.PageTitle = "Edit calendar event";
             return vm;
         }
 
-        public bool CheckCalendarEventExists(Guid eventId)
+        public async Task<object> GetCalendarEventsBetweenDateRangeAsync(DateTime start, DateTime end)
         {
-            return _scheduleRepository.DoesEventExist(eventId);
-        }
+            var endpoint = "api/event-management/events";
+            var queryParams = new { start = start.ToString("o"), end = end.ToString("o") };
+            var calEvents = await _eventApiService.GetApiAsync<List<CalendarEventViewModel>>(endpoint, queryParams);
 
-        public object GetCalendarEventsBetweenDateRange(DateTime start, DateTime end)
-        {
-            var userEvents = _scheduleRepository.GetAllEventsBetweenDateRange(start, end);
-
-            object result = userEvents.Select(x => new
+            object result = calEvents.Select(x => new
             {
                 title = x.Title,
                 start = x.DateFrom.ToString("o"),
                 end = x.DateTo.ToString("o"),
-                id = x.CalendarEntryId,
+                id = x.CalendarEventId,
                 allDay = x.AllDay
             });
 
             return result;
         }
 
-        public CalendarIcalViewModel GenerateIcalForCalendarEvent(Guid id)
+        public async Task<CalendarIcalViewModel> GenerateIcalForCalendarEventAsync(Guid id)
         {
-            var entry = _scheduleRepository.GetCalendarEventByEventId(id);
+            var endpoint = $"api/event-management/events/{id}";
+            var calendarEvent = await _eventApiService.GetApiAsync<CalendarEventViewModel>(endpoint);
 
-            if (entry == null)
+            if (calendarEvent == null)
             {
                 return null;
             }
@@ -113,16 +112,18 @@ namespace DiaryScheduler.Presentation.Services.Scheduler
             };
 
             // Create event.
-            CreateCalendarIcalEventFromCalendarEvent(iCal, entry);
+            CreateCalendarIcalEventFromCalendarEvent(iCal, calendarEvent);
 
             // Build the .ics file.
             return CreateCalendarIcalViewModelFromIcal(iCal);
         }
 
-        public CalendarIcalViewModel GenerateIcalBetweenDateRange(DateTime start, DateTime end)
+        public async Task<CalendarIcalViewModel> GenerateIcalBetweenDateRangeAsync(DateTime start, DateTime end)
         {
             // Get user's calendar entries within the date range.
-            var calendarEvents = _scheduleRepository.GetAllEventsBetweenDateRange(start, end);
+            var endpoint = "api/event-management/events";
+            var queryParams = new { start = start.ToString("o"), end = end.ToString("o") };
+            var calendarEvents = await _eventApiService.GetApiAsync<List<CalendarEventViewModel>>(endpoint, queryParams);
 
             // Check if there are any diary entries to sync.
             if (calendarEvents == null)
@@ -138,7 +139,7 @@ namespace DiaryScheduler.Presentation.Services.Scheduler
             };
 
             // Create a new event for each calendar entry.
-            foreach (CalEventDm calEvent in calendarEvents)
+            foreach (CalendarEventViewModel calEvent in calendarEvents)
             {
                 CreateCalendarIcalEventFromCalendarEvent(iCal, calEvent);
             }
@@ -147,27 +148,28 @@ namespace DiaryScheduler.Presentation.Services.Scheduler
             return CreateCalendarIcalViewModelFromIcal(iCal);
         }
 
-        public Guid CreateCalendarEvent(CalendarEventViewModel eventVm)
+        public async Task<Guid> CreateCalendarEventAsync(CalendarEventViewModel eventVm)
         {
-            var calEvent = ConvertCalendarEventViewModelToDomainModel(eventVm);
-
             // Save event.
-            var id = _scheduleRepository.CreateCalendarEvent(calEvent);
+            var endpoint = "api/event-management/events";
+            var id = await _eventApiService.PostApiAsync<Guid>(endpoint, eventVm);
             return id;
         }
 
-        public void UpdateCalendarEvent(CalendarEventViewModel eventVm)
+        public async Task UpdateCalendarEventAsync(CalendarEventViewModel eventVm)
         {
-            var calEvent = ConvertCalendarEventViewModelToDomainModel(eventVm);
-
             // Save event.
-            _scheduleRepository.EditCalendarEvent(calEvent);
+            var endpoint = $"api/event-management/events/{eventVm.CalendarEventId}";
+            await _eventApiService.PutApiAsync<string>(endpoint, eventVm);
         }
 
-        public void DeleteCalendarEvent(Guid id)
+        public async Task DeleteCalendarEventAsync(Guid id)
         {
-            _scheduleRepository.DeleteCalendarEvent(id);
+            var endpoint = $"api/event-management/events/{id}";
+            await _eventApiService.DeleteApiAsync<string>(endpoint);
         }
+
+        #region Helpers
 
         /// <summary>
         /// Create a prepopulated <see cref="SchedulerModifyViewModel"/> for the create variant.
@@ -184,38 +186,19 @@ namespace DiaryScheduler.Presentation.Services.Scheduler
         /// Create a calendar event in the <see cref="Ical.Net.Calendar"/>.
         /// </summary>
         /// <param name="iCal">The calendar to add the event to.</param>
-        /// <param name="entry">The event to add.</param>
-        private void CreateCalendarIcalEventFromCalendarEvent(Ical.Net.Calendar iCal, CalEventDm entry)
+        /// <param name="calendarEvent">The event to add.</param>
+        private void CreateCalendarIcalEventFromCalendarEvent(Ical.Net.Calendar iCal, CalendarEventViewModel calendarEvent)
         {
             // Create event.
             var evt = iCal.Create<Ical.Net.CalendarComponents.CalendarEvent>();
 
             // Prepare ical event.
-            evt.Uid = entry.CalendarEntryId.ToString();
-            evt.Start = new Ical.Net.DataTypes.CalDateTime(entry.DateFrom);
-            evt.End = new Ical.Net.DataTypes.CalDateTime(entry.DateTo);
-            evt.Description = entry.Description;
-            evt.Summary = entry.Title;
-            evt.IsAllDay = entry.AllDay;
-        }
-
-        /// <summary>
-        /// Convert a <see cref="CalendarEventViewModel"/> to a <see cref="CalEventDm"/>.
-        /// </summary>
-        /// <param name="eventVm">The model to convert.</param>
-        /// <returns>The converted <see cref="CalEventDm"/>.</returns>
-        private CalEventDm ConvertCalendarEventViewModelToDomainModel(CalendarEventViewModel eventVm)
-        {
-            var calEvent = new CalEventDm()
-            {
-                CalendarEntryId = eventVm.CalendarEventId,
-                Title = eventVm.Title.Trim(),
-                Description = string.IsNullOrEmpty(eventVm.Description) ? null : eventVm.Description.Trim(),
-                DateFrom = eventVm.DateFrom,
-                DateTo = eventVm.DateTo,
-                AllDay = eventVm.AllDay
-            };
-            return calEvent;
+            evt.Uid = calendarEvent.CalendarEventId.ToString();
+            evt.Start = new Ical.Net.DataTypes.CalDateTime(calendarEvent.DateFrom);
+            evt.End = new Ical.Net.DataTypes.CalDateTime(calendarEvent.DateTo);
+            evt.Description = calendarEvent.Description;
+            evt.Summary = calendarEvent.Title;
+            evt.IsAllDay = calendarEvent.AllDay;
         }
 
         /// <summary>
@@ -238,5 +221,7 @@ namespace DiaryScheduler.Presentation.Services.Scheduler
             fileData.FileName = fileId.ToString() + ".ics";
             return fileData;
         }
+
+        #endregion
     }
 }

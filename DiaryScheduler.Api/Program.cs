@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using System;
 
-namespace DiaryScheduler.Presentation.Web
+namespace DiaryScheduler.Api
 {
     public class Program
     {
@@ -15,6 +15,7 @@ namespace DiaryScheduler.Presentation.Web
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureAppConfiguration(configuration =>
                 {
                     configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
@@ -22,7 +23,6 @@ namespace DiaryScheduler.Presentation.Web
                         $"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json",
                         optional: true);
                 })
-                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

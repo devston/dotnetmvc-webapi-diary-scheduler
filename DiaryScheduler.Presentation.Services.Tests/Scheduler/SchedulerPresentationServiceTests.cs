@@ -1,7 +1,6 @@
-﻿using DiaryScheduler.Presentation.Services.Scheduler;
+﻿using DiaryScheduler.Presentation.Models.Scheduler;
+using DiaryScheduler.Presentation.Services.Scheduler;
 using DiaryScheduler.Presentation.Services.Utility;
-using DiaryScheduler.ScheduleManagement.Core.Interfaces;
-using DiaryScheduler.ScheduleManagement.Core.Models;
 using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -9,6 +8,7 @@ using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DiaryScheduler.Presentation.Services.Tests.Scheduler
 {
@@ -18,17 +18,17 @@ namespace DiaryScheduler.Presentation.Services.Tests.Scheduler
     [TestFixture]
     public class SchedulerPresentationServiceTests
     {
-        private Mock<IScheduleRepository> _scheduleRepo;
+        private Mock<IEventApiService> _apiService;
         private Mock<IDateTimeService> _dateTimeService;
         private SchedulerPresentationService _schedulerPresentationService;
 
         [SetUp]
         public void SetUp()
         {
-            _scheduleRepo = new Mock<IScheduleRepository>();
+            _apiService = new Mock<IEventApiService>();
             _dateTimeService = new Mock<IDateTimeService>();
             _schedulerPresentationService = new SchedulerPresentationService(
-                _scheduleRepo.Object, _dateTimeService.Object);
+                _apiService.Object, _dateTimeService.Object);
         }
 
         [Test]
@@ -66,65 +66,65 @@ namespace DiaryScheduler.Presentation.Services.Tests.Scheduler
         }
 
         [Test]
-        public void CreateSchedulerEditViewModel_GivenInvalidGuid_ReturnsNull()
+        public async Task CreateSchedulerEditViewModelAsync_GivenInvalidGuid_ReturnsNull()
         {
             // Arrange
             var eventId = Guid.NewGuid();
-            _scheduleRepo.Setup(x => x.GetCalendarEventByEventId(eventId)).Returns(() => null);
+            _apiService.Setup(x => x.GetApiAsync<CalendarEventViewModel>(It.IsAny<string>(), It.IsAny<object>())).ReturnsAsync(() => null);
 
             // Act
-            var result = _schedulerPresentationService.CreateSchedulerEditViewModel(eventId);
+            var result = await _schedulerPresentationService.CreateSchedulerEditViewModelAsync(eventId);
 
             // Assert
             result.ShouldBeNull();
         }
 
         [Test]
-        public void GetCalendarEventsBetweenDateRange_GivenRequiredParameters_ReturnsConvertedEventCollection()
+        public async Task GetCalendarEventsBetweenDateRangeAsync_GivenRequiredParameters_ReturnsConvertedEventCollection()
         {
             // Arrange
             var start = new DateTime(2022, 1, 1, 12, 15, 0);
             var end = new DateTime(2022, 3, 3, 12, 30, 0);
-            var userEvents = new List<CalEventDm>()
+            var calendarEvents = new List<CalendarEventViewModel>()
             {
-                new CalEventDm()
+                new CalendarEventViewModel()
                 {
                     Title = "Event 1",
                     DateFrom = new DateTime(2022, 1, 1, 12, 15, 0),
                     DateTo = new DateTime(2022, 1, 1, 12, 30, 0),
-                    CalendarEntryId = Guid.NewGuid(),
+                    CalendarEventId = Guid.NewGuid(),
                     AllDay = true
                 },
-                new CalEventDm()
+                new CalendarEventViewModel()
                 {
                     Title = "Event 2",
                     DateFrom = new DateTime(2022, 2, 2, 12, 15, 0),
                     DateTo = new DateTime(2022, 2, 2, 12, 30, 0),
-                    CalendarEntryId = Guid.NewGuid(),
+                    CalendarEventId = Guid.NewGuid(),
                     AllDay = true
                 },
-                new CalEventDm()
+                new CalendarEventViewModel()
                 {
                     Title = "Event 3",
                     DateFrom = new DateTime(2022, 3, 3, 12, 15, 0),
                     DateTo = new DateTime(2022, 3, 3, 12, 30, 0),
-                    CalendarEntryId = Guid.NewGuid(),
+                    CalendarEventId = Guid.NewGuid(),
                     AllDay = false
                 }
             };
-            var expectedResult = userEvents.Select(x => new
+            var expectedResult = calendarEvents.Select(x => new
             {
                 title = x.Title,
                 start = x.DateFrom.ToString("o"),
                 end = x.DateTo.ToString("o"),
-                id = x.CalendarEntryId,
+                id = x.CalendarEventId,
                 allDay = x.AllDay
             });
             var convertedExpectedResult = JsonConvert.SerializeObject(expectedResult);
-            _scheduleRepo.Setup(x => x.GetAllEventsBetweenDateRange(start, end)).Returns(userEvents);
+            _apiService.Setup(x => x.GetApiAsync<List<CalendarEventViewModel>>(It.IsAny<string>(), It.IsAny<object>())).ReturnsAsync(calendarEvents);
 
             // Act
-            var result = _schedulerPresentationService.GetCalendarEventsBetweenDateRange(start, end);
+            var result = await _schedulerPresentationService.GetCalendarEventsBetweenDateRangeAsync(start, end);
             // Convert the result to json so we can compare the contents match.
             var convertedResult = JsonConvert.SerializeObject(result);
 
@@ -133,38 +133,38 @@ namespace DiaryScheduler.Presentation.Services.Tests.Scheduler
         }
 
         [Test]
-        public void GenerateIcalForCalendarEvent_GivenInvalidEventId_ReturnsNull()
+        public async Task GenerateIcalForCalendarEventAsync_GivenInvalidEventId_ReturnsNull()
         {
             // Arrange
             var eventId = Guid.NewGuid();
-            _scheduleRepo.Setup(x => x.GetCalendarEventByEventId(eventId)).Returns(() => null);
+            _apiService.Setup(x => x.GetApiAsync<CalendarEventViewModel>(It.IsAny<string>(), It.IsAny<object>())).ReturnsAsync(() => null);
 
             // Act
-            var result = _schedulerPresentationService.GenerateIcalForCalendarEvent(eventId);
+            var result = await _schedulerPresentationService.GenerateIcalForCalendarEventAsync(eventId);
 
             // Assert
             result.ShouldBeNull();
         }
 
         [Test]
-        public void GenerateIcalForCalendarEvent_GivenValidEventId_ReturnsModelWithIcalData()
+        public async Task GenerateIcalForCalendarEventAsync_GivenValidEventId_ReturnsModelWithIcalData()
         {
             // Arrange
             var eventId = Guid.NewGuid();
-            var eventData = new CalEventDm()
+            var eventData = new CalendarEventViewModel()
             {
-                CalendarEntryId = eventId,
+                CalendarEventId = eventId,
                 Title = "Event 1",
                 Description = "This is a test event.",
                 DateFrom = new DateTime(2022, 1, 1, 12, 15, 0),
                 DateTo = new DateTime(2022, 1, 1, 12, 30, 0),
                 AllDay = false
             };
-            _scheduleRepo.Setup(x => x.GetCalendarEventByEventId(eventId)).Returns(eventData);
+            _apiService.Setup(x => x.GetApiAsync<CalendarEventViewModel>(It.IsAny<string>(), It.IsAny<object>())).ReturnsAsync(eventData);
             var expectedContentType = "text/calendar";
 
             // Act
-            var result = _schedulerPresentationService.GenerateIcalForCalendarEvent(eventId);
+            var result = await _schedulerPresentationService.GenerateIcalForCalendarEventAsync(eventId);
 
             // Assert
             result.ContentType.ShouldBe(expectedContentType);
@@ -173,49 +173,49 @@ namespace DiaryScheduler.Presentation.Services.Tests.Scheduler
         }
 
         [Test]
-        public void GenerateIcalBetweenDateRange_GivenInvalidParameters_ReturnsNull()
+        public async Task GenerateIcalBetweenDateRangeAsync_GivenInvalidParameters_ReturnsNull()
         {
             // Arrange
             var start = new DateTime(2022, 1, 1, 12, 15, 0);
             var end = new DateTime(2022, 1, 1, 12, 30, 0);
-            _scheduleRepo.Setup(x => x.GetAllEventsBetweenDateRange(start, end)).Returns(() => null);
+            _apiService.Setup(x => x.GetApiAsync<List<CalendarEventViewModel>>(It.IsAny<string>(), It.IsAny<object>())).ReturnsAsync(() => null);
 
             // Act
-            var result = _schedulerPresentationService.GenerateIcalBetweenDateRange(start, end);
+            var result = await _schedulerPresentationService.GenerateIcalBetweenDateRangeAsync(start, end);
 
             // Assert
             result.ShouldBeNull();
         }
 
         [Test]
-        public void GenerateIcalBetweenDateRange_GivenValidParameters_ReturnsModelWithIcalData()
+        public async Task GenerateIcalBetweenDateRangeAsync_GivenValidParameters_ReturnsModelWithIcalData()
         {
             // Arrange
             var start = new DateTime(2022, 1, 1, 12, 15, 0);
             var end = new DateTime(2022, 1, 1, 12, 30, 0);
-            var eventData = new List<CalEventDm>()
+            var eventData = new List<CalendarEventViewModel>()
             {
-                new CalEventDm()
+                new CalendarEventViewModel()
                 {
-                    CalendarEntryId = Guid.NewGuid(),
+                    CalendarEventId = Guid.NewGuid(),
                     Title = "Event 1",
                     Description = "This is a test event.",
                     DateFrom = new DateTime(2022, 1, 1, 12, 15, 0),
                     DateTo = new DateTime(2022, 1, 1, 12, 30, 0),
                     AllDay = false
                 },
-                new CalEventDm()
+                new CalendarEventViewModel()
                 {
-                    CalendarEntryId = Guid.NewGuid(),
+                    CalendarEventId = Guid.NewGuid(),
                     Title = "Event 2",
                     Description = "This is a test event.",
                     DateFrom = new DateTime(2022, 1, 1, 12, 15, 0),
                     DateTo = new DateTime(2022, 1, 1, 12, 30, 0),
                     AllDay = false
                 },
-                new CalEventDm()
+                new CalendarEventViewModel()
                 {
-                    CalendarEntryId = Guid.NewGuid(),
+                    CalendarEventId = Guid.NewGuid(),
                     Title = "Event 3",
                     Description = "This is a test event.",
                     DateFrom = new DateTime(2022, 1, 1, 12, 15, 0),
@@ -224,10 +224,10 @@ namespace DiaryScheduler.Presentation.Services.Tests.Scheduler
                 }
             };
             var expectedContentType = "text/calendar";
-            _scheduleRepo.Setup(x => x.GetAllEventsBetweenDateRange(start, end)).Returns(eventData);
+            _apiService.Setup(x => x.GetApiAsync<List<CalendarEventViewModel>>(It.IsAny<string>(), It.IsAny<object>())).ReturnsAsync(eventData);
 
             // Act
-            var result = _schedulerPresentationService.GenerateIcalBetweenDateRange(start, end);
+            var result = await _schedulerPresentationService.GenerateIcalBetweenDateRangeAsync(start, end);
 
             // Assert
             result.ContentType.ShouldBe(expectedContentType);

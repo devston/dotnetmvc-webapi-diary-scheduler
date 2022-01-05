@@ -1,5 +1,6 @@
 ﻿using DiaryScheduler.Presentation.Models.Scheduler;
 using System;
+using System.Threading.Tasks;
 
 namespace DiaryScheduler.Presentation.Services.Scheduler
 {
@@ -30,59 +31,52 @@ namespace DiaryScheduler.Presentation.Services.Scheduler
         SchedulerModifyViewModel CreateSchedulerCreateViewModel(string title, DateTime start, DateTime end);
 
         /// <summary>
-        /// Create the edit variant of the <see cref="SchedulerModifyViewModel"/>.
+        /// Create the edit variant of the <see cref="SchedulerModifyViewModel"/> asynchronously.
         /// </summary>
         /// <param name="id">The calendar entry id.</param>
         /// <returns>The <see cref="SchedulerModifyViewModel"/>.</returns>
-        SchedulerModifyViewModel CreateSchedulerEditViewModel(Guid id);
+        Task<SchedulerModifyViewModel> CreateSchedulerEditViewModelAsync(Guid id);
 
         /// <summary>
-        /// Check if a calendar event exists by event id.
-        /// </summary>
-        /// <param name="eventId">The calendar event id.</param>
-        /// <returns>A value indicating whether the calendar event exists.</returns>
-        bool CheckCalendarEventExists(Guid eventId);
-
-        /// <summary>
-        /// Get the calendar events between a date range.
+        /// Get the calendar events between a date range asynchronously.
         /// </summary>
         /// <param name="start">The start date.</param>
         /// <param name="end">The end date.</param>
         /// <returns>The calendar events as an object.</returns>
-        object GetCalendarEventsBetweenDateRange(DateTime start, DateTime end);
+        Task<object> GetCalendarEventsBetweenDateRangeAsync(DateTime start, DateTime end);
 
         /// <summary>
-        /// Generate an ical file for a calendar event.
+        /// Generate an ical file for a calendar event asynchronously.
         /// </summary>
         /// <param name="id">The event id.</param>
         /// <returns>The file data stored in <see cref="CalendarIcalViewModel"/>.</returns>
-        CalendarIcalViewModel GenerateIcalForCalendarEvent(Guid id);
+        Task<CalendarIcalViewModel> GenerateIcalForCalendarEventAsync(Guid id);
 
         /// <summary>
-        /// Generate an ical file between a date range.
+        /// Generate an ical file between a date range asynchronously.
         /// </summary>
         /// <param name="start">The start date.</param>
         /// <param name="end">The end date.</param>
         /// <returns>The file data stored in <see cref="CalendarIcalViewModel"/>.</returns>
-        CalendarIcalViewModel GenerateIcalBetweenDateRange(DateTime start, DateTime end);
+        Task<CalendarIcalViewModel> GenerateIcalBetweenDateRangeAsync(DateTime start, DateTime end);
 
         /// <summary>
-        /// Create a calendar event.
+        /// Create a calendar event asynchronously.
         /// </summary>
         /// <param name="eventVm">The calendar entry to event.</param>
         /// <returns>The event id.</returns>
-        Guid CreateCalendarEvent(CalendarEventViewModel eventVm);
+        Task<Guid> CreateCalendarEventAsync(CalendarEventViewModel eventVm);
 
         /// <summary>
-        /// Update a calendar event.
+        /// Update a calendar event asynchronously.
         /// </summary>
         /// <param name="eventVm">The event to update.</param>
-        void UpdateCalendarEvent(CalendarEventViewModel eventVm);
+        Task UpdateCalendarEventAsync(CalendarEventViewModel eventVm);
 
         /// <summary>
-        /// Delete a calendar event.
+        /// Delete a calendar event asynchronously.
         /// </summary>
         /// <param name="id">The calendar event id.</param>
-        void DeleteCalendarEvent(Guid id);
+        Task DeleteCalendarEventAsync(Guid id);
     }
 }
