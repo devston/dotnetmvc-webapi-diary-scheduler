@@ -418,7 +418,7 @@ export namespace Scheduler {
     }
 }
 
-// Initialise the datatables demo module on page load.
+// Initialise the scheduler module on page load.
 $(() => {
     Scheduler.init();
 });

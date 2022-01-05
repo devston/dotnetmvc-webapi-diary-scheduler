@@ -150,6 +150,7 @@ namespace DiaryScheduler.Presentation.Services.Scheduler
 
         public Guid CreateCalendarEvent(CalendarEventViewModel eventVm, string userId)
         {
+            eventVm.UserId = userId;
             var calEvent = ConvertCalendarEventViewModelToDomainModel(eventVm);
 
             // Save event.

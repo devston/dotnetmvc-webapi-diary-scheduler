@@ -16,7 +16,7 @@ export namespace SiteAlert {
     /**
      *  The alert container id.
      * */
-    const alertContainerId = "#site-alert-container";
+    const alertContainerId = "#alert-container";
 
     /**
      * Show an alert inside the site alert container.
@@ -34,27 +34,19 @@ export namespace SiteAlert {
         });
 
         // Create the alert.
-        const alert = `<div class="alert alert-${type}" role="alert">
+        const alert = `<div class="alert alert-${type} alert-dismissible fade show" role="alert">
                         ${message}
-                        <button aria-label="Close" class="close" type="button">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <button aria-label="Close" class="btn-close" data-bs-dismiss="alert" type="button"></button>
                     </div>`;
 
         // If the alert has been set to hide, then automatically dismiss it after 8 seconds.
         if (timeout) {
             $(alert).appendTo(alertContainerId).timeout(8000, function () {
                 hide($(this));
-            }).children(".close").on("click", function (e) {
-                e.preventDefault();
-                hide($(this).parent());
             });
         }
         else {
-            $(alert).appendTo(alertContainerId).children(".close").on("click", function (e) {
-                e.preventDefault();
-                hide($(this).parent());
-            });
+            $(alert).appendTo(alertContainerId);
         }
     }
 
