@@ -37,7 +37,7 @@ namespace DiaryScheduler.DependencyResolution
 
             // Do any registrations.
             builder.RegisterModule<DataModule>();
-            builder.RegisterModule<PresentationModule>();
+            builder.RegisterModule<ApiServiceModule>();
 
             // Return the builder.
             return builder;
@@ -49,8 +49,8 @@ namespace DiaryScheduler.DependencyResolution
         /// <param name="builder"></param>
         public static void ConfigureContainer(ContainerBuilder builder)
         {
-            builder.RegisterModule(new DataModule());
-            builder.RegisterModule(new PresentationModule());
+            builder.RegisterModule<DataModule>();
+            builder.RegisterModule<ApiServiceModule>();
         }
 
         /// <summary>

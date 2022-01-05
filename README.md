@@ -1,5 +1,5 @@
-# ASP.Net Core MVC Diary Scheduler
-An ASP.Net Core 5 MVC diary scheduling app based on the domain-driven design concept. This makes use of Asp.Net Core 5 MVC, WebPack and fullcalendar.
+# ASP.Net Core MVC & Web API Diary Scheduler
+An ASP.Net Core 5 MVC & Web API diary scheduling app based on the domain-driven design concept. This makes use of Asp.Net Core 5 MVC, Asp.Net Core Web API, WebPack and fullcalendar.
 
 # Getting Started:
 ## Prerequisites
@@ -8,12 +8,12 @@ An ASP.Net Core 5 MVC diary scheduling app based on the domain-driven design con
 
 ## Running the solution
 - Run `update-database` in the **nuget package manager** console against the `DiaryScheduler.Data` project to create the initial datastore.
-- Start `DiaryScheduler.Presentation.Web`
-- Create a user & navigate to the scheduler area
+- Start `DiaryScheduler.Presentation.Web` & `DiaryScheduler.Api`
+- Navigate to the scheduler area
 
 ## TODO:
 - Update projects to .net 6
-- Improve styling for account pages.
+- Add Identity Server 4 for authorisation & authentication
 - Remove jQuery
 - Add google calendar integration
 - Add Office 365 integration

@@ -21,7 +21,6 @@
   <ItemGroup>
     <ProjectReference Include="..\DiaryScheduler.Presentation.Models\DiaryScheduler.Presentation.Models.csproj" />
     <ProjectReference Include="..\DiaryScheduler.Presentation.Services\DiaryScheduler.Presentation.Services.csproj" />
-    <ProjectReference Include="..\DiaryScheduler.ScheduleManagement.Core\DiaryScheduler.ScheduleManagement.Core.csproj" />
   </ItemGroup>
 
 </Project>

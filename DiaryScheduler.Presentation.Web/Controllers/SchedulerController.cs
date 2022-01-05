@@ -1,14 +1,12 @@
 ﻿using DiaryScheduler.Presentation.Models.Scheduler;
 using DiaryScheduler.Presentation.Services.Scheduler;
 using DiaryScheduler.Presentation.Web.Common.Services.Scheduler;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace DiaryScheduler.Presentation.Web.Controllers
 {
-    [Authorize]
     public class SchedulerController : Controller
     {
         private readonly ISchedulerPresentationService _schedulerPresentationService;
@@ -49,7 +47,7 @@ namespace DiaryScheduler.Presentation.Web.Controllers
         }
 
         // GET: Edit event view.
-        public ActionResult Edit(Guid id)
+        public async Task<IActionResult> Edit(Guid id)
         {
             // Check if an id was sent.
             if (id == Guid.Empty)
@@ -57,7 +55,7 @@ namespace DiaryScheduler.Presentation.Web.Controllers
                 return BadRequest("<strong>Error:</strong> Invalid calendar event id.");
             }
 
-            var vm = _schedulerPresentationService.CreateSchedulerEditViewModel(id);
+            var vm = await _schedulerPresentationService.CreateSchedulerEditViewModelAsync(id);
 
             if (vm == null)
             {
@@ -86,7 +84,7 @@ namespace DiaryScheduler.Presentation.Web.Controllers
         // Create calendar event.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateEvent(CalendarEventViewModel vm)
+        public async Task<IActionResult> CreateEvent(CalendarEventViewModel vm)
         {
             if (!ModelState.IsValid)
             {
@@ -100,8 +98,7 @@ namespace DiaryScheduler.Presentation.Web.Controllers
             }
 
             // Save event.
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var id = _schedulerPresentationService.CreateCalendarEvent(vm, userId);
+            var id = await _schedulerPresentationService.CreateCalendarEventAsync(vm);
 
             // Return calendar record for fullCalendar.js.
             return Json(new
@@ -122,7 +119,7 @@ namespace DiaryScheduler.Presentation.Web.Controllers
         // Edit calendar event.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditEvent(CalendarEventViewModel vm)
+        public async Task<IActionResult> EditEvent(CalendarEventViewModel vm)
         {
             if (!ModelState.IsValid)
             {
@@ -135,14 +132,8 @@ namespace DiaryScheduler.Presentation.Web.Controllers
                 return BadRequest("<strong>Error:</strong> Start date cannot be after the end date.");
             }
 
-            // Check if the calendar entry exists.
-            if (!_schedulerPresentationService.CheckCalendarEventExists(vm.CalendarEventId))
-            {
-                return BadRequest("<strong>Error:</strong> The calendar event could not be found.");
-            }
-
             // Save event.
-            _schedulerPresentationService.UpdateCalendarEvent(vm);
+            await _schedulerPresentationService.UpdateCalendarEventAsync(vm);
 
             return Json(new
             {
@@ -154,16 +145,10 @@ namespace DiaryScheduler.Presentation.Web.Controllers
         // Delete calendar event.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteEvent(Guid id)
+        public async Task<IActionResult> DeleteEvent(Guid id)
         {
-            // Check if the calendar entry exists.
-            if (!_schedulerPresentationService.CheckCalendarEventExists(id))
-            {
-                return BadRequest("<strong>Error:</strong> The calendar event could not be found.");
-            }
-
             // Delete event.
-            _schedulerPresentationService.DeleteCalendarEvent(id);
+            await _schedulerPresentationService.DeleteCalendarEventAsync(id);
 
             return Json(new
             {
@@ -176,11 +161,10 @@ namespace DiaryScheduler.Presentation.Web.Controllers
 
         #region Calendar Sources
 
-        // GET: User calendar events.
-        public ActionResult UserEvents(DateTime start, DateTime end)
+        // GET: Calendar events.
+        public async Task<IActionResult> CalendarEvents(DateTime start, DateTime end)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var result = _schedulerPresentationService.GetCalendarEventsForUserBetweenDateRange(start, end, userId);
+            var result = await _schedulerPresentationService.GetCalendarEventsBetweenDateRangeAsync(start, end);
             return Json(result);
         }
 
@@ -189,7 +173,7 @@ namespace DiaryScheduler.Presentation.Web.Controllers
         #region Export
 
         // Create a .ics file for a calendar event.
-        public ActionResult ExportEventToIcal(Guid id)
+        public async Task<IActionResult> ExportEventToIcal(Guid id)
         {
             // Check if an id was sent.
             if (id == Guid.Empty)
@@ -197,7 +181,7 @@ namespace DiaryScheduler.Presentation.Web.Controllers
                 return BadRequest("<strong>Error:</strong> Invalid calendar event id.");
             }
 
-            var fileData = _schedulerPresentationService.GenerateIcalForCalendarEvent(id);
+            var fileData = await _schedulerPresentationService.GenerateIcalForCalendarEventAsync(id);
 
             if (fileData == null)
             {
@@ -208,7 +192,7 @@ namespace DiaryScheduler.Presentation.Web.Controllers
         }
 
         // Create a .ics file for calendar events from a date range.
-        public ActionResult ExportEventsToIcal(DateTime? start, DateTime? end)
+        public async Task<IActionResult> ExportEventsToIcal(DateTime? start, DateTime? end)
         {
             // Check if dates are null before doing anything.
             if (!start.HasValue || !end.HasValue)
@@ -216,8 +200,7 @@ namespace DiaryScheduler.Presentation.Web.Controllers
                 return BadRequest("<strong>Error:</strong> No calendar events to sync.");
             }
 
-            var userId = User.Identity.Name;
-            var fileData = _schedulerPresentationService.GenerateIcalBetweenDateRange(start.Value, end.Value, userId);
+            var fileData = await _schedulerPresentationService.GenerateIcalBetweenDateRangeAsync(start.Value, end.Value);
 
             // Check if there are any diary entries to sync.
             if (fileData == null)

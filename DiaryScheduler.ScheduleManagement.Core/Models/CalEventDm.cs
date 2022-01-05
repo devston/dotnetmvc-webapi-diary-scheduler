@@ -13,11 +13,6 @@ namespace DiaryScheduler.ScheduleManagement.Core.Models
         public Guid CalendarEntryId { get; set; }
 
         /// <summary>
-        /// Gets or sets the user id.
-        /// </summary>
-        public string UserId { get; set; }
-
-        /// <summary>
         /// Gets or sets the from date.
         /// </summary>
         public DateTime DateFrom { get; set; }

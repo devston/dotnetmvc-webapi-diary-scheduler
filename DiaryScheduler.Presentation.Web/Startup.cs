@@ -1,11 +1,9 @@
 using Autofac;
-using DiaryScheduler.Data.Data;
-using DiaryScheduler.Data.Models;
-using DiaryScheduler.DependencyResolution;
+using DiaryScheduler.Presentation.Services.Scheduler;
+using DiaryScheduler.Presentation.Services.Utility;
 using DiaryScheduler.Presentation.Web.Common.Services.Scheduler;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,11 +22,6 @@ namespace DiaryScheduler.Presentation.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
@@ -39,7 +32,6 @@ namespace DiaryScheduler.Presentation.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
             }
             else
             {
@@ -66,9 +58,24 @@ namespace DiaryScheduler.Presentation.Web
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            IoCBootstrapper.ConfigureContainer(builder);
             builder.RegisterType<SchedulerUrlGenerationService>()
                 .As<ISchedulerUrlGenerationService>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<DateTimeService>()
+                .As<IDateTimeService>()
+                .SingleInstance();
+
+            builder.RegisterType<ApiService>()
+                .As<IApiService>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<EventApiService>()
+                .As<IEventApiService>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<SchedulerPresentationService>()
+                .As<ISchedulerPresentationService>()
                 .InstancePerLifetimeScope();
         }
     }
