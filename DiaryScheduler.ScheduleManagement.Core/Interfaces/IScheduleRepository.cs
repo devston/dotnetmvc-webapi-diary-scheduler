@@ -12,20 +12,19 @@ namespace DiaryScheduler.ScheduleManagement.Core.Interfaces
         #region Gets
 
         /// <summary>
-        /// Return all user calendar events.
+        /// Return all calendar events between a date range.
         /// </summary>
-        /// <param name="id">User id</param>
         /// <param name="start">Search start date</param>
         /// <param name="end">Search end date</param>
         /// <returns>A collection of <see cref="CalEventDm"/>.</returns>
-        List<CalEventDm> GetAllUserEvents(string id, DateTime start, DateTime end);
+        List<CalEventDm> GetAllEventsBetweenDateRange(DateTime start, DateTime end);
 
         /// <summary>
         /// Get a calendar event by id.
         /// </summary>
         /// <param name="id"></param>
         /// <returns>A <see cref="CalEventDm"/>.</returns>
-        CalEventDm GetCalendarEvent(Guid id);
+        CalEventDm GetCalendarEventByEventId(Guid id);
 
         #endregion
 

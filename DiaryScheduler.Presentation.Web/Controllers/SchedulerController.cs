@@ -1,14 +1,11 @@
 ﻿using DiaryScheduler.Presentation.Models.Scheduler;
 using DiaryScheduler.Presentation.Services.Scheduler;
 using DiaryScheduler.Presentation.Web.Common.Services.Scheduler;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Security.Claims;
 
 namespace DiaryScheduler.Presentation.Web.Controllers
 {
-    [Authorize]
     public class SchedulerController : Controller
     {
         private readonly ISchedulerPresentationService _schedulerPresentationService;
@@ -100,8 +97,7 @@ namespace DiaryScheduler.Presentation.Web.Controllers
             }
 
             // Save event.
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var id = _schedulerPresentationService.CreateCalendarEvent(vm, userId);
+            var id = _schedulerPresentationService.CreateCalendarEvent(vm);
 
             // Return calendar record for fullCalendar.js.
             return Json(new
@@ -176,11 +172,10 @@ namespace DiaryScheduler.Presentation.Web.Controllers
 
         #region Calendar Sources
 
-        // GET: User calendar events.
-        public ActionResult UserEvents(DateTime start, DateTime end)
+        // GET: Calendar events.
+        public ActionResult CalendarEvents(DateTime start, DateTime end)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var result = _schedulerPresentationService.GetCalendarEventsForUserBetweenDateRange(start, end, userId);
+            var result = _schedulerPresentationService.GetCalendarEventsBetweenDateRange(start, end);
             return Json(result);
         }
 
@@ -216,8 +211,7 @@ namespace DiaryScheduler.Presentation.Web.Controllers
                 return BadRequest("<strong>Error:</strong> No calendar events to sync.");
             }
 
-            var userId = User.Identity.Name;
-            var fileData = _schedulerPresentationService.GenerateIcalBetweenDateRange(start.Value, end.Value, userId);
+            var fileData = _schedulerPresentationService.GenerateIcalBetweenDateRange(start.Value, end.Value);
 
             // Check if there are any diary entries to sync.
             if (fileData == null)

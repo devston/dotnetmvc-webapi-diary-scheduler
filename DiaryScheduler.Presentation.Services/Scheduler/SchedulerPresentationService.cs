@@ -55,7 +55,7 @@ namespace DiaryScheduler.Presentation.Services.Scheduler
 
         public SchedulerModifyViewModel CreateSchedulerEditViewModel(Guid id)
         {
-            var entry = _scheduleRepository.GetCalendarEvent(id);
+            var entry = _scheduleRepository.GetCalendarEventByEventId(id);
 
             if (entry == null)
             {
@@ -69,7 +69,6 @@ namespace DiaryScheduler.Presentation.Services.Scheduler
             vm.DateTo = entry.DateTo;
             vm.Description = entry.Description;
             vm.Title = entry.Title;
-            vm.UserId = entry.UserId;
             vm.ShowDeleteBtn = true;
             vm.ShowExportBtn = true;
             vm.PageTitle = "Edit calendar event";
@@ -81,9 +80,9 @@ namespace DiaryScheduler.Presentation.Services.Scheduler
             return _scheduleRepository.DoesEventExist(eventId);
         }
 
-        public object GetCalendarEventsForUserBetweenDateRange(DateTime start, DateTime end, string userId)
+        public object GetCalendarEventsBetweenDateRange(DateTime start, DateTime end)
         {
-            var userEvents = _scheduleRepository.GetAllUserEvents(userId, start, end);
+            var userEvents = _scheduleRepository.GetAllEventsBetweenDateRange(start, end);
 
             object result = userEvents.Select(x => new
             {
@@ -99,7 +98,7 @@ namespace DiaryScheduler.Presentation.Services.Scheduler
 
         public CalendarIcalViewModel GenerateIcalForCalendarEvent(Guid id)
         {
-            var entry = _scheduleRepository.GetCalendarEvent(id);
+            var entry = _scheduleRepository.GetCalendarEventByEventId(id);
 
             if (entry == null)
             {
@@ -120,13 +119,13 @@ namespace DiaryScheduler.Presentation.Services.Scheduler
             return CreateCalendarIcalViewModelFromIcal(iCal);
         }
 
-        public CalendarIcalViewModel GenerateIcalBetweenDateRange(DateTime start, DateTime end, string userId)
+        public CalendarIcalViewModel GenerateIcalBetweenDateRange(DateTime start, DateTime end)
         {
             // Get user's calendar entries within the date range.
-            var userEntries = _scheduleRepository.GetAllUserEvents(userId, start, end);
+            var calendarEvents = _scheduleRepository.GetAllEventsBetweenDateRange(start, end);
 
             // Check if there are any diary entries to sync.
-            if (userEntries == null)
+            if (calendarEvents == null)
             {
                 return null;
             }
@@ -139,18 +138,17 @@ namespace DiaryScheduler.Presentation.Services.Scheduler
             };
 
             // Create a new event for each calendar entry.
-            foreach (CalEventDm entry in userEntries)
+            foreach (CalEventDm calEvent in calendarEvents)
             {
-                CreateCalendarIcalEventFromCalendarEvent(iCal, entry);
+                CreateCalendarIcalEventFromCalendarEvent(iCal, calEvent);
             }
 
             // Build the .ics file.
             return CreateCalendarIcalViewModelFromIcal(iCal);
         }
 
-        public Guid CreateCalendarEvent(CalendarEventViewModel eventVm, string userId)
+        public Guid CreateCalendarEvent(CalendarEventViewModel eventVm)
         {
-            eventVm.UserId = userId;
             var calEvent = ConvertCalendarEventViewModelToDomainModel(eventVm);
 
             // Save event.
@@ -215,8 +213,7 @@ namespace DiaryScheduler.Presentation.Services.Scheduler
                 Description = string.IsNullOrEmpty(eventVm.Description) ? null : eventVm.Description.Trim(),
                 DateFrom = eventVm.DateFrom,
                 DateTo = eventVm.DateTo,
-                AllDay = eventVm.AllDay,
-                UserId = eventVm.UserId
+                AllDay = eventVm.AllDay
             };
             return calEvent;
         }

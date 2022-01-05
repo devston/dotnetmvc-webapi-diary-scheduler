@@ -1,6 +1,5 @@
 using Autofac;
 using DiaryScheduler.Data.Data;
-using DiaryScheduler.Data.Models;
 using DiaryScheduler.DependencyResolution;
 using DiaryScheduler.Presentation.Web.Common.Services.Scheduler;
 using Microsoft.AspNetCore.Builder;
@@ -27,8 +26,6 @@ namespace DiaryScheduler.Presentation.Web
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }

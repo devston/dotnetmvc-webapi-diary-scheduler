@@ -70,7 +70,7 @@ namespace DiaryScheduler.Presentation.Services.Tests.Scheduler
         {
             // Arrange
             var eventId = Guid.NewGuid();
-            _scheduleRepo.Setup(x => x.GetCalendarEvent(eventId)).Returns(() => null);
+            _scheduleRepo.Setup(x => x.GetCalendarEventByEventId(eventId)).Returns(() => null);
 
             // Act
             var result = _schedulerPresentationService.CreateSchedulerEditViewModel(eventId);
@@ -80,12 +80,11 @@ namespace DiaryScheduler.Presentation.Services.Tests.Scheduler
         }
 
         [Test]
-        public void GetCalendarEventsForUserBetweenDateRange_GivenRequiredParameters_ReturnsConvertedEventCollection()
+        public void GetCalendarEventsBetweenDateRange_GivenRequiredParameters_ReturnsConvertedEventCollection()
         {
             // Arrange
             var start = new DateTime(2022, 1, 1, 12, 15, 0);
             var end = new DateTime(2022, 3, 3, 12, 30, 0);
-            var userId = "MrTest";
             var userEvents = new List<CalEventDm>()
             {
                 new CalEventDm()
@@ -122,10 +121,10 @@ namespace DiaryScheduler.Presentation.Services.Tests.Scheduler
                 allDay = x.AllDay
             });
             var convertedExpectedResult = JsonConvert.SerializeObject(expectedResult);
-            _scheduleRepo.Setup(x => x.GetAllUserEvents(userId, start, end)).Returns(userEvents);
+            _scheduleRepo.Setup(x => x.GetAllEventsBetweenDateRange(start, end)).Returns(userEvents);
 
             // Act
-            var result = _schedulerPresentationService.GetCalendarEventsForUserBetweenDateRange(start, end, userId);
+            var result = _schedulerPresentationService.GetCalendarEventsBetweenDateRange(start, end);
             // Convert the result to json so we can compare the contents match.
             var convertedResult = JsonConvert.SerializeObject(result);
 
@@ -138,7 +137,7 @@ namespace DiaryScheduler.Presentation.Services.Tests.Scheduler
         {
             // Arrange
             var eventId = Guid.NewGuid();
-            _scheduleRepo.Setup(x => x.GetCalendarEvent(eventId)).Returns(() => null);
+            _scheduleRepo.Setup(x => x.GetCalendarEventByEventId(eventId)).Returns(() => null);
 
             // Act
             var result = _schedulerPresentationService.GenerateIcalForCalendarEvent(eventId);
@@ -155,14 +154,13 @@ namespace DiaryScheduler.Presentation.Services.Tests.Scheduler
             var eventData = new CalEventDm()
             {
                 CalendarEntryId = eventId,
-                UserId = "MrTestId",
                 Title = "Event 1",
                 Description = "This is a test event.",
                 DateFrom = new DateTime(2022, 1, 1, 12, 15, 0),
                 DateTo = new DateTime(2022, 1, 1, 12, 30, 0),
                 AllDay = false
             };
-            _scheduleRepo.Setup(x => x.GetCalendarEvent(eventId)).Returns(eventData);
+            _scheduleRepo.Setup(x => x.GetCalendarEventByEventId(eventId)).Returns(eventData);
             var expectedContentType = "text/calendar";
 
             // Act
@@ -180,11 +178,10 @@ namespace DiaryScheduler.Presentation.Services.Tests.Scheduler
             // Arrange
             var start = new DateTime(2022, 1, 1, 12, 15, 0);
             var end = new DateTime(2022, 1, 1, 12, 30, 0);
-            var userId = "MrTestId";
-            _scheduleRepo.Setup(x => x.GetAllUserEvents(userId, start, end)).Returns(() => null);
+            _scheduleRepo.Setup(x => x.GetAllEventsBetweenDateRange(start, end)).Returns(() => null);
 
             // Act
-            var result = _schedulerPresentationService.GenerateIcalBetweenDateRange(start, end, userId);
+            var result = _schedulerPresentationService.GenerateIcalBetweenDateRange(start, end);
 
             // Assert
             result.ShouldBeNull();
@@ -196,13 +193,11 @@ namespace DiaryScheduler.Presentation.Services.Tests.Scheduler
             // Arrange
             var start = new DateTime(2022, 1, 1, 12, 15, 0);
             var end = new DateTime(2022, 1, 1, 12, 30, 0);
-            var userId = "MrTestId";
             var eventData = new List<CalEventDm>()
             {
                 new CalEventDm()
                 {
                     CalendarEntryId = Guid.NewGuid(),
-                    UserId = userId,
                     Title = "Event 1",
                     Description = "This is a test event.",
                     DateFrom = new DateTime(2022, 1, 1, 12, 15, 0),
@@ -212,7 +207,6 @@ namespace DiaryScheduler.Presentation.Services.Tests.Scheduler
                 new CalEventDm()
                 {
                     CalendarEntryId = Guid.NewGuid(),
-                    UserId = userId,
                     Title = "Event 2",
                     Description = "This is a test event.",
                     DateFrom = new DateTime(2022, 1, 1, 12, 15, 0),
@@ -222,7 +216,6 @@ namespace DiaryScheduler.Presentation.Services.Tests.Scheduler
                 new CalEventDm()
                 {
                     CalendarEntryId = Guid.NewGuid(),
-                    UserId = userId,
                     Title = "Event 3",
                     Description = "This is a test event.",
                     DateFrom = new DateTime(2022, 1, 1, 12, 15, 0),
@@ -231,10 +224,10 @@ namespace DiaryScheduler.Presentation.Services.Tests.Scheduler
                 }
             };
             var expectedContentType = "text/calendar";
-            _scheduleRepo.Setup(x => x.GetAllUserEvents(userId, start, end)).Returns(eventData);
+            _scheduleRepo.Setup(x => x.GetAllEventsBetweenDateRange(start, end)).Returns(eventData);
 
             // Act
-            var result = _schedulerPresentationService.GenerateIcalBetweenDateRange(start, end, userId);
+            var result = _schedulerPresentationService.GenerateIcalBetweenDateRange(start, end);
 
             // Assert
             result.ContentType.ShouldBe(expectedContentType);

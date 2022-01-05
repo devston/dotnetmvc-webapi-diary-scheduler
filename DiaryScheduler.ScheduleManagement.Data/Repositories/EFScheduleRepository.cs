@@ -24,10 +24,10 @@ namespace DiaryScheduler.ScheduleManagement.Data.Repositories
 
         #region Gets
 
-        public List<CalEventDm> GetAllUserEvents(string id, DateTime start, DateTime end)
+        public List<CalEventDm> GetAllEventsBetweenDateRange(DateTime start, DateTime end)
         {
             return _context.CalendarEvents.AsNoTracking()
-                .Where(x => x.UserId == id && x.DateFrom >= start && x.DateTo <= end)
+                .Where(x => x.DateFrom >= start && x.DateTo <= end)
                 .Select(x => new CalEventDm
                 {
                     AllDay = x.AllDay,
@@ -36,12 +36,11 @@ namespace DiaryScheduler.ScheduleManagement.Data.Repositories
                     DateTo = x.DateTo,
                     Description = x.Description,
                     Title = x.Title,
-                    UserId = x.UserId
                 })
                 .ToList();
         }
 
-        public CalEventDm GetCalendarEvent(Guid id)
+        public CalEventDm GetCalendarEventByEventId(Guid id)
         {
             return _context.CalendarEvents.AsNoTracking()
                 .Where(x => x.CalendarEventId == id)
@@ -52,8 +51,7 @@ namespace DiaryScheduler.ScheduleManagement.Data.Repositories
                     DateFrom = x.DateFrom,
                     DateTo = x.DateTo,
                     Description = x.Description,
-                    Title = x.Title,
-                    UserId = x.UserId
+                    Title = x.Title
                 })
                 .FirstOrDefault();
         }
@@ -137,7 +135,6 @@ namespace DiaryScheduler.ScheduleManagement.Data.Repositories
             newEntity.DateTo = entry.DateTo;
             newEntity.Description = entry.Description;
             newEntity.Title = entry.Title;
-            newEntity.UserId = entry.UserId;
             return newEntity;
         }
 

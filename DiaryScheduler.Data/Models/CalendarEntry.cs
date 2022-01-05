@@ -9,9 +9,6 @@ namespace DiaryScheduler.Data.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid CalendarEventId { get; set; }
-
-        [Required]
-        public string UserId { get; set; }
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
         public bool AllDay { get; set; }
@@ -22,8 +19,5 @@ namespace DiaryScheduler.Data.Models
 
         [StringLength(200)]
         public string Description { get; set; }
-
-        [ForeignKey("UserId")]
-        public virtual ApplicationUser AspNetUser { get; set; }
     }
 }

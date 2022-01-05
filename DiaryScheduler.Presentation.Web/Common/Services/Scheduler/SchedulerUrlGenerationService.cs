@@ -21,7 +21,7 @@ namespace DiaryScheduler.Presentation.Web.Common.Services.Scheduler
             vm.CreateEventUrl = _linkGenerator.GetPathByAction(nameof(Controllers.SchedulerController.Create), "Scheduler", null);
             vm.CreateEventMoreOptionsUrl = _linkGenerator.GetPathByAction(nameof(Controllers.SchedulerController.CreateMoreOptions), "Scheduler", new { title = "title_placeholder", start = "start_placeholder", end = "end_placeholder" });
             vm.EditEventUrl = _linkGenerator.GetPathByAction(nameof(Controllers.SchedulerController.Edit), "Scheduler", new { id = "id_placeholder" });
-            vm.CalendarSourceUrl = _linkGenerator.GetPathByAction(nameof(Controllers.SchedulerController.UserEvents), "Scheduler", null);
+            vm.CalendarSourceUrl = _linkGenerator.GetPathByAction(nameof(Controllers.SchedulerController.CalendarEvents), "Scheduler", null);
             vm.PostCreateEventUrl = _linkGenerator.GetPathByAction(nameof(Controllers.SchedulerController.CreateEvent), "Scheduler", null);
             vm.ExportIcalUrl = _linkGenerator.GetPathByAction(nameof(Controllers.SchedulerController.ExportEventsToIcal), "Scheduler", new { start = "start_placeholder", end = "end_placeholder" });
             return vm;
