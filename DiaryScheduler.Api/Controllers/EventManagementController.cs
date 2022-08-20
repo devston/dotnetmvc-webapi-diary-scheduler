@@ -4,85 +4,84 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 
-namespace DiaryScheduler.Api.Controllers
+namespace DiaryScheduler.Api.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+[ApiExplorerSettings(GroupName = "Event Management")]
+public class EventManagementController : Controller
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    [ApiExplorerSettings(GroupName = "Event Management")]
-    public class EventManagementController : Controller
+    private readonly IEventManagementApiService _eventManagementApiService;
+
+    public EventManagementController(
+        IEventManagementApiService eventManagementApiService)
     {
-        private readonly IEventManagementApiService _eventManagementApiService;
+        _eventManagementApiService = eventManagementApiService;
+    }
 
-        public EventManagementController(
-            IEventManagementApiService eventManagementApiService)
+    [HttpGet("events")]
+    public async Task<IActionResult> GetEventsBetweenDateRangeAsync(DateTime start, DateTime end)
+    {
+        try
         {
-            _eventManagementApiService = eventManagementApiService;
+            return Ok(await _eventManagementApiService.GetCalendarEventsBetweenDateRangeAsync(start, end));
         }
-
-        [HttpGet("events")]
-        public async Task<IActionResult> GetEventsBetweenDateRangeAsync(DateTime start, DateTime end)
+        catch (Exception ex)
         {
-            try
-            {
-                return Ok(await _eventManagementApiService.GetCalendarEventsBetweenDateRangeAsync(start, end));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return BadRequest(ex.Message);
         }
+    }
 
-        [HttpGet("events/{id}")]
-        public async Task<IActionResult> GetEventByIdAsync(Guid id)
+    [HttpGet("events/{id}")]
+    public async Task<IActionResult> GetEventByIdAsync(Guid id)
+    {
+        try
         {
-            try
-            {
-                return Ok(await _eventManagementApiService.GetCalendarEventByIdAsync(id));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return Ok(await _eventManagementApiService.GetCalendarEventByIdAsync(id));
         }
-
-        [HttpPost("events")]
-        public async Task<IActionResult> CreateEventAsync([FromBody] CalendarEventViewModel calendarEvent)
+        catch (Exception ex)
         {
-            try
-            {
-                return Ok(await _eventManagementApiService.CreateCalendarEventAsync(calendarEvent));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return BadRequest(ex.Message);
         }
+    }
 
-        [HttpPut("events/{id}")]
-        public async Task<IActionResult> UpdateEventAsync(Guid id, [FromBody] CalendarEventViewModel calendarEvent)
+    [HttpPost("events")]
+    public async Task<IActionResult> CreateEventAsync([FromBody] CalendarEventViewModel calendarEvent)
+    {
+        try
         {
-            try
-            {
-                calendarEvent.CalendarEventId = id;
-                return Ok(await _eventManagementApiService.UpdateCalendarEventAsync(calendarEvent));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return Ok(await _eventManagementApiService.CreateCalendarEventAsync(calendarEvent));
         }
-
-        [HttpDelete("events/{id}")]
-        public async Task<IActionResult> DeleteEventAsync(Guid id)
+        catch (Exception ex)
         {
-            try
-            {
-                return Ok(await _eventManagementApiService.DeleteCalendarEventAsync(id));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPut("events/{id}")]
+    public async Task<IActionResult> UpdateEventAsync(Guid id, [FromBody] CalendarEventViewModel calendarEvent)
+    {
+        try
+        {
+            calendarEvent.CalendarEventId = id;
+            return Ok(await _eventManagementApiService.UpdateCalendarEventAsync(calendarEvent));
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpDelete("events/{id}")]
+    public async Task<IActionResult> DeleteEventAsync(Guid id)
+    {
+        try
+        {
+            return Ok(await _eventManagementApiService.DeleteCalendarEventAsync(id));
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
         }
     }
 }
