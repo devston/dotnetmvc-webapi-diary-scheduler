@@ -18,14 +18,14 @@ namespace DiaryScheduler.Presentation.Services.Tests.Scheduler;
 [TestFixture]
 public class SchedulerPresentationServiceTests
 {
-    private Mock<IEventApiService> _apiService;
+    private Mock<IEventApi> _apiService;
     private Mock<IDateTimeService> _dateTimeService;
     private SchedulerPresentationService _schedulerPresentationService;
 
     [SetUp]
     public void SetUp()
     {
-        _apiService = new Mock<IEventApiService>();
+        _apiService = new Mock<IEventApi>();
         _dateTimeService = new Mock<IDateTimeService>();
         _schedulerPresentationService = new SchedulerPresentationService(
             _apiService.Object, _dateTimeService.Object);
@@ -70,7 +70,7 @@ public class SchedulerPresentationServiceTests
     {
         // Arrange
         var eventId = Guid.NewGuid();
-        _apiService.Setup(x => x.GetApiAsync<CalendarEventViewModel>(It.IsAny<string>(), It.IsAny<object>())).ReturnsAsync(() => null);
+        _apiService.Setup(x => x.GetEventByIdAsync(It.IsAny<Guid>())).ReturnsAsync(() => null);
 
         // Act
         var result = await _schedulerPresentationService.CreateSchedulerEditViewModelAsync(eventId);
@@ -121,7 +121,8 @@ public class SchedulerPresentationServiceTests
             allDay = x.AllDay
         });
         var convertedExpectedResult = JsonConvert.SerializeObject(expectedResult);
-        _apiService.Setup(x => x.GetApiAsync<List<CalendarEventViewModel>>(It.IsAny<string>(), It.IsAny<object>())).ReturnsAsync(calendarEvents);
+        _apiService.Setup(x => x.GetEventsBetweenDateRangeAsync(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+            .ReturnsAsync(calendarEvents);
 
         // Act
         var result = await _schedulerPresentationService.GetCalendarEventsBetweenDateRangeAsync(start, end);
@@ -137,7 +138,7 @@ public class SchedulerPresentationServiceTests
     {
         // Arrange
         var eventId = Guid.NewGuid();
-        _apiService.Setup(x => x.GetApiAsync<CalendarEventViewModel>(It.IsAny<string>(), It.IsAny<object>())).ReturnsAsync(() => null);
+        _apiService.Setup(x => x.GetEventByIdAsync(It.IsAny<Guid>())).ReturnsAsync(() => null);
 
         // Act
         var result = await _schedulerPresentationService.GenerateIcalForCalendarEventAsync(eventId);
@@ -160,7 +161,7 @@ public class SchedulerPresentationServiceTests
             DateTo = new DateTime(2022, 1, 1, 12, 30, 0),
             AllDay = false
         };
-        _apiService.Setup(x => x.GetApiAsync<CalendarEventViewModel>(It.IsAny<string>(), It.IsAny<object>())).ReturnsAsync(eventData);
+        _apiService.Setup(x => x.GetEventByIdAsync(It.IsAny<Guid>())).ReturnsAsync(eventData);
         var expectedContentType = "text/calendar";
 
         // Act
@@ -178,7 +179,8 @@ public class SchedulerPresentationServiceTests
         // Arrange
         var start = new DateTime(2022, 1, 1, 12, 15, 0);
         var end = new DateTime(2022, 1, 1, 12, 30, 0);
-        _apiService.Setup(x => x.GetApiAsync<List<CalendarEventViewModel>>(It.IsAny<string>(), It.IsAny<object>())).ReturnsAsync(() => null);
+        _apiService.Setup(x => x.GetEventsBetweenDateRangeAsync(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+            .ReturnsAsync(() => null);
 
         // Act
         var result = await _schedulerPresentationService.GenerateIcalBetweenDateRangeAsync(start, end);
@@ -224,7 +226,8 @@ public class SchedulerPresentationServiceTests
             }
         };
         var expectedContentType = "text/calendar";
-        _apiService.Setup(x => x.GetApiAsync<List<CalendarEventViewModel>>(It.IsAny<string>(), It.IsAny<object>())).ReturnsAsync(eventData);
+        _apiService.Setup(x => x.GetEventsBetweenDateRangeAsync(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+            .ReturnsAsync(eventData);
 
         // Act
         var result = await _schedulerPresentationService.GenerateIcalBetweenDateRangeAsync(start, end);

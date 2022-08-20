@@ -1,4 +1,5 @@
 using Autofac;
+using DiaryScheduler.Presentation.Services.Configuration;
 using DiaryScheduler.Presentation.Services.Scheduler;
 using DiaryScheduler.Presentation.Services.Utility;
 using DiaryScheduler.Presentation.Web.Common.Services.Scheduler;
@@ -7,6 +8,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Refit;
+using System;
 
 namespace DiaryScheduler.Presentation.Web;
 
@@ -22,8 +25,11 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
+        var apiConfig = Configuration.GetSection(EventApiConfig.SectionName).Get<EventApiConfig>();
         services.AddControllersWithViews();
         services.AddRazorPages();
+        services.AddRefitClient<IEventApi>()
+                .ConfigureHttpClient(c => c.BaseAddress = new Uri(apiConfig.Url));
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,14 +71,6 @@ public class Startup
         builder.RegisterType<DateTimeService>()
             .As<IDateTimeService>()
             .SingleInstance();
-
-        builder.RegisterType<ApiService>()
-            .As<IApiService>()
-            .InstancePerLifetimeScope();
-
-        builder.RegisterType<EventApiService>()
-            .As<IEventApiService>()
-            .InstancePerLifetimeScope();
 
         builder.RegisterType<SchedulerPresentationService>()
             .As<ISchedulerPresentationService>()
