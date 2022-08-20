@@ -12,14 +12,14 @@ namespace DiaryScheduler.Presentation.Services.Scheduler;
 /// </summary>
 public class SchedulerPresentationService : ISchedulerPresentationService
 {
-    private readonly IEventApiService _eventApiService;
+    private readonly IEventApi _eventApi;
     private readonly IDateTimeService _dateTimeService;
 
     public SchedulerPresentationService(
-        IEventApiService eventApiService,
+        IEventApi eventApi,
         IDateTimeService dateTimeService)
     {
-        _eventApiService = eventApiService;
+        _eventApi = eventApi;
         _dateTimeService = dateTimeService;
     }
 
@@ -55,8 +55,7 @@ public class SchedulerPresentationService : ISchedulerPresentationService
 
     public async Task<SchedulerModifyViewModel> CreateSchedulerEditViewModelAsync(Guid id)
     {
-        var endpoint = $"api/event-management/events/{id}";
-        var calendarEvent = await _eventApiService.GetApiAsync<CalendarEventViewModel>(endpoint);
+        var calendarEvent = await _eventApi.GetEventByIdAsync(id);
 
         if (calendarEvent == null)
         {
@@ -78,10 +77,7 @@ public class SchedulerPresentationService : ISchedulerPresentationService
 
     public async Task<object> GetCalendarEventsBetweenDateRangeAsync(DateTime start, DateTime end)
     {
-        var endpoint = "api/event-management/events";
-        var queryParams = new { start = start.ToString("o"), end = end.ToString("o") };
-        var calEvents = await _eventApiService.GetApiAsync<List<CalendarEventViewModel>>(endpoint, queryParams);
-
+        var calEvents = await _eventApi.GetEventsBetweenDateRangeAsync(start, end);
         object result = calEvents.Select(x => new
         {
             title = x.Title,
@@ -96,8 +92,7 @@ public class SchedulerPresentationService : ISchedulerPresentationService
 
     public async Task<CalendarIcalViewModel> GenerateIcalForCalendarEventAsync(Guid id)
     {
-        var endpoint = $"api/event-management/events/{id}";
-        var calendarEvent = await _eventApiService.GetApiAsync<CalendarEventViewModel>(endpoint);
+        var calendarEvent = await _eventApi.GetEventByIdAsync(id);
 
         if (calendarEvent == null)
         {
@@ -121,9 +116,7 @@ public class SchedulerPresentationService : ISchedulerPresentationService
     public async Task<CalendarIcalViewModel> GenerateIcalBetweenDateRangeAsync(DateTime start, DateTime end)
     {
         // Get user's calendar entries within the date range.
-        var endpoint = "api/event-management/events";
-        var queryParams = new { start = start.ToString("o"), end = end.ToString("o") };
-        var calendarEvents = await _eventApiService.GetApiAsync<List<CalendarEventViewModel>>(endpoint, queryParams);
+        var calendarEvents = await _eventApi.GetEventsBetweenDateRangeAsync(start, end);
 
         // Check if there are any diary entries to sync.
         if (calendarEvents == null)
@@ -151,22 +144,19 @@ public class SchedulerPresentationService : ISchedulerPresentationService
     public async Task<Guid> CreateCalendarEventAsync(CalendarEventViewModel eventVm)
     {
         // Save event.
-        var endpoint = "api/event-management/events";
-        var id = await _eventApiService.PostApiAsync<Guid>(endpoint, eventVm);
+        var id = await _eventApi.CreateEventAsync(eventVm);
         return id;
     }
 
     public async Task UpdateCalendarEventAsync(CalendarEventViewModel eventVm)
     {
         // Save event.
-        var endpoint = $"api/event-management/events/{eventVm.CalendarEventId}";
-        await _eventApiService.PutApiAsync<string>(endpoint, eventVm);
+        await _eventApi.UpdateEventAsync(eventVm.CalendarEventId, eventVm);
     }
 
     public async Task DeleteCalendarEventAsync(Guid id)
     {
-        var endpoint = $"api/event-management/events/{id}";
-        await _eventApiService.DeleteApiAsync<string>(endpoint);
+        await _eventApi.DeleteEventAsync(id);
     }
 
     #region Helpers

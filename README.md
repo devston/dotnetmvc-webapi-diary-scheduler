@@ -15,7 +15,6 @@ An ASP.Net Core 6 MVC & Web API diary scheduling app based on the domain-driven 
 
 ## TODO:
 - Switch the validation layer with FluentValidation
-- Replace the manual API call service with Refit
 - Add API authorisation
 - Remove jQuery
 - Add google calendar integration
@@ -27,3 +26,4 @@ An ASP.Net Core 6 MVC & Web API diary scheduling app based on the domain-driven 
 - [WebPack](https://webpack.js.org/)
 - [jQuery](https://jquery.com/)
 - [Autofac](https://autofac.org/)
+- [Refit](https://github.com/reactiveui/refit)
