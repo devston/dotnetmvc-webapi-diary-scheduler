@@ -8,6 +8,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DiaryScheduler.Api.Services.Tests.EventManagement;
@@ -35,11 +36,12 @@ public class EventManagementApiServiceTests
         // Arrange
         var fromDate = new DateTime(2022, 1, 1, 12, 10, 0);
         var toDate = new DateTime(2022, 1, 1, 12, 30, 0);
-        _scheduleRepository.Setup(x => x.GetAllEventsBetweenDateRangeAsync(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+        var cancellationToken = new CancellationToken();
+        _scheduleRepository.Setup(x => x.GetAllEventsBetweenDateRangeAsync(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<CalEventDm>());
 
         // Act
-        var result = await _eventManagementApiService.GetCalendarEventsBetweenDateRangeAsync(fromDate, toDate);
+        var result = await _eventManagementApiService.GetCalendarEventsBetweenDateRangeAsync(fromDate, toDate, cancellationToken);
 
         // Assert
         result.Should().NotBeNull();
@@ -53,15 +55,16 @@ public class EventManagementApiServiceTests
         // Arrange
         var fromDate = new DateTime(2022, 1, 1, 12, 10, 0);
         var toDate = new DateTime(2022, 1, 1, 12, 30, 0);
+        var cancellationToken = new CancellationToken();
         var calEvent = new CalEventDm()
         {
             Title = "Test"
         };
-        _scheduleRepository.Setup(x => x.GetAllEventsBetweenDateRangeAsync(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+        _scheduleRepository.Setup(x => x.GetAllEventsBetweenDateRangeAsync(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<CalEventDm>() { calEvent });
 
         // Act
-        var result = await _eventManagementApiService.GetCalendarEventsBetweenDateRangeAsync(fromDate, toDate);
+        var result = await _eventManagementApiService.GetCalendarEventsBetweenDateRangeAsync(fromDate, toDate, cancellationToken);
 
         // Assert
         result.Should().NotBeNull();
@@ -75,11 +78,12 @@ public class EventManagementApiServiceTests
     {
         // Arrange
         var id = Guid.NewGuid();
-        _scheduleRepository.Setup(x => x.GetCalendarEventByEventIdAsync(It.IsAny<Guid>()))
+        var cancellationToken = new CancellationToken();
+        _scheduleRepository.Setup(x => x.GetCalendarEventByEventIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((CalEventDm)null);
 
         // Act
-        Func<Task> act = async () => await _eventManagementApiService.GetCalendarEventByIdAsync(id);
+        Func<Task> act = async () => await _eventManagementApiService.GetCalendarEventByIdAsync(id, cancellationToken);
 
         // Assert
         await act.Should().ThrowAsync<NullReferenceException>();
@@ -90,6 +94,7 @@ public class EventManagementApiServiceTests
     {
         // Arrange
         var id = Guid.NewGuid();
+        var cancellationToken = new CancellationToken();
         var calEvent = new CalEventDm()
         {
             CalendarEntryId = id,
@@ -99,11 +104,11 @@ public class EventManagementApiServiceTests
             Description = "Test description",
             AllDay = true
         };
-        _scheduleRepository.Setup(x => x.GetCalendarEventByEventIdAsync(It.IsAny<Guid>()))
+        _scheduleRepository.Setup(x => x.GetCalendarEventByEventIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(calEvent);
 
         // Act
-        var result = await _eventManagementApiService.GetCalendarEventByIdAsync(id);
+        var result = await _eventManagementApiService.GetCalendarEventByIdAsync(id, cancellationToken);
 
         // Assert
         result.Should().NotBeNull();
@@ -120,6 +125,7 @@ public class EventManagementApiServiceTests
     {
         // Arrange
         var expectedId = Guid.NewGuid();
+        var cancellationToken = new CancellationToken();
         var calEvent = new CalendarEventViewModel()
         {
             Title = "Test",
@@ -128,11 +134,11 @@ public class EventManagementApiServiceTests
             Description = "Test description",
             AllDay = true
         };
-        _scheduleRepository.Setup(x => x.CreateCalendarEventAsync(It.IsAny<CalEventDm>()))
+        _scheduleRepository.Setup(x => x.CreateCalendarEventAsync(It.IsAny<CalEventDm>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedId);
 
         // Act
-        var result = await _eventManagementApiService.CreateCalendarEventAsync(calEvent);
+        var result = await _eventManagementApiService.CreateCalendarEventAsync(calEvent, cancellationToken);
 
         // Assert
         result.Should().Be(expectedId);
@@ -142,6 +148,7 @@ public class EventManagementApiServiceTests
     public async Task UpdateCalendarEventAsync_GivenInvalidCalendarEventId_ReturnsException()
     {
         // Arrange
+        var cancellationToken = new CancellationToken();
         var calEvent = new CalendarEventViewModel()
         {
             CalendarEventId = Guid.NewGuid(),
@@ -151,11 +158,11 @@ public class EventManagementApiServiceTests
             Description = "Test description",
             AllDay = true
         };
-        _scheduleRepository.Setup(x => x.DoesEventExistAsync(It.IsAny<Guid>()))
+        _scheduleRepository.Setup(x => x.DoesEventExistAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
 
         // Act
-        Func<Task> act = async () => await _eventManagementApiService.UpdateCalendarEventAsync(calEvent);
+        Func<Task> act = async () => await _eventManagementApiService.UpdateCalendarEventAsync(calEvent, cancellationToken);
 
         // Assert
         await act.Should().ThrowAsync<Exception>();
@@ -165,6 +172,7 @@ public class EventManagementApiServiceTests
     public async Task UpdateCalendarEventAsync_GivenValidCalendarEventId_ReturnsMessage()
     {
         // Arrange
+        var cancellationToken = new CancellationToken();
         var calEvent = new CalendarEventViewModel()
         {
             CalendarEventId = Guid.NewGuid(),
@@ -174,12 +182,12 @@ public class EventManagementApiServiceTests
             Description = "Test description",
             AllDay = true
         };
-        _scheduleRepository.Setup(x => x.DoesEventExistAsync(It.IsAny<Guid>()))
+        _scheduleRepository.Setup(x => x.DoesEventExistAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
-        _scheduleRepository.Setup(x => x.EditCalendarEventAsync(It.IsAny<CalEventDm>()));
+        _scheduleRepository.Setup(x => x.EditCalendarEventAsync(It.IsAny<CalEventDm>(), It.IsAny<CancellationToken>()));
 
         // Act
-        var result = await _eventManagementApiService.UpdateCalendarEventAsync(calEvent);
+        var result = await _eventManagementApiService.UpdateCalendarEventAsync(calEvent, cancellationToken);
 
         // Assert
         result.Should().NotBeEmpty();
@@ -190,11 +198,12 @@ public class EventManagementApiServiceTests
     {
         // Arrange
         var id = Guid.NewGuid();
-        _scheduleRepository.Setup(x => x.DoesEventExistAsync(It.IsAny<Guid>()))
+        var cancellationToken = new CancellationToken();
+        _scheduleRepository.Setup(x => x.DoesEventExistAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
 
         // Act
-        Func<Task> act = async () => await _eventManagementApiService.DeleteCalendarEventAsync(id);
+        Func<Task> act = async () => await _eventManagementApiService.DeleteCalendarEventAsync(id, cancellationToken);
 
         // Assert
         await act.Should().ThrowAsync<Exception>();
@@ -205,12 +214,13 @@ public class EventManagementApiServiceTests
     {
         // Arrange
         var id = Guid.NewGuid();
-        _scheduleRepository.Setup(x => x.DoesEventExistAsync(It.IsAny<Guid>()))
+        var cancellationToken = new CancellationToken();
+        _scheduleRepository.Setup(x => x.DoesEventExistAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
-        _scheduleRepository.Setup(x => x.DeleteCalendarEventAsync(It.IsAny<Guid>()));
+        _scheduleRepository.Setup(x => x.DeleteCalendarEventAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()));
 
         // Act
-        var result = await _eventManagementApiService.DeleteCalendarEventAsync(id);
+        var result = await _eventManagementApiService.DeleteCalendarEventAsync(id, cancellationToken);
 
         // Assert
         result.Should().NotBeEmpty();
