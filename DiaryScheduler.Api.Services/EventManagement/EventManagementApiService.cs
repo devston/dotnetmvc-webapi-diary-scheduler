@@ -4,6 +4,7 @@ using DiaryScheduler.ScheduleManagement.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DiaryScheduler.Api.Services.EventManagement;
@@ -21,9 +22,9 @@ public class EventManagementApiService : IEventManagementApiService
         _scheduleRepository = scheduleRepository;
     }
 
-    public async Task<List<CalendarEventViewModel>> GetCalendarEventsBetweenDateRangeAsync(DateTime start, DateTime end)
+    public async Task<List<CalendarEventViewModel>> GetCalendarEventsBetweenDateRangeAsync(DateTime start, DateTime end, CancellationToken cancellationToken)
     {
-        var calEvents = await _scheduleRepository.GetAllEventsBetweenDateRangeAsync(start, end);
+        var calEvents = await _scheduleRepository.GetAllEventsBetweenDateRangeAsync(start, end, cancellationToken);
 
         if (calEvents == null)
         {
@@ -33,9 +34,9 @@ public class EventManagementApiService : IEventManagementApiService
         return calEvents.Select(x => ConvertCalendarEventDomainModelToViewModel(x)).ToList();
     }
 
-    public async Task<CalendarEventViewModel> GetCalendarEventByIdAsync(Guid id)
+    public async Task<CalendarEventViewModel> GetCalendarEventByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        var calendarEvent = await _scheduleRepository.GetCalendarEventByEventIdAsync(id);
+        var calendarEvent = await _scheduleRepository.GetCalendarEventByEventIdAsync(id, cancellationToken);
 
         if (calendarEvent == null)
         {
@@ -45,18 +46,18 @@ public class EventManagementApiService : IEventManagementApiService
         return ConvertCalendarEventDomainModelToViewModel(calendarEvent);
     }
 
-    public async Task<Guid> CreateCalendarEventAsync(CalendarEventViewModel eventVm)
+    public async Task<Guid> CreateCalendarEventAsync(CalendarEventViewModel eventVm, CancellationToken cancellationToken)
     {
         var calEvent = ConvertCalendarEventViewModelToDomainModel(eventVm);
 
         // Save event.
-        var id = await _scheduleRepository.CreateCalendarEventAsync(calEvent);
+        var id = await _scheduleRepository.CreateCalendarEventAsync(calEvent, cancellationToken);
         return id;
     }
 
-    public async Task<string> UpdateCalendarEventAsync(CalendarEventViewModel eventVm)
+    public async Task<string> UpdateCalendarEventAsync(CalendarEventViewModel eventVm, CancellationToken cancellationToken)
     {
-        if (!await _scheduleRepository.DoesEventExistAsync(eventVm.CalendarEventId))
+        if (!await _scheduleRepository.DoesEventExistAsync(eventVm.CalendarEventId, cancellationToken))
         {
             throw new Exception("The calendar event could not be found.");
         }
@@ -64,18 +65,18 @@ public class EventManagementApiService : IEventManagementApiService
         var calEvent = ConvertCalendarEventViewModelToDomainModel(eventVm);
 
         // Save event.
-        await _scheduleRepository.EditCalendarEventAsync(calEvent);
+        await _scheduleRepository.EditCalendarEventAsync(calEvent, cancellationToken);
         return "The calendar event was updated.";
     }
 
-    public async Task<string> DeleteCalendarEventAsync(Guid id)
+    public async Task<string> DeleteCalendarEventAsync(Guid id, CancellationToken cancellationToken)
     {
-        if (!await _scheduleRepository.DoesEventExistAsync(id))
+        if (!await _scheduleRepository.DoesEventExistAsync(id, cancellationToken))
         {
             throw new Exception("The calendar event could not be found.");
         }
 
-        await _scheduleRepository.DeleteCalendarEventAsync(id);
+        await _scheduleRepository.DeleteCalendarEventAsync(id, cancellationToken);
         return "The calendar event was deleted.";
     }
 

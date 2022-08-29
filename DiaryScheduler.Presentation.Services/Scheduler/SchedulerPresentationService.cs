@@ -1,7 +1,6 @@
 ﻿using DiaryScheduler.Presentation.Models.Scheduler;
 using DiaryScheduler.Presentation.Services.Utility;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 

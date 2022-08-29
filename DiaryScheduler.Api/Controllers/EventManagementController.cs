@@ -2,6 +2,7 @@
 using DiaryScheduler.Presentation.Models.Scheduler;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DiaryScheduler.Api.Controllers;
@@ -20,11 +21,11 @@ public class EventManagementController : Controller
     }
 
     [HttpGet("events")]
-    public async Task<IActionResult> GetEventsBetweenDateRangeAsync(DateTime start, DateTime end)
+    public async Task<IActionResult> GetEventsBetweenDateRangeAsync(DateTime start, DateTime end, CancellationToken cancellationToken)
     {
         try
         {
-            return Ok(await _eventManagementApiService.GetCalendarEventsBetweenDateRangeAsync(start, end));
+            return Ok(await _eventManagementApiService.GetCalendarEventsBetweenDateRangeAsync(start, end, cancellationToken));
         }
         catch (Exception ex)
         {
@@ -33,11 +34,11 @@ public class EventManagementController : Controller
     }
 
     [HttpGet("events/{id}")]
-    public async Task<IActionResult> GetEventByIdAsync(Guid id)
+    public async Task<IActionResult> GetEventByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         try
         {
-            return Ok(await _eventManagementApiService.GetCalendarEventByIdAsync(id));
+            return Ok(await _eventManagementApiService.GetCalendarEventByIdAsync(id, cancellationToken));
         }
         catch (Exception ex)
         {
@@ -46,11 +47,11 @@ public class EventManagementController : Controller
     }
 
     [HttpPost("events")]
-    public async Task<IActionResult> CreateEventAsync([FromBody] CalendarEventViewModel calendarEvent)
+    public async Task<IActionResult> CreateEventAsync([FromBody] CalendarEventViewModel calendarEvent, CancellationToken cancellationToken)
     {
         try
         {
-            return Ok(await _eventManagementApiService.CreateCalendarEventAsync(calendarEvent));
+            return Ok(await _eventManagementApiService.CreateCalendarEventAsync(calendarEvent, cancellationToken));
         }
         catch (Exception ex)
         {
@@ -59,12 +60,12 @@ public class EventManagementController : Controller
     }
 
     [HttpPut("events/{id}")]
-    public async Task<IActionResult> UpdateEventAsync(Guid id, [FromBody] CalendarEventViewModel calendarEvent)
+    public async Task<IActionResult> UpdateEventAsync(Guid id, [FromBody] CalendarEventViewModel calendarEvent, CancellationToken cancellationToken)
     {
         try
         {
             calendarEvent.CalendarEventId = id;
-            return Ok(await _eventManagementApiService.UpdateCalendarEventAsync(calendarEvent));
+            return Ok(await _eventManagementApiService.UpdateCalendarEventAsync(calendarEvent, cancellationToken));
         }
         catch (Exception ex)
         {
@@ -73,11 +74,11 @@ public class EventManagementController : Controller
     }
 
     [HttpDelete("events/{id}")]
-    public async Task<IActionResult> DeleteEventAsync(Guid id)
+    public async Task<IActionResult> DeleteEventAsync(Guid id, CancellationToken cancellationToken)
     {
         try
         {
-            return Ok(await _eventManagementApiService.DeleteCalendarEventAsync(id));
+            return Ok(await _eventManagementApiService.DeleteCalendarEventAsync(id, cancellationToken));
         }
         catch (Exception ex)
         {

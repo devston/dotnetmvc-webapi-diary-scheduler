@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DiaryScheduler.ScheduleManagement.Data.Repositories;
@@ -25,50 +26,50 @@ public class EFScheduleRepository : IScheduleRepository
 
     #region Gets
 
-    public async Task<List<CalEventDm>> GetAllEventsBetweenDateRangeAsync(DateTime start, DateTime end)
+    public async Task<List<CalEventDm>> GetAllEventsBetweenDateRangeAsync(DateTime start, DateTime end, CancellationToken cancellationToken)
     {
         var query = SelectCalendarEventDmFromQuery(
                 _context.CalendarEvents.AsNoTracking()
                 .Where(x => x.DateFrom >= start && x.DateTo <= end)
             );
-        return await query.ToListAsync();
+        return await query.ToListAsync(cancellationToken);
     }
 
-    public async Task<CalEventDm> GetCalendarEventByEventIdAsync(Guid id)
+    public async Task<CalEventDm> GetCalendarEventByEventIdAsync(Guid id, CancellationToken cancellationToken)
     {
         var query = SelectCalendarEventDmFromQuery(
                 _context.CalendarEvents.AsNoTracking()
                 .Where(x => x.CalendarEventId == id)
             );
-        return await query.FirstOrDefaultAsync();
+        return await query.FirstOrDefaultAsync(cancellationToken);
     }
 
     #endregion
 
     #region Checks
 
-    public async Task<bool> DoesEventExistAsync(Guid id)
+    public async Task<bool> DoesEventExistAsync(Guid id, CancellationToken cancellationToken)
     {
-        return await _context.CalendarEvents.AnyAsync(x => x.CalendarEventId == id);
+        return await _context.CalendarEvents.AnyAsync(x => x.CalendarEventId == id, cancellationToken);
     }
 
     #endregion
 
     #region Create, update and delete
 
-    public async Task<Guid> CreateCalendarEventAsync(CalEventDm entry)
+    public async Task<Guid> CreateCalendarEventAsync(CalEventDm entry, CancellationToken cancellationToken)
     {
         var mappedEntry = ConvertCalendarEventDomainModelToEntity(entry);
         _context.CalendarEvents.Attach(mappedEntry);
         _context.Entry(mappedEntry).State = EntityState.Added;
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
         return mappedEntry.CalendarEventId;
     }
 
-    public async Task EditCalendarEventAsync(CalEventDm entry)
+    public async Task EditCalendarEventAsync(CalEventDm entry, CancellationToken cancellationToken)
     {
         // Get the original event.
-        var originalEntry = await _context.CalendarEvents.FirstOrDefaultAsync(x => x.CalendarEventId == entry.CalendarEntryId);
+        var originalEntry = await _context.CalendarEvents.FirstOrDefaultAsync(x => x.CalendarEventId == entry.CalendarEntryId, cancellationToken);
 
         // Double check the event exists.
         if (originalEntry == null)
@@ -85,13 +86,13 @@ public class EFScheduleRepository : IScheduleRepository
 
         // Save changes.
         _context.Entry(originalEntry).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task DeleteCalendarEventAsync(Guid id)
+    public async Task DeleteCalendarEventAsync(Guid id, CancellationToken cancellationToken)
     {
         // Get the original event.
-        var originalEntry = await _context.CalendarEvents.FirstOrDefaultAsync(x => x.CalendarEventId == id);
+        var originalEntry = await _context.CalendarEvents.FirstOrDefaultAsync(x => x.CalendarEventId == id, cancellationToken);
 
         // Double check the event exists.
         if (originalEntry == null)
@@ -101,7 +102,7 @@ public class EFScheduleRepository : IScheduleRepository
 
         // Save changes.
         _context.CalendarEvents.Remove(originalEntry);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
     }
 
     #endregion
