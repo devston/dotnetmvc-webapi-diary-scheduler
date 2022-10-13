@@ -29,7 +29,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiaryScheduler.Api", "Diary
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiaryScheduler.Api.Services", "DiaryScheduler.Api.Services\DiaryScheduler.Api.Services.csproj", "{1A10E879-35A7-482C-92F7-86D7839F4608}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiaryScheduler.Api.Services.Tests", "DiaryScheduler.Api.Services.Tests\DiaryScheduler.Api.Services.Tests.csproj", "{E1B944D0-9435-4322-967E-2B7DD1EB04A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiaryScheduler.Api.Services.Tests", "DiaryScheduler.Api.Services.Tests\DiaryScheduler.Api.Services.Tests.csproj", "{E1B944D0-9435-4322-967E-2B7DD1EB04A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiaryScheduler.Tests.Utilities", "DiaryScheduler.Tests.Utilities\DiaryScheduler.Tests.Utilities.csproj", "{DB691500-DAD0-418D-BD2B-01A77939D94B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiaryScheduler.Api.Integration.Tests", "DiaryScheduler.Api.Integration.Tests\DiaryScheduler.Api.Integration.Tests.csproj", "{938E6E25-D52E-4AA3-B566-D0005E770EF2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +85,14 @@ Global
 		{E1B944D0-9435-4322-967E-2B7DD1EB04A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E1B944D0-9435-4322-967E-2B7DD1EB04A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E1B944D0-9435-4322-967E-2B7DD1EB04A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB691500-DAD0-418D-BD2B-01A77939D94B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB691500-DAD0-418D-BD2B-01A77939D94B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB691500-DAD0-418D-BD2B-01A77939D94B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB691500-DAD0-418D-BD2B-01A77939D94B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{938E6E25-D52E-4AA3-B566-D0005E770EF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{938E6E25-D52E-4AA3-B566-D0005E770EF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{938E6E25-D52E-4AA3-B566-D0005E770EF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{938E6E25-D52E-4AA3-B566-D0005E770EF2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -97,6 +109,8 @@ Global
 		{18F129B5-1BB4-4529-8FD3-7F874767262B} = {32930918-B87D-4D30-AE95-5578C50EB510}
 		{1A10E879-35A7-482C-92F7-86D7839F4608} = {32930918-B87D-4D30-AE95-5578C50EB510}
 		{E1B944D0-9435-4322-967E-2B7DD1EB04A8} = {32930918-B87D-4D30-AE95-5578C50EB510}
+		{DB691500-DAD0-418D-BD2B-01A77939D94B} = {5E6B638D-43B7-412A-B272-A3C8D072251A}
+		{938E6E25-D52E-4AA3-B566-D0005E770EF2} = {32930918-B87D-4D30-AE95-5578C50EB510}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A1D1F504-E29C-48F9-BED2-A0DD86AB63E9}

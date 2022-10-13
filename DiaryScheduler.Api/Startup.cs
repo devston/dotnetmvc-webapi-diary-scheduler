@@ -1,12 +1,12 @@
+using Asp.Versioning;
 using Autofac;
 using DiaryScheduler.Api.Configuration;
+using DiaryScheduler.Api.Exceptions;
 using DiaryScheduler.Api.Swagger;
-using DiaryScheduler.Data.Data;
 using DiaryScheduler.DependencyResolution;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -15,27 +15,38 @@ namespace DiaryScheduler.Api;
 
 public class Startup
 {
+    private readonly string _apiVersion;
+    private readonly int _apiVersionMajor;
+    private readonly int _apiVersionMinor;
+
     public Startup(IConfiguration configuration)
     {
         Configuration = configuration;
+
+        _apiVersionMajor = Configuration.GetValue<int>("ApiVersionMajor");
+        _apiVersionMinor = Configuration.GetValue<int>("ApiVersionMinor");
+        _apiVersion = $"{_apiVersionMajor}.{_apiVersionMinor}";
     }
 
     public IConfiguration Configuration { get; }
 
-    // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer(
-                Configuration.GetConnectionString("DefaultConnection")));
+        services.ConfigureDbContextService(Configuration);
         services.AddControllers(options => 
         {
             options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
         });
         services.ConfigureSwaggerServices();
+        services.AddApiVersioning(config =>
+        {
+            config.DefaultApiVersion = new ApiVersion(_apiVersionMajor, _apiVersionMinor);
+            config.AssumeDefaultVersionWhenUnspecified = true;
+            config.ReportApiVersions = true;
+            config.ApiVersionReader = new HeaderApiVersionReader("api-version");
+        });
     }
 
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         if (env.IsDevelopment())
@@ -44,11 +55,9 @@ public class Startup
         }
 
         app.UseHttpsRedirection();
-
         app.UseRouting();
-
         app.UseAuthorization();
-
+        app.ConfigureCustomExceptionMiddleware();
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
