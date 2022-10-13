@@ -36,6 +36,7 @@ public class IoCBootstrapper
         var builder = new ContainerBuilder();
 
         // Do any registrations.
+        builder.RegisterModule<LoggingModule>();
         builder.RegisterModule<DataModule>();
         builder.RegisterModule<ApiServiceModule>();
 
@@ -49,8 +50,10 @@ public class IoCBootstrapper
     /// <param name="builder"></param>
     public static void ConfigureContainer(ContainerBuilder builder)
     {
+        builder.RegisterModule<LoggingModule>();
         builder.RegisterModule<DataModule>();
         builder.RegisterModule<ApiServiceModule>();
+        builder.RegisterModule<ValidatorModule>();
     }
 
     /// <summary>

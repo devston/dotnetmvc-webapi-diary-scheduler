@@ -15,11 +15,6 @@ public class CalendarEventViewModel
     public Guid CalendarEventId { get; set; }
 
     /// <summary>
-    /// Gets or sets the user id.
-    /// </summary>
-    public string UserId { get; set; }
-
-    /// <summary>
     /// Gets or sets the from date.
     /// </summary>
     [DisplayName("From date")]

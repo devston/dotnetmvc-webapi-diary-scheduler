@@ -14,9 +14,7 @@ An ASP.Net Core 6 MVC & Web API diary scheduling app based on the domain-driven 
 - Navigate to the scheduler area
 
 ## TODO:
-- Switch the validation layer with FluentValidation
 - Add API authorisation
-- Add integration tests
 - Add an Angular UI example
 - Remove jQuery
 - Add google calendar integration

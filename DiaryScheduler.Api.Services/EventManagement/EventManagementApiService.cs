@@ -1,4 +1,5 @@
 ﻿using DiaryScheduler.Presentation.Models.Scheduler;
+using DiaryScheduler.ScheduleManagement.Core.Exceptions;
 using DiaryScheduler.ScheduleManagement.Core.Interfaces;
 using DiaryScheduler.ScheduleManagement.Core.Models;
 using System;
@@ -40,7 +41,7 @@ public class EventManagementApiService : IEventManagementApiService
 
         if (calendarEvent == null)
         {
-            throw new NullReferenceException("The calendar event could not be found.");
+            throw new ScheduleManagementEventNotFoundException("The calendar event could not be found.");
         }
 
         return ConvertCalendarEventDomainModelToViewModel(calendarEvent);
@@ -59,7 +60,7 @@ public class EventManagementApiService : IEventManagementApiService
     {
         if (!await _scheduleRepository.DoesEventExistAsync(eventVm.CalendarEventId, cancellationToken))
         {
-            throw new Exception("The calendar event could not be found.");
+            throw new ScheduleManagementEventNotFoundException("The calendar event could not be found.");
         }
 
         var calEvent = ConvertCalendarEventViewModelToDomainModel(eventVm);
@@ -73,7 +74,7 @@ public class EventManagementApiService : IEventManagementApiService
     {
         if (!await _scheduleRepository.DoesEventExistAsync(id, cancellationToken))
         {
-            throw new Exception("The calendar event could not be found.");
+            throw new ScheduleManagementEventNotFoundException("The calendar event could not be found.");
         }
 
         await _scheduleRepository.DeleteCalendarEventAsync(id, cancellationToken);

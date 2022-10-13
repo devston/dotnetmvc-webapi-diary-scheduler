@@ -1,5 +1,6 @@
 ﻿using DiaryScheduler.Api.Services.EventManagement;
 using DiaryScheduler.Presentation.Models.Scheduler;
+using DiaryScheduler.ScheduleManagement.Core.Exceptions;
 using DiaryScheduler.ScheduleManagement.Core.Interfaces;
 using DiaryScheduler.ScheduleManagement.Core.Models;
 using FluentAssertions;
@@ -86,7 +87,7 @@ public class EventManagementApiServiceTests
         Func<Task> act = async () => await _eventManagementApiService.GetCalendarEventByIdAsync(id, cancellationToken);
 
         // Assert
-        await act.Should().ThrowAsync<NullReferenceException>();
+        await act.Should().ThrowAsync<ScheduleManagementEventNotFoundException>();
     }
 
     [Test]
