@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System;
-using Unchase.Swashbuckle.AspNetCore.Extensions.Extensions;
 
 namespace DiaryScheduler.Api.Swagger;
 
@@ -42,12 +41,6 @@ public static class SwaggerConfiguration
             });
 
             c.DocInclusionPredicate((name, api) => true);
-
-            c.AddEnumsWithValuesFixFilters(services, o =>
-            {
-                o.IncludeDescriptions = true;
-                o.ApplyDocumentFilter = true;
-            });
         });
     }
 }

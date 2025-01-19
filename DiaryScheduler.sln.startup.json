@@ -51,7 +51,8 @@
           }
         }
     */
-    "MultiProjectConfigurations": {
+  "MultiProjectConfigurations": 
+    {
       "API + Web": {
         "Projects": {
           "DiaryScheduler.Api": {},
