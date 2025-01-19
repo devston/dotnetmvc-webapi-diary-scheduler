@@ -35,7 +35,7 @@ public class EventManagementController : Controller
     [HttpGet("events")]
     public async Task<IActionResult> GetEventsBetweenDateRangeAsync(DateTime start, DateTime end, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Getting events between date range {start} {end}.", start, end);
+        _logger.LogInformation("Getting events between date range {start} - {end}.", start, end);
         return Ok(await _eventManagementApiService.GetCalendarEventsBetweenDateRangeAsync(start, end, cancellationToken));
     }
 
@@ -49,7 +49,7 @@ public class EventManagementController : Controller
     [HttpPost("events")]
     public async Task<IActionResult> CreateEventAsync([FromBody] CalendarEventViewModel calendarEvent, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Validating the create event request with payload", calendarEvent);
+        _logger.LogInformation("Validating the create event request with payload = {calendarEvent}", calendarEvent);
         var validationResult = await _eventValidator.ValidateAsync(calendarEvent, cancellationToken);
 
         if (!validationResult.IsValid)
@@ -61,7 +61,7 @@ public class EventManagementController : Controller
             }));
         }
 
-        _logger.LogInformation("Creating the event with payload", calendarEvent);
+        _logger.LogInformation("Creating the event with payload = {calendarEvent}", calendarEvent);
         return Ok(await _eventManagementApiService.CreateCalendarEventAsync(calendarEvent, cancellationToken));
     }
 
@@ -69,7 +69,7 @@ public class EventManagementController : Controller
     public async Task<IActionResult> UpdateEventAsync(Guid id, [FromBody] CalendarEventViewModel calendarEvent, CancellationToken cancellationToken)
     {
         calendarEvent.CalendarEventId = id;
-        _logger.LogInformation("Validating the update event request with payload", calendarEvent);
+        _logger.LogInformation("Validating the update event request with payload = {calendarEvent}", calendarEvent);
         var validationResult = await _eventValidator.ValidateAsync(calendarEvent, cancellationToken);
 
         if (!validationResult.IsValid)
@@ -81,7 +81,7 @@ public class EventManagementController : Controller
             }));
         }
 
-        _logger.LogInformation("Updating the event with payload", calendarEvent);
+        _logger.LogInformation("Updating the event with payload = {calendarEvent}", calendarEvent);
         return Ok(await _eventManagementApiService.UpdateCalendarEventAsync(calendarEvent, cancellationToken));
     }
 
