@@ -5,7 +5,7 @@ An ASP.Net Core 8 MVC & Web API diary scheduling app based on the domain-driven 
 
 # Getting Started:
 ## Prerequisites
-- [Visual Studio 2022](https://visualstudio.microsoft.com/) with ASP.Net/ web component and .Net 6 SDK installed.
+- [Visual Studio 2022](https://visualstudio.microsoft.com/) with ASP.Net/ web component and .Net 8 SDK installed.
 - [Node js](https://nodejs.org/en/)
 
 ## Running the solution
